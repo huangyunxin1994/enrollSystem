@@ -460,7 +460,10 @@ export default {
                 height: 250px;
                 padding: 20px 0;
                 border: 1px dotted #dbdbe1;
-               
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
                 .button-class{
                     margin: 10px;
                     height: 40px;

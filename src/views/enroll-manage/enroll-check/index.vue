@@ -324,8 +324,8 @@ export default {
                             titlePara[temp.dataKey]=""
                         }
                     }
-                    let paras = {title:"审核状态",name:"reviewState",type:"input",width:120,fixed:"right"}
-                    let paras2 ={title:"是否已读",name:"readNot",type:"input",width:120,fixed:"right"} 
+                    let paras = {title:"审核状态",name:"reviewState",type:"input",width:120}
+                    let paras2 ={title:"是否已读",name:"readNot",type:"input",width:120} 
                     tableTitle.push(paras)  
                     tableTitle.push(paras2)
                     titlePara.reviewState=""
