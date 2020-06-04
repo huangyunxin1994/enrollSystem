@@ -7,11 +7,10 @@
 			
 			<el-col :span="4" class="userinfo">
 
-				<el-dropdown trigger="hover">
+				<el-dropdown trigger="click">
 					<span class="el-dropdown-link userinfo-inner"> <span>欢迎你</span> {{sysUserName}}</span>
 					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item>我的消息</el-dropdown-item>
-						<el-dropdown-item>密码设置</el-dropdown-item>
+						<el-dropdown-item @click.native="setPass">密码设置</el-dropdown-item>
 						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
@@ -26,11 +25,16 @@
 					</el-col>
 			</section>
 		</el-col>
+		<change-passworld ref="changePass"></change-passworld>
 	</el-row>
 </template>
 
 <script>
+	import changePassworld from '../components/changePass/index.vue'
 	export default {
+		components:{
+			changePassworld
+		},
 		data() {
 			return {
 				sysName:'报名系统',
@@ -62,7 +66,7 @@
 			handleselect: function (a, b) {
 			},
 			//退出登录
-			logout: function () {
+			logout () {
 				var _this = this;
 				this.$confirm('确认退出吗?', '提示', {
 					//type: 'warning'
@@ -72,8 +76,10 @@
 				}).catch(() => {
 
 				});
-
-
+			},
+			//设置密码
+			setPass(){
+				this.$refs.changePass.setShow()
 			},
 			//折叠导航栏
 			collapse:function(){

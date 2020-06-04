@@ -21,7 +21,7 @@
   overflow-x:hidden ;
 }
 .el-scrollbar .el-scrollbar__wrap .el-scrollbar__view{
-  white-space: nowrap;
+  white-space: wrap;
 }
 // to fixed https://github.com/ElemeFE/element/issues/2461
 .el-dialog {
