@@ -65,7 +65,7 @@
             //_this.$router.replace('/table');
             this.logining = true;
             //NProgress.start();
-            var loginParams = { account: this.ruleForm2.account, password: this.ruleForm2.checkPass };
+            var loginParams = { account: this.ruleForm2.account, password: this.ruleForm2.checkPass ,type:2 };
             requestLogin(loginParams).then(data => {
               this.logining = false;
               //NProgress.done();
