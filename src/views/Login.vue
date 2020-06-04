@@ -7,24 +7,36 @@
     <el-form-item prop="checkPass">
       <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>
+    <div class="login-handle">
     <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
+    <el-link :underline="false" type="primary" class="remember" @click="changePass">忘记密码?</el-link>
+    </div>
     <el-form-item style="width:100%;">
       <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
       <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
     </el-form-item>
+    <change-passworld ref="changePass"></change-passworld>
   </el-form>
+  
 </template>
 
 <script>
-  //import { requestLogin } from '../api/api';
+  import { requestLogin } from '../api/api';
+  import changePassworld from '../components/changePass/index.vue'
   //import NProgress from 'nprogress'
   export default {
+    components:{
+      changePassworld
+    },
     data() {
       return {
+        
         logining: false,
         ruleForm2: {
-          account: 'administrator',
-          checkPass: 'password'
+          // account: 'administrator',
+		  account: '',
+          // checkPass: 'password'
+		  checkPass: ''
         },
         rules2: {
           account: [
@@ -34,12 +46,15 @@
           checkPass: [
             { required: true, message: '请输入密码', trigger: 'blur' },
             //{ validator: validaePass2 }
-          ]
+          ],
         },
         checked: true
       };
     },
     methods: {
+      changePass(){
+        this.$refs.changePass.setShow()
+      },
       handleReset2() {
         this.$refs.ruleForm2.resetFields();
       },
@@ -50,34 +65,76 @@
             //_this.$router.replace('/table');
             this.logining = true;
             //NProgress.start();
-            var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass };
-            // requestLogin(loginParams).then(data => {
-            //   this.logining = false;
-            //   //NProgress.done();
-            //   let { msg, code, user } = data;
-            //   if (code !== 0) {
-            //     this.$message({
-            //       message: msg,
-            //       type: 'error'
-            //     });
-            //   } else {
+            var loginParams = { account: this.ruleForm2.account, password: this.ruleForm2.checkPass };
+            requestLogin(loginParams).then(data => {
+              this.logining = false;
+              //NProgress.done();
+              let { msg, code, user } = data;
+              if (code !== 0) {
+                this.$message({
+                  message: msg,
+                  type: 'error'
+                });
+              } else {
                 sessionStorage.setItem('user', JSON.stringify({
                   id: 1,
-                  username: 'admin',
-                  password: '123456',
+                  username: this.ruleForm2.account,
+                  password: this.ruleForm2.checkPass,
                   avatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
-                  name: '张某某'
+                  name: this.ruleForm2.account
                 }));
                 this.$router.push({ path: '/' });
-            //   }
-            // });
+				this.$message({
+				  message: "登录成功",
+				  type: 'success'
+				});
+              }
+            });
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
-      }
-    }
+        if(_this.checked == true){
+          // console.log("checked == true");
+          _this.setCookie(_this.ruleForm2.account,_this.ruleForm2.checkPass,7)
+        }else{
+          // console.log("清空Cookie");
+          _this.clearCookie();
+        }
+      },
+	  //设置cookie
+	  setCookie(c_name, c_pwd, exdays){
+		var exdate = new Date(); //获取时间
+	    exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
+	    //字符串拼接cookie
+	    window.document.cookie =
+			"userName" + "=" + c_name + ";path=/;expires=" + exdate.toGMTString();
+		window.document.cookie =
+			"userPwd" + "=" + c_pwd + ";path=/;expires=" + exdate.toGMTString();
+	  },
+	  //读取cookie
+	  getCookie(){
+		if(document.cookie.length > 0){
+			var arr = document.cookie.split("; "); //这里显示的格式需要切割一下自己可输出看下
+			console.log(arr)
+			for (var i = 0; i < arr.length; i++) {
+			  var arr2 = arr[i].split("="); //再次切割
+			  //判断查找相对应的值
+			  if (arr2[0] == "userName") {
+				this.ruleForm2.account = arr2[1]; //保存到保存数据的地方
+			  } else if (arr2[0] == "userPwd") {
+				this.ruleForm2.checkPass = arr2[1];
+			  }
+			}
+		}
+	  },
+	  clearCookie: function() {
+		this.setCookie("", "", -1); //修改2值都为空，天数为负1天就好了
+	  },
+    },
+	mounted() {
+		this.getCookie()
+	}
   }
 
 </script>
@@ -100,8 +157,14 @@
       text-align: center;
       color: #505458;
     }
-    .remember {
+    .login-handle{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .remember {
       margin: 0px 0px 35px 0px;
     }
+    }
+    
   }
 </style>

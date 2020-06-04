@@ -28,7 +28,7 @@ service.interceptors.request.use(
   },
   error => {
     // do something with request error
-    console.log(error) // for debug
+    //console.log(error) // for debug
     return Promise.reject(error)
   }
 )
@@ -64,7 +64,7 @@ service.interceptors.response.use(
     return response
   },
   error => {
-    console.log(error)
+    //console.log(error)
     return Promise.reject(error)
   }
 )
@@ -78,11 +78,20 @@ export default service
  * @returns {Promise}
  */
 export function post (url, data) {
-    let para;
-    //if(Array.isArray(data))
-      para=data
-    // else
-    // para=Qs.stringify(data)
+    let para,bool;
+    if(Array.isArray(data)){
+		bool = true
+	}else {
+		let flag =  Object.values(data).some(i=>{
+			return Array.isArray(i)
+		})
+		bool = flag
+	}
+	if(bool){
+		para = data
+	}else{
+		para = Qs.stringify(data)
+	}
     return new Promise((resolve, reject) => {
 
       service.post(url, para)
@@ -118,7 +127,7 @@ export function get (url, data = {}) {
  */
 export function getResultful (url, data = {}) {
     return new Promise((resolve, reject) => {
-        console.log(data)
+        //console.log(data)
         for(let key in data){
             url=url+'/'+ data[key]
         }
@@ -129,4 +138,37 @@ export function getResultful (url, data = {}) {
           reject(err)
         })
     })
+  }
+
+ /**
+ * put 方法封装
+ * @param url
+ * @param data
+ * @returns {Promise}
+ */
+export function put (url, data = {}) {
+  console.log(150)
+  let para,bool;
+  if(Array.isArray(data)){
+    bool = true
+  }else {
+    let flag =  Object.values(data).some(i=>{
+      return Array.isArray(i)
+    })
+    bool = flag
+  }
+  if(bool){
+    para = data
+  }else{
+    para = Qs.stringify(data)
+  }
+  return new Promise((resolve, reject) => {
+
+    service.put(url, para)
+      .then(response => {
+        resolve(response.data)
+      }, err => {
+        reject(err)
+      })
+  })
   }

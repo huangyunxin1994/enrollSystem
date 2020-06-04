@@ -7,7 +7,7 @@
            <div class="more-term-text" >
                <span class="more-term-text-title">选择字段</span>
                <div class="more-term-contain-type">
-                   <div class="more-term-radio" v-for="(item,index) in tableTitle" :key="index">
+                   <div class="more-term-radio" v-for="(item,index) in showTableTitle" :key="index">
                         <el-radio v-model="radio" :label="item.name" v-if="item.name!=='reviewState'&&item.name!=='readNot'" @change="changeRadio">{{item.title}}</el-radio>
                   </div>
                </div>
@@ -15,7 +15,7 @@
            </div>
            <div class="more-term-text">
                <span  class="more-term-text-title">筛选内容</span>
-                <div  v-for="(item,index) in tableTitle" :key="index">
+                <div  v-for="(item,index) in showTableTitle" :key="index">
                     <el-input v-model="titlePara[item.name]" v-if="item.type==='input'&&item.name===radio" placeholder="请输入内容"></el-input>
                     <el-input v-model="titlePara[item.name]" v-else-if="item.type==='number'&&item.name===radio" type="number" placeholder="请输入内容"></el-input>
                     <el-input v-model="titlePara[item.name]" v-else-if="item.type==='textarea'&&item.name===radio" placeholder="请输入内容"  type="textarea" :rows="2"></el-input>
@@ -50,7 +50,7 @@
 import { randomStr } from "@/utils/index.js"
 export default {
     props:{
-        tableTitle:Array,
+        showTableTitle:Array,
         titlePara:Object
     },
     data(){

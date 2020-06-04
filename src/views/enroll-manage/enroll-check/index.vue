@@ -57,8 +57,8 @@
                     </div>
                     
                     <div >
-                        <el-button type="primary" size="medium" >通过</el-button>
-                        <el-button type="danger" size="medium" >拒绝</el-button>
+                        <el-button type="primary" size="medium" @click="checkEnroll('2')">通过</el-button>
+                        <el-button type="danger" size="medium" @click="checkEnroll('3')">拒绝</el-button>
                     </div>
                 </div>
                 <el-table :data="tables.slice((page-1)*pageSize,page*pageSize)" border stripe highlight-current-row v-loading="listLoading" @selection-change="selsChange" @row-click="selectDetails" height="calc(98% - 200px)" ref="table">
@@ -83,8 +83,10 @@
                 
             </div>      
         </div>
-        <more-term :tableTitle="tableTitle" :titlePara="titlePara" ref="moreTerm" @selectByTerm="selectByTerm" @clearChoose="clearChoose"></more-term>
+        <more-term :showTableTitle="showTableTitle" :titlePara="titlePara" ref="moreTerm" @selectByTerm="selectByTerm" @clearChoose="clearChoose"></more-term>
         <show-field :tableTitle="tableTitle" :showTableTitle="showTableTitle" ref="showField" @showField="showField"></show-field>
+        <review-enroll  ref="reviewEnroll" @getSignupPerson="getSignupPerson"></review-enroll>
+        
     </el-scrollbar>
 </template>
 <script>
@@ -93,13 +95,17 @@ import { getSignup,getSignupPerson,getPersonDetial } from "@/api/api"
 import { getByteLen } from "@/utils/index.js"
 import moreTerm from '@/components/more-term'
 import showField from '@/components/show-field'
+import reviewEnroll from '@/components/review-enroll'
 export default {
     components:{
         moreTerm,
-        showField
+        showField,
+        reviewEnroll
     },
     data(){
         return{
+            enrollId:'',
+           
             isIndeterminate:false,//对el-checkbox控制不完整的全选状态
             checkAll:false,//对el-checkbox控制全选状态
             startTime:"",
@@ -115,123 +121,7 @@ export default {
             showTableTitle:[],
             titlePara:{},
             tableData:[],
-            tableAllData: [{
-                id:0,
-                name: '张三',
-                phone:1,
-                wgKUGWOjM2EO: "男",
-                RoBPRgxmInkp:"篮球",
-                reviewState:1,
-                readNot:""
-            }, {
-                id:0,
-                name: '李四',
-                phone:2,
-                wgKUGWOjM2EO: "男",
-                 RoBPRgxmInkp:"足球",
-                reviewState:2,
-                readNot:"2"
-            },{
-                id:0,
-                name: '王五',
-                phone:3,
-                wgKUGWOjM2EO: "男",
-                RoBPRgxmInkp:"跑步",
-                reviewState:3,
-                readNot:"1"
-            }, {
-               id:0,
-                name: '赵六',
-                phone:4,
-                wgKUGWOjM2EO: "男",
-                reviewState:1,
-                readNot:""
-            },
-            {
-                id:0,
-                name: '张三',
-                phone:5,
-                wgKUGWOjM2EO: "男",
-                reviewState:1,
-                readNot:""
-            }, {
-                id:0,
-                name: '李四',
-                phone:6,
-                wgKUGWOjM2EO: "男",
-                reviewState:2,
-                readNot:"2"
-            },{
-                id:0,
-                name: '王五',
-                phone:7,
-                wgKUGWOjM2EO: "男",
-                reviewState:3,
-                readNot:"1"
-            }, {
-               id:0,
-                name: '赵六',
-                phone:8,
-                wgKUGWOjM2EO: "男",
-                reviewState:1,
-                readNot:""
-            },{
-                id:0,
-                name: '张三',
-                phone:9,
-                wgKUGWOjM2EO: "男",
-                reviewState:1,
-                readNot:""
-            }, {
-                id:0,
-                name: '李四',
-                phone:10,
-                wgKUGWOjM2EO: "男",
-                reviewState:2,
-                readNot:"2"
-            },{
-                id:0,
-                name: '王五',
-                phone:11,
-                wgKUGWOjM2EO: "男",
-                reviewState:3,
-                readNot:"1"
-            }, {
-               id:0,
-                name: '赵六',
-                phone:12,
-                wgKUGWOjM2EO: "男",
-                reviewState:1,
-                readNot:""
-            },{
-                id:0,
-                name: '张三',
-                phone:13,
-                wgKUGWOjM2EO: "男",
-                reviewState:1,
-                readNot:""
-            }, {
-                id:0,
-                name: '李四',
-                phone:14,
-                wgKUGWOjM2EO: "男",
-                reviewState:2,
-                readNot:"2"
-            },{
-                id:0,
-                name: '王五',
-                phone:15,
-                wgKUGWOjM2EO: "男",
-                reviewState:3,
-                readNot:"1"
-            }, {
-               id:0,
-                name: '赵六',
-                phone:16,
-                wgKUGWOjM2EO: "男",
-                reviewState:1,
-                readNot:""
-            }],
+            tableAllData: [],
             clientHeight:'',
             optionsC:[
                 {
@@ -336,6 +226,13 @@ export default {
                     
                 }
             })
+            await this.getSignupPerson()
+            this.$nextTick(()=>{
+                this.$refs.table.doLayout()
+            })            
+        },
+        async getSignupPerson(){
+            let id = this.enrollId
             await getSignupPerson({id:id}).then(res=>{
                 if(res.code==0){
                     let arr = []
@@ -345,7 +242,6 @@ export default {
                         para.personId = formArr.id
                         para.reviewState = formArr.reviewState
                         para.readNot = formArr.readNot
-                        console.log(para)
                         arr.push(para)
                     }
                     this.tableAllData=arr
@@ -353,11 +249,7 @@ export default {
                 }
 
             }).catch(err=>{
-
-            })
-            this.$nextTick(()=>{
-                            this.$refs.table.doLayout()
-                        })            
+            })   
         },
         changeResult(val){
             console.log(this.titlePara)
@@ -434,7 +326,7 @@ export default {
             } = require('@/export/Export2Excel');
             const tHeader = [] // 对应表格输出的中文title
             const filterVal = [] // 对应表格输出的数据
-            this.tableTitle.forEach(val => {
+            this.showTableTitle.forEach(val => {
             tHeader.push(val.title)
             filterVal.push(val.name)
             })
@@ -457,10 +349,28 @@ export default {
                 }
             ) 
         
-        }
+        },
+        checkEnroll(val){
+            if(this.sels.length>0){
+                let sels = JSON.parse(JSON.stringify(this.sels))
+                  this.$refs.reviewEnroll.sels = sels
+                this.$refs.reviewEnroll.replyMessage = ""
+                this.$refs.reviewEnroll.reviewFlag = val
+                this.$refs.reviewEnroll.centerDialogVisible = true
+            }else{
+                this.$notify({
+                        title: '警告',
+                        message: '请先勾选需要审核的记录',
+                        type: 'warning'
+                    });
+            }
+            
+        },
+        
     },
     mounted(){
         let id =  this.$route.query.id
+        this.enrollId = id
        this.getEnrollPersonData(id)
       
         

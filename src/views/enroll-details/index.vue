@@ -19,7 +19,7 @@
                     <div class="other-msg">
                         <div v-for="(item,index) in otherMsg" :key="index">
                             <div class="other-msg-title">{{item.name}}</div>
-                            <el-table :data="item.submitData" border style="width: 100%">
+                            <el-table :data="item.submitData" border style="width: 96%">
                                 <el-table-column v-for="(ite,index) in item.child" :key="index" :prop="ite.dataKey" :label="ite.name" :min-width="ite.width">
                                     <template slot-scope="scope">
                                         <p  v-html="scope.row[ite.dataKey]"></p>
