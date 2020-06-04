@@ -15,6 +15,18 @@ let routes = [
         name: '',
         hidden: true
     },
+	{
+		path: '/userLogin',
+		component: UserLogin,
+		name: '',
+		hidden: true
+	},
+	{
+		path:'/userAdmin',
+		component:UserAdmin,
+		name:'',
+		hidden:true
+	},
     {
         path: '/404',
         component: NotFound,

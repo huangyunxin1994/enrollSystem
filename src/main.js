@@ -34,6 +34,15 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
+  // if (to.path == '/userLogin') {
+  //   sessionStorage.removeItem('adminUser');
+  // }
+  // let adminUser = JSON.parse(sessionStorage.getItem('adminUser'));
+  // if (!adminUser && to.path != '/userLogin') {
+  //   next({ path: '/userLogin' })
+  // } else {
+  //   next()
+  // }
 })
 
 //router.afterEach(transition => {
