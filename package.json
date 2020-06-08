@@ -10,7 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "axios": "^0.15.3",
+    "axios": ">=0.18.1",
     "echarts": "^3.3.2",
     "element-ui": "^2.13.0",
     "file-saver": "^2.0.2",
@@ -62,10 +62,13 @@
     "vue-style-loader": "^2.0.0",
     "vue-template-compiler": "^2.2.4",
     "webpack": "^2.2.1",
-    "webpack-bundle-analyzer": "^2.2.1",
+    "webpack-bundle-analyzer": ">=3.3.2",
     "webpack-dev-middleware": "^1.10.0",
     "webpack-hot-middleware": "^2.16.1",
-    "webpack-merge": "^2.6.1"
+    "webpack-merge": "^2.6.1",
+    "serialize-javascript": ">=2.1.1",
+    "braces": ">=2.3.1",
+    "js-yaml": ">=3.13.1"
   },
   "engines": {
     "node": ">= 4.0.0",
