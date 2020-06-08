@@ -25,24 +25,24 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   //NProgress.start();
-  if (to.path == '/login') {
+  // if (to.path == '/login') {
+  //   sessionStorage.removeItem('user');
+  // }
+  // let user = JSON.parse(sessionStorage.getItem('user'));
+  // if (!user && to.path != '/login') {
+  //   next({ path: '/login' })
+  // } else {
+  //   next()
+  // }
+  if (to.path == '/userLogin' || to.path == '/userLogin') {
     sessionStorage.removeItem('user');
   }
-  let user = JSON.parse(sessionStorage.getItem('user'));
-  if (!user && to.path != '/login') {
+  let adminUser = JSON.parse(sessionStorage.getItem('user'));
+  if (!adminUser && to.path != '/userLogin' && to.path != '/login') {
     next({ path: '/login' })
   } else {
     next()
   }
-  // if (to.path == '/userLogin') {
-  //   sessionStorage.removeItem('adminUser');
-  // }
-  // let adminUser = JSON.parse(sessionStorage.getItem('adminUser'));
-  // if (!adminUser && to.path != '/userLogin') {
-  //   next({ path: '/userLogin' })
-  // } else {
-  //   next()
-  // }
 })
 
 //router.afterEach(transition => {

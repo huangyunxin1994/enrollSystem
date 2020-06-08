@@ -6,6 +6,8 @@ import Newenrll from '@/views/new-enroll/index.vue'
 import Enrollmanage from '@/views/enroll-manage/index.vue'
 import Enrollcheck from '@/views/enroll-manage/enroll-check/index.vue'
 import Enrolldetails from '@/views/enroll-details/index.vue'
+import UserLogin from './views/userLogin.vue'
+import UserAdmin from '@/views/enroll-admin/index.vue'
 
 
 let routes = [
@@ -20,12 +22,6 @@ let routes = [
 		component: UserLogin,
 		name: '',
 		hidden: true
-	},
-	{
-		path:'/userAdmin',
-		component:UserAdmin,
-		name:'',
-		hidden:true
 	},
     {
         path: '/404',
@@ -44,6 +40,7 @@ let routes = [
             { path: '/enrollmanage', component: Enrollmanage, name: '报名管理与审核'},
             { path: '/enrollcheck', component: Enrollcheck, name: '报名审核'},
             { path: '/enrolldetails', component: Enrolldetails, name: '报名详情'},
+			{ path: '/userAdmin',component:UserAdmin,name:'用户管理',hidden:true},
         ]
     },
     {

@@ -16,6 +16,7 @@
       <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
     </el-form-item>
     <change-passworld ref="changePass"></change-passworld>
+	<verify-idcard ref="verifyId"></verify-idcard>
   </el-form>
   
 </template>
@@ -23,10 +24,12 @@
 <script>
   import { requestLogin } from '../api/api';
   import changePassworld from '../components/changePass/index.vue'
+  import verifyIdcard from '../components/verify-IDCard/index.vue'
   //import NProgress from 'nprogress'
   export default {
     components:{
-      changePassworld
+      changePassworld,
+	  verifyIdcard
     },
     data() {
       return {
@@ -65,30 +68,39 @@
             //_this.$router.replace('/table');
             this.logining = true;
             //NProgress.start();
-            var loginParams = { account: this.ruleForm2.account, password: this.ruleForm2.checkPass ,type:2 };
+            var loginParams = { account: this.ruleForm2.account, password: this.ruleForm2.checkPass ,type:2};//普通用户传2
             requestLogin(loginParams).then(data => {
+				console.log(data)
               this.logining = false;
               //NProgress.done();
               let { msg, code, user } = data;
-              if (code !== 0) {
-                this.$message({
-                  message: msg,
-                  type: 'error'
-                });
-              } else {
-                sessionStorage.setItem('user', JSON.stringify({
-                  id: 1,
-                  username: this.ruleForm2.account,
-                  password: this.ruleForm2.checkPass,
-                  avatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
-                  name: this.ruleForm2.account
-                }));
-                this.$router.push({ path: '/' });
-				this.$message({
-				  message: "登录成功",
-				  type: 'success'
-				});
-              }
+			  // let boolId = user.hasOwnProperty("idCard"); 
+			  // console.log(boolId)
+			  // if(boolId == false){ //判断身份证号是否存在，如果存在就直接登录，如果不存在，需要绑定身份证号
+				 //  console.log("身份证不存在")
+				 //  this.$refs.verifyId.setShow()
+			  // }else{
+				  
+			  // }
+			  if (code !== 0) {
+			    this.$message({
+			      message: msg,
+			      type: 'error'
+			    });
+			  } else {
+			    sessionStorage.setItem('user', JSON.stringify({
+			      id: 1,
+			      username: this.ruleForm2.account,
+			      password: this.ruleForm2.checkPass,
+			      avatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
+			      name: this.ruleForm2.account
+			    }));
+			    this.$router.push({ path: '/' });
+			  						this.$message({
+			  						  message: "登录成功",
+			  						  type: 'success'
+			  						});
+			  }
             });
           } else {
             return false;

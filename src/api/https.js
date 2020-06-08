@@ -172,3 +172,24 @@ export function put (url, data = {}) {
       })
   })
   }
+  
+  /**
+   * delete 方法封装
+   * @param url
+   * @param data
+   * @returns {Promise}
+   */
+  export function deleteResultful (url, data = {}) {
+      return new Promise((resolve, reject) => {
+          //console.log(data)
+          for(let key in data){
+              url=url+'/'+ data[key]
+          }
+        service.delete(url)
+          .then(response => {
+            resolve(response.data)
+          }, err => {
+            reject(err)
+          })
+      })
+    }
