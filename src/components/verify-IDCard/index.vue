@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import {changePass,vaildIdCard} from '@/api/api.js'
+import {changePass,updateUser} from '@/api/api.js'
 import {IdentityCodeValid} from '@/utils/index.js'
 
 export default {
@@ -61,19 +61,14 @@ export default {
 				if(!bool){
 					callback(new Error('身份证格式错误'));
 				}else{
-					vaildIdCard({idCard:value}).then(res=>{
-						if(res.code==0){
-							callback();
-						}else{
-						  callback(new Error(res.msg));
-						}
-					})
+					callback();
 				}
 				
 			}
 		}
 		return{
 			dialogPassVisible:false,
+			id:"",
 			ruleForm2:{
 				newPassword:'',
 				again:'',
@@ -96,31 +91,24 @@ export default {
 	},
 	methods:{
 		onSubmit(){
-			 this.$refs.ruleForm2.validate((valid) => {
-					if (valid) {
-						let para = Object.assign({}, this.ruleForm2);
-						changePass(para).then((res)=>{
-							console.log(res)
-							if(res.code == 0){
-								this.$message({
-									message: '密码修改成功',
-									type: 'success'
-								});
-								this.ruleForm2={
-									newPassword:'',
-									again:'',
-									idCard:''
-								},
-								this.dialogPassVisible = false
-							}else{
-								this.$message.error('密码修改失败');
-							}
-						}).catch((res)=>{
-							this.$message.error('密码修改失败');
-						})
-					}
-			 })
-			
+			 
+			let param = {
+				idCard:this.ruleForm2.idCard,
+				id:this.id
+			}
+			updateUser(param).then((res)=>{
+				console.log(res)
+				if(res.code == 0){
+					this.$message({
+						message: '身份证绑定成功',
+						type: 'success'
+					});
+					this.dialogPassVisible = false
+				}else{
+					this.$message.error('身份证绑定失败');
+					this.dialogPassVisible = false
+				}
+			})
 		},
 		handleClose(){
 			this.ruleForm2={
@@ -130,7 +118,8 @@ export default {
 			},
 			this.dialogPassVisible = false
 		},
-		setShow(){
+		setShow(id){
+			this.id = id
 			this.dialogPassVisible = true
 		}
 	}

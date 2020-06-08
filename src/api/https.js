@@ -147,24 +147,17 @@ export function getResultful (url, data = {}) {
  * @returns {Promise}
  */
 export function put (url, data = {}) {
-  console.log(150)
-  let para,bool;
-  if(Array.isArray(data)){
-    bool = true
-  }else {
-    let flag =  Object.values(data).some(i=>{
-      return Array.isArray(i)
-    })
-    bool = flag
-  }
-  if(bool){
-    para = data
-  }else{
-    para = Qs.stringify(data)
-  }
   return new Promise((resolve, reject) => {
-
-    service.put(url, para)
+      //console.log(data)
+      for(let key in data){
+		  if(url.indexOf('?')>-1){
+			  url=url+'&'+ key +'='+ data[key]
+		  }else{
+			  url=url+'?'+ key +'='+ data[key]
+		  }
+          
+      }
+    service.put(url)
       .then(response => {
         resolve(response.data)
       }, err => {
