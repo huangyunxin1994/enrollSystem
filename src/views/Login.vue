@@ -74,33 +74,34 @@
               this.logining = false;
               //NProgress.done();
               let { msg, code, user } = data;
-			  // let boolId = user.hasOwnProperty("idCard"); 
-			  // console.log(boolId)
-			  // if(boolId == false){ //判断身份证号是否存在，如果存在就直接登录，如果不存在，需要绑定身份证号
-				 //  console.log("身份证不存在")
-				 //  this.$refs.verifyId.setShow()
-			  // }else{
+			  console.log(typeof(user))
+			  let boolId = user.hasOwnProperty("idCard"); 
+			  console.log(boolId)
+			  if(boolId == false){ //判断身份证号是否存在，如果存在就直接登录，如果不存在，需要绑定身份证号
+				  console.log("身份证不存在")
+				  this.$refs.verifyId.setShow()
+			  }else{
 				  
-			  // }
-			  if (code !== 0) {
-			    this.$message({
-			      message: msg,
-			      type: 'error'
-			    });
-			  } else {
-			    sessionStorage.setItem('user', JSON.stringify({
-			      id: 1,
-			      username: this.ruleForm2.account,
-			      password: this.ruleForm2.checkPass,
-			      avatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
-			      name: this.ruleForm2.account
-			    }));
-			    this.$router.push({ path: '/' });
-			  						this.$message({
-			  						  message: "登录成功",
-			  						  type: 'success'
-			  						});
 			  }
+			  // if (code !== 0) {
+			  //   this.$message({
+			  //     message: msg,
+			  //     type: 'error'
+			  //   });
+			  // } else {
+			  //   sessionStorage.setItem('user', JSON.stringify({
+			  //     id: 1,
+			  //     username: this.ruleForm2.account,
+			  //     password: this.ruleForm2.checkPass,
+			  //     avatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
+			  //     name: this.ruleForm2.account
+			  //   }));
+			  //   this.$router.push({ path: '/' });
+			  // 						this.$message({
+			  // 						  message: "登录成功",
+			  // 						  type: 'success'
+			  // 						});
+			  // }
             });
           } else {
             return false;
