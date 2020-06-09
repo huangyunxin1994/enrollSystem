@@ -7,12 +7,6 @@
 					<el-form-item  label="身份证号" prop="idCard">
 						<el-input type="text" v-model="ruleForm2.idCard" auto-complete="off" placeholder="身份证号"></el-input>
 					</el-form-item>
-					<!-- <el-form-item  label="输入新密码" prop="newPassword">
-					<el-input type="password" v-model="ruleForm2.newPassword" auto-complete="off" placeholder="密码" show-password></el-input>
-					</el-form-item>
-					<el-form-item  label="再次输入密码" prop="again">
-					<el-input type="password" v-model="ruleForm2.again" auto-complete="off" placeholder="密码" show-password></el-input>
-					</el-form-item> -->
 					
 					<el-button type="primary" style="width:100%;" @click.native.prevent="onSubmit" >确定</el-button>
 					
@@ -91,24 +85,27 @@ export default {
 	},
 	methods:{
 		onSubmit(){
-			 
-			let param = {
-				idCard:this.ruleForm2.idCard,
-				id:this.id
-			}
-			updateUser(param).then((res)=>{
-				console.log(res)
-				if(res.code == 0){
-					this.$message({
-						message: '身份证绑定成功',
-						type: 'success'
-					});
-					this.dialogPassVisible = false
-				}else{
-					this.$message.error('身份证绑定失败');
-					this.dialogPassVisible = false
+			this.$refs.ruleForm2.validate((valid) => {
+				if (valid) {
+					let param = {
+						idCard:this.ruleForm2.idCard,
+						id:this.id
+					}
+					updateUser(param).then((res)=>{
+						console.log(res)
+						if(res.code == 0){
+							this.$message({
+								message: '身份证绑定成功',
+								type: 'success'
+							});
+							this.dialogPassVisible = false
+						}else{
+							this.$message.error('身份证绑定失败');
+							this.dialogPassVisible = false
+						}
+					})
 				}
-			})
+			})	
 		},
 		handleClose(){
 			this.ruleForm2={

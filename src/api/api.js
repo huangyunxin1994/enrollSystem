@@ -15,3 +15,4 @@ export const getUserList = params => { return get(`${base}/user/`, params); };//
 export const addUser = params => { return post(`${base}/user/`, params, {emulateJSON: true}); };//新增用户
 export const updateUser = params => { return put(`${base}/user/`, params, {emulateJSON: true}); };//批量更新报名信息
 export const deleteUser = params => { return deleteResultful(`${base}/user/`, params); };//查询报名项目信息
+export const getUserName = params => { return getResultful(`${base}/user/user/`, params); };//获取url中account值的User信息
