@@ -67,20 +67,15 @@
 							console.log(data)
 						  this.logining = false;
 						  //NProgress.done();
-						  let { msg, code, user } = data;
-						  if (code !== 0) {
+						  let { code, msg} = data
+						  let { user } = data.data;
+						  if (code != 0) {
 						    this.$message({
 						      message: msg,
 						      type: 'error'
 						    });
 						  } else {
-						    sessionStorage.setItem('user', JSON.stringify({
-						      id: 1,
-						      username: this.ruleForm2.account,
-						      password: this.ruleForm2.checkPass,
-						      avatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
-						      name: this.ruleForm2.account
-						    }));
+						    sessionStorage.setItem('user', JSON.stringify(user));
 						    this.$router.push({ path: '/userAdmin' });
 							this.$message({
 							  message: "登录成功",
