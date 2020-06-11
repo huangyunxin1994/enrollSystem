@@ -144,7 +144,6 @@ export default {
                             str=x[i.dataKey]
                         }
                          str+=i.name
-                         getByteLen(str)*10
                          temp.push(getByteLen(str)*10) //获得列的最大长度
                          
                     })

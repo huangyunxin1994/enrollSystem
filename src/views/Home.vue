@@ -104,8 +104,7 @@
 			if (user) {
 				user = JSON.parse(user);
 				this.sysUserName = user.username || '';
-				this.sysUserAvatar = user.avatar || ''; //放图片
-				this.account = user.account
+				this.sysUserAvatar = user.avatar || '';
 			}
 		}
 	}

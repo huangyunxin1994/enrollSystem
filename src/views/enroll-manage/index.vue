@@ -30,7 +30,7 @@
                         <template slot-scope="scope">
                             <div v-if="item.type=='handle'">
                                 <el-tooltip v-for="(item,index) in item.button" :key="index" :content="item.name" placement="top">
-                                    <el-button v-if="item.type=='edit'" type="primary" icon="el-icon-edit" size="small" circle @click="handleEdit(scope.$index, scope.row)"></el-button>
+                                    <el-button v-if="item.type=='edit'" type="primary" icon="el-icon-edit" size="small" round @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                                     <el-button v-else-if="item.type=='check'" type="warning" icon="el-icon-s-check" size="small" circle @click="handleCheck(scope.$index, scope.row)"></el-button>
                                 </el-tooltip>
                             </div>

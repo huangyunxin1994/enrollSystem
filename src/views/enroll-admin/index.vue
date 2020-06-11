@@ -1,10 +1,10 @@
 <template>
     <el-scrollbar style="width:100%;height:100%;">
         <div class="enroll-manage-main">
-            <!-- <el-link class="enroll-manage-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一页 </el-link> -->
-            <!-- <div class="enroll-manage-title">
-                报名管理与审核
-            </div> -->
+            <div class="enroll-manage-nav"> </div>
+            <div class="enroll-manage-title">
+                用户管理
+            </div>
             <div class="enroll-manage-container" ref="container">
                 <div class="enroll-manage-container-title">用户信息</div> 
                 <div class="enroll-manage-container-handle" >
@@ -168,7 +168,7 @@ export default {
 				id : row.id
 			}
 			console.log(param)
-			this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+			this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
 			  confirmButtonText: '确定',
 			  cancelButtonText: '取消',
 			  type: 'warning'
@@ -187,11 +187,7 @@ export default {
 				  this.$message.error('删除失败');
 			  })
 			  
-			}).catch(() => {
-			  this.$message({
-				type: 'info',
-				message: '已取消删除'
-			  });          
+			}).catch(() => {         
 			});
         },
 		//新增用户

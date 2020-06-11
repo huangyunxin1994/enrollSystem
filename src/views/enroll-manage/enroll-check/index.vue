@@ -61,12 +61,12 @@
                         <el-button type="danger" size="medium" @click="checkEnroll('3')">拒绝</el-button>
                     </div>
                 </div>
-                <el-table :data="tables.slice((page-1)*pageSize,page*pageSize)" border stripe highlight-current-row v-loading="listLoading" @selection-change="selsChange" @row-click="selectDetails" height="calc(98% - 200px)" ref="table">
-                    <el-table-column type="selection" width="55">
+                <el-table :data="tables.slice((page-1)*pageSize,page*pageSize)" border stripe highlight-current-row v-loading="listLoading" @selection-change="selsChange" @row-click="selectDetails" height="calc(98% - 200px)" ref="table" :row-key="getRowKeys">
+                    <el-table-column type="selection" width="55" :reserve-selection="true">
                     </el-table-column>
                     <el-table-column type="index" width="60" label="序号">
                     </el-table-column>
-                    <el-table-column v-for="(item,index) in showTableTitle" :fixed="item.fixed" :key="index" :prop="item.name" :label="item.title" :width="item.width" :min-width="item.minwidth"  :sortable="item.type!='button'&&item.type!='handle'?true:false">
+                    <el-table-column v-for="(item,index) in showTableTitle" :fixed="item.fixed" :key="index" :prop="item.name" :label="item.title" :min-width="item.width"  :sortable="item.type!='button'&&item.type!='handle'?true:false">
                         <template slot-scope="scope">
                             <p :formatter="formatSex" v-html="arrFormatter(scope.row[item.name],item.name)"></p>
                         </template>
@@ -115,7 +115,7 @@ export default {
             listLoading:false,
             inputValue:"",
             page:1,
-            pageSize:10,
+            pageSize:20,
             id:"",
             tableTitle:[],
             showTableTitle:[],
@@ -162,8 +162,11 @@ export default {
             this.$router.go(-1);
         },
         selsChange: function (sels) {
-				this.sels = sels;
+                this.sels = sels;
         },
+        getRowKeys(row) {
+   		    return row.personId;
+	    },
         //性别显示转换
         formatSex: function (row, column) {
                   console.log(column.property)
@@ -206,12 +209,9 @@ export default {
                             paras.type=temp.type
                             if(temp.childs)
                             paras.childs=temp.childs
-                            paras.width=120
+                            paras.width=180
                             tableTitle.push(paras)
-                            if(temp.type==="checkbox")
                             titlePara[temp.dataKey]=[]
-                            else
-                            titlePara[temp.dataKey]=""
                         }
                     }
                     let paras = {title:"审核状态",name:"reviewState",type:"input",width:120}
@@ -272,7 +272,7 @@ export default {
         clearChoose(){
              Object.keys(this.titlePara).forEach(key =>{
                  if(key!=="reviewState"&&key!=="readNot")
-                     this.titlePara[key] = ""
+                     this.titlePara[key] = []
                 }  
              );
         },
@@ -292,7 +292,11 @@ export default {
         //查看所有数据，清空条件
         selectAllData(){
             this.inputValue=""
-            Object.keys(this.titlePara).forEach(key => this.titlePara[key] = "");
+            Object.keys(this.titlePara).forEach(key =>{
+                 if(key!=="reviewState"&&key!=="readNot")
+                     this.titlePara[key] = []
+                }  
+             );
             this.tableData=this.tableAllData
         },
         //条件查询
@@ -300,23 +304,54 @@ export default {
             console.log(this.titlePara)
             let keys = Object.keys(this.titlePara);
             let vals = Object.values(this.titlePara);
+            console.log(keys)
+            console.log(vals)
             this.tableData = this.tableAllData.filter(item=>{
+                let boolArr = []
                 for(let i=0;i<keys.length;i++){
-                    if(Array.isArray(vals[i])){
-                        let bool=false
-                        for(let j=0;j<vals[i].length;j++){
-                            console.log(vals[i][j])
-                            if( String(item[keys[i]]).indexOf(vals[i][j]) > -1)
-                            bool=true
+                        if(Array.isArray(this.titlePara[keys[i]])){
+                        // console.log(keys[i]+","+vals[i])
+                            if(Array.isArray(vals[i])){
+                            // console.log(keys[i]+","+vals[i])
+                                if(vals[i].length>0){
+                                    let bool = false
+                                    for(let j=0;j<vals[i].length;j++){
+                                    console.log(String(item[keys[i]]).indexOf(vals[i][j]))
+                                    console.log(item[keys[i]]+","+vals[i][j])
+                                    if( String(item[keys[i]]).indexOf(vals[i][j]) > -1)
+                                        bool=true 
+                                    }
+                                    boolArr.push(bool)
+                                }
+                            }
                         }
-                        if(!bool)
-                            return ""
-                    }
-                    else if( String(item[keys[i]]).indexOf(vals[i]) <= -1)
-                    return ""
                 }
-                return item
+                console.log(boolArr)
+                let flag = boolArr.some(k=>{
+                    return k==false
+                })
+                if(!flag){
+                    return item
+                }
             })
+            // this.tableData = this.tableAllData.filter(item=>{
+            //     for(let i=0;i<keys.length;i++){
+            //         if(Array.isArray(this.titlePara[keys[i]])){
+            //             console.log(keys[i]+","+vals[i])
+            //             let bool=false
+            //             for(let j=0;j<vals[i].length;j++){
+            //                 console.log(vals[i][j])
+            //                 if( String(item[keys[i]]).indexOf(vals[i][j]) > -1)
+            //                 bool=true
+            //             }
+            //             if(!bool)
+            //                 return ""
+            //         }
+            //         else if( String(item[keys[i]]).indexOf(vals[i]) <= -1)
+            //         return ""
+            //     }
+            //     return item
+            // })
         },
         //excel数据导出
         exportToExcel() {
@@ -422,7 +457,7 @@ export default {
                 }
             }    
         },
-    },
+    }
     
 }
 </script>

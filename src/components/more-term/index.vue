@@ -16,15 +16,34 @@
            <div class="more-term-text">
                <span  class="more-term-text-title">筛选内容</span>
                 <div  v-for="(item,index) in showTableTitle" :key="index">
-                    <el-input v-model="titlePara[item.name]" v-if="item.type==='input'&&item.name===radio" placeholder="请输入内容"></el-input>
-                    <el-input v-model="titlePara[item.name]" v-else-if="item.type==='number'&&item.name===radio" type="number" placeholder="请输入内容"></el-input>
-                    <el-input v-model="titlePara[item.name]" v-else-if="item.type==='textarea'&&item.name===radio" placeholder="请输入内容"  type="textarea" :rows="2"></el-input>
-                    <el-date-picker v-model="titlePara[item.name]" type="date" placeholder="选择日期" v-else-if="item.type==='date'&&item.name===radio" format="yyyy-MM-dd" value-format="yyyy-MM-dd" ></el-date-picker>
-                    <el-radio-group v-model="titlePara[item.name]" v-else-if="item.type==='radio'&&item.name===radio">
+                    <!-- <div v-for="(itee,index) in titlePara[item.name]" :key="index"> -->
+                        <div v-if="item.type==='input'&&item.name===radio">
+                            <el-input v-model="itee[index]" v-for="(itee,index) in titlePara[item.name]" :key="index" placeholder="请输入内容"></el-input>
+                        </div>
+                        <div v-else-if="item.type==='number'&&item.name===radio">
+                            <el-input v-model="itee[index]"  v-for="(itee,index) in titlePara[item.name]" :key="index" type="number" placeholder="请输入内容"></el-input>
+                        </div>
+                        <div v-else-if="item.type==='textarea'&&item.name===radio">
+                            <el-input v-model="itee[index]" v-for="(itee,index) in titlePara[item.name]" :key="index" placeholder="请输入内容"  type="textarea" :rows="2"></el-input>
+                        </div>
+                        <div v-else-if="item.type==='date'&&item.name===radio">
+                            <el-date-picker v-model="itee[index]" type="date" placeholder="选择日期" v-for="(itee,index) in titlePara[item.name]" :key="index" format="yyyy-MM-dd" value-format="yyyy-MM-dd" ></el-date-picker>
+                        </div>
+                        <div v-else-if="item.name===radio">
+                             <el-checkbox-group 
+                                v-model="titlePara[item.name]">
+                                <el-checkbox v-for="(ite,index) in item.childs" :label="ite.name" :key="index">{{ite.name}}</el-checkbox>
+                            </el-checkbox-group>
+                        </div>
+                    <!-- <el-input v-model="itee.value" v-if="item.type==='input'&&item.name===radio" placeholder="请输入内容"></el-input>
+                    <el-input v-model="itee.value" v-else-if="item.type==='number'&&item.name===radio" type="number" placeholder="请输入内容"></el-input>
+                    <el-input v-model="itee.value" v-else-if="item.type==='textarea'&&item.name===radio" placeholder="请输入内容"  type="textarea" :rows="2"></el-input>
+                    <el-date-picker v-model="itee.value" type="date" placeholder="选择日期" v-else-if="item.type==='date'&&item.name===radio" format="yyyy-MM-dd" value-format="yyyy-MM-dd" ></el-date-picker>
+                    <el-radio-group v-model="itee.value" v-else-if="item.type==='radio'&&item.name===radio">
                         <el-radio :label="ite.name" v-for="(ite,index) in item.childs" :key="index">{{ite.name}}</el-radio>
                     </el-radio-group>
                     <el-checkbox-group 
-                        v-model="titlePara[item.name]"
+                        v-model="itee.value"
                         :min="1"
                         :max="2" v-else-if="item.type==='checkbox'&&item.name===radio">
                         <el-checkbox v-for="(ite,index) in item.childs" :label="ite.name" :key="index">{{ite.name}}</el-checkbox>
@@ -36,7 +55,8 @@
                         :label="ite.name"
                         :value="ite.name">
                         </el-option>
-                    </el-select>
+                    </el-select> -->
+                    <!-- </div> -->
                 </div>
            </div>
        </div>
@@ -65,6 +85,7 @@ export default {
     methods:{
         //显示新增界面
 			handleShow() {
+                console.log(this.showTableTitle)
                 this.formVisible = true;	
             },
             //新增
