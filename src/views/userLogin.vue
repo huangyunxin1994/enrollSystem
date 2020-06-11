@@ -64,7 +64,7 @@
 						//NProgress.start();
 						var loginParams = { account: this.ruleForm2.account, password: this.ruleForm2.checkPass , type:1};//管理员登录传1
 						requestLogin(loginParams).then(data => {
-							console.log(data)
+							// console.log(data)
 						  this.logining = false;
 						  //NProgress.done();
 						  let { code, msg} = data

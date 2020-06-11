@@ -33,7 +33,7 @@
                         <template slot-scope="scope">
                             <div v-if="item.type=='handle'">
                                 <el-tooltip v-for="(item,index) in item.button" :key="index" :content="item.name" placement="top">
-                                    <el-button v-if="item.type=='edit'" type="primary" icon="el-icon-edit" size="small" circle @click="handleEdit(scope.$index, scope.row)"></el-button>
+                                    <el-button v-if="item.type=='edit'" type="primary" icon="el-icon-edit" size="small" round @click="handleEdit(scope.$index, scope.row)">修改</el-button>
                                     <el-button v-else-if="item.type=='check'" type="danger" icon="el-icon-delete" size="small" circle @click="handleCheck(scope.$index, scope.row)"></el-button>
                                 </el-tooltip>
                             </div>
@@ -68,11 +68,13 @@ export default {
             pageSize:20,
             tableTitle:[
                 { title : "账号", name : "account", type:"input"},
+				{ title : "服务结束日期", name : "expiresTime", type:"input",width:'250'},
+				{ title : "联系号码", name : "phone", type:"input",width:'250'},
                 { title : "单位名称", name : "username", type:"input",width:'250'},
                 { title : "所属区域", name : "areas", type:"input",width:'200' },
                // { title : "报名人数", name : "number", type:"input",width:'110' },
                 { title : "是否启用", name : "isEnable", type:"input",width:'150' },
-                { title : "操作", type : "handle",button:[{type:"edit",name:"编辑"},{type:"check",name:"删除"}],width:'150' }
+                { title : "操作", type : "handle",button:[{type:"edit",name:"编辑"}],width:'150' }
 
             ],
             tableData:[],

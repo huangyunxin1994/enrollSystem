@@ -15,12 +15,18 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="最小字符数" prop="minimumCharacters" v-show="form['type']=='input'">
+            <!-- <el-form-item label="最小字符数" prop="minimumCharacters" v-show="form['type']=='input'">
                 <el-input v-model="form['minimumCharacters']" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="最大字符数" prop="maximumCharacters" v-show="form['type']=='input'">
                 <el-input v-model="form['maximumCharacters']" auto-complete="off"></el-input>
-            </el-form-item>
+            </el-form-item> -->
+			<el-form-item prop="maximumCharacters" v-show="form['type']=='input'">
+				<el-radio-group v-model="form['maximumCharacters']">
+				    <el-radio :label="30" class="sortText">短文本 <p class="explain">(最多可填30个字符)</p></el-radio>
+				    <el-radio :label="60" class="longText">长文本 <p class="explain">(最多可填60个字符)</p></el-radio>
+				</el-radio-group>
+			</el-form-item>
             <el-form-item label="最小长度" prop="minimumCharacters" v-show="form['type']=='number'">
                 <el-input v-model="form['minimumCharacters']" auto-complete="off"></el-input>
             </el-form-item>
@@ -89,8 +95,8 @@ export default {
             form: {
                name :'',
                type :'',
-               minimumCharacters:'',
-               maximumCharacters:'',
+               minimumCharacters:'1',
+               maximumCharacters:'1',
                required:0,
                childs:[] 
             },
@@ -126,7 +132,7 @@ export default {
                             let key = randomStr(false,12)
                             para.dataKey=arr[0].toLowerCase()+"_"+key
                             
-                            console.log(para)
+                            // console.log(para)
                             if(para.submitType=="insert"){
                                 this.$emit("insertOption",para)
                             }else if(para.submitType=="update"){
@@ -171,5 +177,8 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+.sortText,.longText{
+	position: relative;
 }
 </style>

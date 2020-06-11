@@ -41,6 +41,7 @@
 				collapsed:false,
 				sysUserName: '',
 				sysUserAvatar: '',
+				account:'',
 				form: {
 					name: '',
 					region: '',
@@ -71,15 +72,24 @@
 				this.$confirm('确认退出吗?', '提示', {
 					//type: 'warning'
 				}).then(() => {
-					sessionStorage.removeItem('user');
-					_this.$router.push('/login');
+					let user = sessionStorage.getItem('user')
+					user = JSON.parse(user)
+					console.log(user)
+					// if(user.type == 1){
+					if(user.account == 'huachen2020'){
+						sessionStorage.removeItem('user');
+						_this.$router.push('/userLogin');
+					}else{
+						sessionStorage.removeItem('user');
+						_this.$router.push('/login');
+					}
 				}).catch(() => {
 
 				});
 			},
 			//设置密码
 			setPass(){
-				this.$refs.changePass.setShow()
+				this.$refs.changePass.setShow(this.account)
 			},
 			//折叠导航栏
 			collapse:function(){
@@ -93,10 +103,10 @@
 			var user = sessionStorage.getItem('user');
 			if (user) {
 				user = JSON.parse(user);
-				this.sysUserName = user.name || '';
-				this.sysUserAvatar = user.avatar || '';
+				this.sysUserName = user.username || '';
+				this.sysUserAvatar = user.avatar || ''; //放图片
+				this.account = user.account
 			}
-
 		}
 	}
 

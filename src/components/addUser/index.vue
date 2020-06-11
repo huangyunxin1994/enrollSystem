@@ -1,6 +1,12 @@
 <template>
 	<div>
-		<el-dialog title="用户编辑" :visible.sync="dialogPassVisible" center :append-to-body='true' :before-close="handleClose" :lock-scroll="false" :close-on-click-modal="false" width="685px">
+		<el-dialog title="用户编辑" 
+			:visible.sync="dialogPassVisible" 
+			center 
+			:append-to-body='true' 
+			:before-close="handleClose" 
+			:lock-scroll="false" 
+			:close-on-click-modal="false" width="685px">
 			<div class="passList">
 				<el-form  :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="140px">
 					<el-form-item label="账号" prop="account">
@@ -15,6 +21,21 @@
 					      <el-radio :label='2'>否</el-radio>
 					    </el-radio-group>
 					  </el-form-item>
+					<el-form-item label="服务结束日期" prop="expiresTime">
+					    <!-- <el-input v-model="ruleForm2.endTime" placeholder="请输入联系号码" ></el-input>	 -->
+						<el-date-picker
+						      v-model="ruleForm2.expiresTime"
+						      type="date"
+							  align="right"
+							  format="yyyy-MM-dd" 
+							  value-format="yyyy-MM-dd"
+						      placeholder="选择服务结束日期"
+							  :picker-options="startTimeOptions">
+						    </el-date-picker>
+					</el-form-item>
+					<el-form-item label="联系号码" prop="phone">
+					    <el-input v-model="ruleForm2.phone" placeholder="请输入联系号码" ></el-input>
+					</el-form-item>
 					<el-form-item label="单位名称" prop="username">
 					    <el-input v-model="ruleForm2.username" placeholder="请输入单位名称" ></el-input>
 					</el-form-item>
@@ -73,6 +94,20 @@ export default {
 				callback();
 			}
 		}
+		var validatePhone = (rule, value, callback) => {
+			if(value ===''){
+				callback(new Error('请输入联系号码'));
+			}else{
+				callback();
+			}
+		}
+		var validateEndTime = (rule, value, callback) => {
+			if(value ===''){
+				callback(new Error('请输入结束日期'));
+			}else{
+				callback();
+			}
+		}
 		return{
 			dialogPassVisible:false,
 			getClick:true,//创建按钮是否可以点击
@@ -81,6 +116,8 @@ export default {
 				account:'',
 				areas:'',
 				createTime:'',
+				expiresTime:'',
+				phone:'',
 				id:'',
 				idCard:'',
 				isEnable:1,
@@ -103,6 +140,12 @@ export default {
 				],
 				areas:[
 					{ required: true,validator: validateAreas, trigger: 'blur' }
+				],
+				phone:[
+					{ required: true,validator: validatePhone, trigger: 'blur' }
+				],
+				expiresTime:[
+					{ required: true,validator: validateEndTime, trigger: 'blur' }
 				]
 			},
 		}
@@ -110,9 +153,16 @@ export default {
 	methods:{
 		handleClose(){
 			this.ruleForm2={
-				newPassword:'',
-				again:'',
-				idCard:''
+				account:'',
+				areas:'',
+				createTime:'',
+				expiresTime:'',
+				phone:'',
+				id:'',
+				isEnable:1,
+				isManage:'',
+				password:'',
+				username:''
 			},
 			this.dialogPassVisible = false
 		},
@@ -121,13 +171,15 @@ export default {
 			if(val == 1){
 				this.state = val
 			}else{
+				console.log(val)
 				this.state = val
 				this.ruleForm2.account = val.account
 				this.ruleForm2.areas = val.areas
 				this.ruleForm2.createTime = val.createTime
 				this.ruleForm2.id = val.id
-				this.ruleForm2.idCard = val.idCard
 				this.ruleForm2.isEnable = val.isEnable
+				this.ruleForm2.phone = val.phone
+				this.ruleForm2.expiresTime = val.expiresTime
 				this.ruleForm2.isManage = val.isManage
 				this.ruleForm2.password = val.password
 				this.ruleForm2.username = val.username
@@ -143,6 +195,8 @@ export default {
 						password:this.ruleForm2.password,
 						isEnable:this.ruleForm2.isEnable,
 						username:this.ruleForm2.username,
+						phone:this.ruleForm2.phone,
+						expiresTime:this.ruleForm2.expiresTime,
 						areas:this.ruleForm2.areas,
 						createTime:time,
 						isManage:2
@@ -174,7 +228,8 @@ export default {
 						areas:this.ruleForm2.areas,
 						createTime:this.ruleForm2.createTime,
 						id:this.ruleForm2.id,
-						idCard:this.ruleForm2.idCard,
+						phone:this.ruleForm2.phone,
+						expiresTime:this.ruleForm2.expiresTime,
 						isEnable:this.ruleForm2.isEnable,
 						isManage:this.ruleForm2.isManage,
 						password:this.ruleForm2.password,
@@ -196,23 +251,29 @@ export default {
 					this.dialogPassVisible = false
 			// 	}
 			// })
-		},
-		getUserName(){//用户名失去焦点
-			let param = {
-				account:this.ruleForm2.account
-			}
-			getUserName(param).then((res)=>{
-				console.log(res)
-				if(res.code == 0){
-					if(res.data.data.length == 0){
-						// console.log("账号不存在")
-					}else{
-						this.$message.error('账号已经存在');
-					}
-				}
-			})
-		},
+		}
 	},
+	computed:{
+	  startTimeOptions(){
+	    // 开始时间
+	    return{
+	      disabledDate:(time)=>{
+	        //今天之前的时间不能作为起始时间
+	        //结束时间之后的时间不能作为开始时间
+	        let disabledDate;
+	        let nowDate = new Date();
+	        nowDate.setDate(nowDate.getDate()-1);
+	        if(this.ruleForm2.expiresTime!=""){
+	            disabledDate = new Date(this.ruleForm2.expiresTime);
+	            disabledDate.setDate(disabledDate.getDate());
+	            return time.getTime() < nowDate.getTime()||time.getTime()>disabledDate.getTime();
+	        }else{
+	            return time.getTime() < nowDate.getTime()
+	        }
+	      }
+	    }
+	  }
+	}
 }
 </script>
 

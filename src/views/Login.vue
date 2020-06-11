@@ -56,7 +56,7 @@
     },
     methods: {
       changePass(){
-        this.$refs.changePass.setShow()
+        this.$refs.changePass.setShow(this.ruleForm2.account)
       },
       handleReset2() {
         this.$refs.ruleForm2.resetFields();
@@ -73,17 +73,12 @@
               this.logining = false;
               if(data.code == 0){
 				  let { msg, code, user } = data.data;
+				  console.log(user)
 				  let boolId = user.hasOwnProperty("idCard"); 
 				  if(boolId == false){//判断身份证号是否存在，如果存在就直接登录，如果不存在，需要绑定身份证号
 						this.$refs.verifyId.setShow(user.id)
 				  }else{
-					  sessionStorage.setItem('user', JSON.stringify({
-						id: 1,
-						username: this.ruleForm2.account,
-						password: this.ruleForm2.checkPass,
-						avatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
-						name: this.ruleForm2.account
-					  }));
+					  sessionStorage.setItem('user', JSON.stringify(user));
 					  this.$router.push({ path: '/' });
 					  this.$message({
 						message: "登录成功",
