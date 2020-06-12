@@ -13,7 +13,9 @@
                     <div class="base-msg">
                             <div v-for="(item,index) in mainMsg.child" :key="index" class="base-msg-item ">
                                 <p class="base-msg-item-label">{{item.name}}</p>
-                                <p class="base-msg-item-text " >{{mainMsg.submitData[0][item.dataKey]}}</p>
+                                <p class="base-msg-item-text small" v-if="item.type!=='textarea'&&(!item.maximumCharacters||item.maximumCharacters<=20)">{{mainMsg.submitData[0][item.dataKey]}}</p>
+                                <p class="base-msg-item-text medium" v-else-if="item.type!=='textarea'&&(item.maximumCharacters>20&&item.maximumCharacters<=50)">{{mainMsg.submitData[0][item.dataKey]}}</p>
+                                <p class="base-msg-item-text large" v-else>{{mainMsg.submitData[0][item.dataKey]}}</p>
                             </div>
                     </div>
                     <div class="other-msg">
@@ -40,21 +42,6 @@
 <script>
 import { randomStr,getByteLen } from "@/utils/index.js"
 import { getSignup,getPersonDetial } from "@/api/api"
-// String.prototype.byteLength = function() {  //获取字符串的字节数，扩展string类型方法
-//     var b = 0; 1 = this.length;  //初始化字节数递加变量并获取字符串参数的字符个数
-//     if(1) {  //如果存在字符串，则执行计划
-//         for(var i = 0; i < 1; i ++) {  //遍历字符串，枚举每个字符
-//             if(this.charCodeAt(i) > 255) {  //字符编码大于255，说明是双字节字符
-//                 b += 2;  //则累加2个
-//             }else {
-//                 b ++;  //否则递加一次
-//             }
-//         }
-//         return b;  //返回字节数
-//     } else {
-//         return 0;  //如果参数为空，则返回0个
-//     }
-// }
 export default {
     data(){
         return {
@@ -104,6 +91,21 @@ export default {
                                     }
                            })
                             this.mainMsg = personMsg[0]
+                            let smallArr=[],mediumArr=[],largeArr=[]
+                            this.mainMsg.child.forEach(i=>{
+                               if(i.type!=='textarea'){
+                                   if(!i.maximumCharacters||i.maximumCharacters<=30){
+                                       smallArr.push(i)
+                                   }else{
+                                       mediumArr.push(i)
+                                   }
+                               }else{
+                                   largeArr.push(i)
+                               }
+                            })
+                            console.log(smallArr )
+                            this.mainMsg.child=smallArr.concat(mediumArr).concat(largeArr)
+                            console.log(this.mainMsg.child )
                             personMsg.splice(0,1)
                             console.log(personMsg)
                             this.otherMsg=personMsg
@@ -157,9 +159,8 @@ export default {
 </script>
 <style lang="scss" scoped>
     .enroll-details-main {
-        width: 85%;
         height: 100%;
-        min-width: 868px;
+        width: 1260px;
         margin: 0 auto;
         .enroll-details-nav{
             height: 50px;
@@ -182,11 +183,11 @@ export default {
                 }
             }
             &-msg{
-                 border: 1px solid #F2F6FC;
+                border: 1px solid #F2F6FC;
                 width: 100%;
                 min-width: 668px;
                  .base-msg{
-                     width: 100%;
+                     width: calc(100% - 40px);
                      padding: 20px;
                      display: flex;
                      justify-content: flex-start;
@@ -197,18 +198,31 @@ export default {
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
+                        box-sizing: border-box;
                         &-label{
                             width: 100px;
-                            font-size: 12px;
+                            font-size: 14px;
+                            text-align: right;
+                            padding: 0 10px;
+                            box-sizing: border-box;
                         }
                         &-text{
                             min-width: 150px;
-                            margin-left: 10px;
                             padding: 10px;
                             font-size: 14px;
                             border: 1px solid rgb(228, 228, 228);
+                            box-sizing: border-box;
                             
                         }
+                        .small{
+                           width: 150px; 
+                        }
+                        .medium{
+                            width: 420px; 
+                        }
+                     }
+                     .large{
+                        width: 100%;     
                      }
                      
                  }

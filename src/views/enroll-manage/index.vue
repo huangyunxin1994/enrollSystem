@@ -30,10 +30,12 @@
                         <template slot-scope="scope">
                             <div v-if="item.type=='handle'">
                                 <el-tooltip v-for="(item,index) in item.button" :key="index" :content="item.name" placement="top">
-                                    <el-button v-if="item.type=='edit'" type="primary" icon="el-icon-edit" size="small" round @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                                    <el-button v-else-if="item.type=='check'" type="warning" icon="el-icon-s-check" size="small" circle @click="handleCheck(scope.$index, scope.row)"></el-button>
+                                    <el-button v-if="item.type=='edit'" type="primary" icon="el-icon-search" size="small" round @click="handleEdit(scope.$index, scope.row)">查看/修改</el-button>
+                                    <el-button v-else-if="item.type=='check'" type="warning" icon="el-icon-s-check" size="small" round @click="handleCheck(scope.$index, scope.row)">审核</el-button> 
                                 </el-tooltip>
+                                <el-button type="success"  size="small" round><i class="iconfont">&#xe606; </i> 二维码</el-button>
                             </div>
+                            
                             <p v-else :formatter="formatSex" v-html="arrFormatter(scope.row[item.name],item.name)"></p>
                         </template>
                     </el-table-column>
@@ -51,6 +53,7 @@
     </el-scrollbar>
 </template>
 <script>
+import "@/assets/iconfonts/iconfont.css"
 import { selectSigup } from '@/api/api'
 export default {
     components:{
@@ -67,7 +70,7 @@ export default {
                 { title : "报名结束时间", name : "endTime", type:"input",width:'130' },
                // { title : "报名人数", name : "number", type:"input",width:'110' },
                 { title : "状态", name : "state", type:"input",width:'80' },
-                { title : "操作", type : "handle",button:[{type:"edit",name:"编辑与发布"},{type:"check",name:"审核"}],width:'100' }
+                { title : "操作", type : "handle",button:[{type:"edit",name:"查看/修改"},{type:"check",name:"审核"}],width:'320' }
 
             ],
             tableData:[],
@@ -77,10 +80,6 @@ export default {
                 {
                 value: '',
                 label: '全部'
-                },
-                {
-                value: '1',
-                label: '未发布'
                 }, {
                 value: '2',
                 label: '未开始'
@@ -157,7 +156,7 @@ export default {
         handleEdit(index,row){
             this.$router.push(
                 {
-                    path:"/newenroll",
+                    path:"/editenroll",
                     query:{
                         id:row.id,
                         type:"update"
@@ -236,6 +235,9 @@ export default {
                     font-size: 14px;
                     color: #606266;
                     font-weight: 700;
+                }
+                .iconfont{
+                    font-size: 12px !important;
                 }
             }
             &-tools{

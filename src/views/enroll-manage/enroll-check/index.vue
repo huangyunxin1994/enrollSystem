@@ -4,10 +4,18 @@
             <el-link class="enroll-check-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一页 </el-link>
             <div class="enroll-check-container" ref="container">
                 <div class="enroll-check-container-title">
-                    <span>{{enrollData.title}}</span>
+                    <div>
+                        <span>{{enrollData.title}}</span>
+                        <el-tag
+                            :type="tagType=enrollData.state==1||enrollData.state==4?'info':(enrollData.state==2?'primary':(enrollData.state==3?'success':''))"
+                            >
+                            {{ enrollData.state==1?"未发布":(enrollData.state==4?'已结束':(enrollData.state==2?'未开始':(enrollData.state==3?'进行中':''))) }}
+                        </el-tag>
+                    </div>
+                    
                     <div>
                         <el-button type="primary" icon="el-icon-printer" size="medium"  @click="exportToExcel()">导出</el-button>
-                        <el-button type="primary" icon="el-icon-full-screen" size="medium"  @click="handleCheck(scope.$index, scope.row)">查看小程序二维码</el-button>
+                        <el-button type="primary" size="medium"  @click="handleCheck(scope.$index, scope.row)"><i class="iconfont">&#xe606; </i>查看小程序二维码</el-button>
                     </div>
                 </div> 
                 <div class="enroll-check-container-handle" >
@@ -66,7 +74,7 @@
                     </el-table-column>
                     <el-table-column type="index" width="60" label="序号">
                     </el-table-column>
-                    <el-table-column v-for="(item,index) in showTableTitle" :fixed="item.fixed" :key="index" :prop="item.name" :label="item.title" :min-width="item.width"  :sortable="item.type!='button'&&item.type!='handle'?true:false">
+                    <el-table-column v-for="(item,index) in showTableTitle" :fixed="item.fixed" :key="index" :prop="item.name" :label="item.title" :min-width="item.width"  :sortable="item.type!='button'&&item.type!='handle'?true:false" show-overflow-tooltip>
                         <template slot-scope="scope">
                             <p :formatter="formatSex" v-html="arrFormatter(scope.row[item.name],item.name)"></p>
                         </template>
@@ -96,6 +104,7 @@ import { getByteLen } from "@/utils/index.js"
 import moreTerm from '@/components/more-term'
 import showField from '@/components/show-field'
 import reviewEnroll from '@/components/review-enroll'
+import "@/assets/iconfonts/iconfont.css"
 export default {
     components:{
         moreTerm,
@@ -104,8 +113,8 @@ export default {
     },
     data(){
         return{
+            tagType:"",
             enrollId:'',
-           
             isIndeterminate:false,//对el-checkbox控制不完整的全选状态
             checkAll:false,//对el-checkbox控制全选状态
             startTime:"",
@@ -152,7 +161,7 @@ export default {
                 label: '已读'
                 }
             ],
-            valueC:"",
+            valueC:"1",
             valueW:""
         }
     },
@@ -218,7 +227,7 @@ export default {
                     let paras2 ={title:"是否已读",name:"readNot",type:"input",width:120} 
                     tableTitle.push(paras)  
                     tableTitle.push(paras2)
-                    titlePara.reviewState=""
+                    titlePara.reviewState="1"
                     titlePara.readNot=""
                     this.tableTitle=tableTitle
                     this.showTableTitle=tableTitle
@@ -245,7 +254,9 @@ export default {
                         arr.push(para)
                     }
                     this.tableAllData=arr
-                    this.tableData=this.tableAllData
+                    this.tableData=this.tableAllData.filter(i=>{
+                        return i.reviewState=="1"
+                    })
                 }
 
             }).catch(err=>{
@@ -355,20 +366,29 @@ export default {
         },
         //excel数据导出
         exportToExcel() {
-            require.ensure([], () => {
-            const {
-                export_json_to_excel
-            } = require('@/export/Export2Excel');
-            const tHeader = [] // 对应表格输出的中文title
-            const filterVal = [] // 对应表格输出的数据
-            this.showTableTitle.forEach(val => {
-            tHeader.push(val.title)
-            filterVal.push(val.name)
-            })
-            const list = this.tableAllData;
-            const data = this.formatJson(filterVal, list);
-            export_json_to_excel(tHeader, data, `${this.enrollData.title}-人员资料`);
-            })
+            if(this.tableAllData.length>0){
+                 require.ensure([], () => {
+                    const {
+                        export_json_to_excel
+                    } = require('@/export/Export2Excel');
+                    const tHeader = [] // 对应表格输出的中文title
+                    const filterVal = [] // 对应表格输出的数据
+                    this.showTableTitle.forEach(val => {
+                    tHeader.push(val.title)
+                    filterVal.push(val.name)
+                    })
+                    const list = this.tableAllData;
+                    const data = this.formatJson(filterVal, list);
+                    export_json_to_excel(tHeader, data, `${this.enrollData.title}-人员资料`);
+                })
+            }else{
+                this.$notify({
+                    title: '警告',
+                    message: '没有数据可以导出',
+                    type: 'warning'
+                });
+            }
+           
         },
         formatJson(filterVal, jsonData) {
                 return jsonData.map(v => filterVal.map(j => v[j]))
@@ -386,19 +406,32 @@ export default {
         
         },
         checkEnroll(val){
-            if(this.sels.length>0){
-                let sels = JSON.parse(JSON.stringify(this.sels))
-                  this.$refs.reviewEnroll.sels = sels
-                this.$refs.reviewEnroll.replyMessage = ""
-                this.$refs.reviewEnroll.reviewFlag = val
-                this.$refs.reviewEnroll.centerDialogVisible = true
+            console.log(this.enrollData)
+            if(this.enrollData.state>=3){
+                if(this.sels.length>0){
+                    let sels = JSON.parse(JSON.stringify(this.sels))
+                    sels = sels.filter(i=>{
+                        return i.reviewState=="1"
+                    })
+                    this.$refs.reviewEnroll.sels = sels
+                    this.$refs.reviewEnroll.replyMessage = ""
+                    this.$refs.reviewEnroll.reviewFlag = val
+                    this.$refs.reviewEnroll.centerDialogVisible = true
+                }else{
+                    this.$notify({
+                            title: '警告',
+                            message: '请先勾选需要审核的记录',
+                            type: 'warning'
+                        });
+                }
             }else{
                 this.$notify({
-                        title: '警告',
-                        message: '请先勾选需要审核的记录',
-                        type: 'warning'
-                    });
+                            title: '警告',
+                            message: '报名还未结束，无法审核',
+                            type: 'warning'
+                        });
             }
+            
             
         },
         
@@ -426,18 +459,13 @@ export default {
             // 开始时间
             return{
                 disabledDate:(time)=>{
-                //今天之前的时间不能作为起始时间
-                //结束时间之后的时间不能作为开始时间
-                let disabledDate;
-                let nowDate = new Date();
-                nowDate.setDate(nowDate.getDate()-1);
-                if(this.endTime!=""){
-                    disabledDate = new Date(this.endTime);
-                    disabledDate.setDate(disabledDate.getDate());
-                    return time.getTime() < nowDate.getTime()||time.getTime()>disabledDate.getTime();
-                }else{
-                    return time.getTime() < nowDate.getTime()
-                }
+                    //结束时间之后的时间不能作为开始时间
+                    let disabledDate;
+                    if(this.endTime!=""){
+                        disabledDate = new Date(this.endTime);
+                        disabledDate.setDate(disabledDate.getDate()-1);
+                        return time.getTime()>disabledDate.getTime();
+                    }
                 }
             }
         },
@@ -445,15 +473,14 @@ export default {
             // 结束时间
             return{
                 disabledDate:(time)=>{
-                //今天之前的时间不能作为结束时间
-                //起始时间之前的时间不能作为结束时间
-                let disabledDate
-                if(this.startTime!="")
-                    disabledDate = new Date(this.startTime);
-                else
-                    disabledDate = new Date();
-                disabledDate.setDate(disabledDate.getDate()-1);
-                return time.getTime() < disabledDate.getTime();
+                    //起始时间之前的时间不能作为结束时间
+                    let disabledDate
+                    if(this.startTime!=""){
+                            disabledDate = new Date(this.startTime);
+                            disabledDate.setDate(disabledDate.getDate()-1);
+                            return time.getTime() < disabledDate.getTime();
+                    }
+                   
                 }
             }    
         },
@@ -485,14 +512,19 @@ export default {
             background: #fff;
             &-title{
                 margin-bottom: 20px;
-                padding: 2px 0;
+                padding: 2px 20px;
                 border-left: 4px solid #409EFF;
-                text-indent: 20px;
                 font-size: 18px;
                 font-weight: 700;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                .el-tag{
+                    margin-left: 50px;
+                }
+                .iconfont{
+                    font-size: 12px !important;
+                }
             }
             &-handle{
                 margin-bottom:2%;

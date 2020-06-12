@@ -6,7 +6,7 @@
                 <el-input v-model="form['name']" auto-complete="off"></el-input>
             </el-form-item>
              <el-form-item label="字段类型" prop="type">
-                <el-select v-model="form['type']" placeholder="请选择">
+                <el-select v-model="form['type']" placeholder="请选择" @change="changeType">
                     <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -23,8 +23,8 @@
             </el-form-item> -->
 			<el-form-item prop="maximumCharacters" v-show="form['type']=='input'">
 				<el-radio-group v-model="form['maximumCharacters']">
-				    <el-radio :label="30" class="sortText">短文本 <p class="explain">(最多可填30个字符)</p></el-radio>
-				    <el-radio :label="60" class="longText">长文本 <p class="explain">(最多可填60个字符)</p></el-radio>
+				    <el-radio :label="20" class="sortText">短文本 <p class="explain">(最多可填10个字)</p></el-radio>
+				    <el-radio :label="50" class="longText">长文本 <p class="explain">(最多可填50个字)</p></el-radio>
 				</el-radio-group>
 			</el-form-item>
             <el-form-item label="最小长度" prop="minimumCharacters" v-show="form['type']=='number'">
@@ -95,8 +95,8 @@ export default {
             form: {
                name :'',
                type :'',
-               minimumCharacters:'1',
-               maximumCharacters:'1',
+               minimumCharacters:'',
+               maximumCharacters:'',
                required:0,
                childs:[] 
             },
@@ -111,6 +111,18 @@ export default {
     methods:{
         //显示新增界面
 			handleShow() {
+                if(this.form.maximumCharacters==''){
+                    if(this.form.type=='number'){
+                        this.form.minimumCharacters=1
+                        this.form.maximumCharacters=20
+                    }else if(this.form.type=='checkbox'){
+                        this.form.minimumCharacters=1
+                        this.form.maximumCharacters=""
+                    }else {
+                        this.form.minimumCharacters=""
+                        this.form.maximumCharacters=20
+                    }
+                }
                 this.formVisible = true;	
                 console.log(this.form)
             },
@@ -167,6 +179,19 @@ export default {
                 this.formVisible=false
                 this.loading=false
                 this.$emit("handleClosed")
+            },
+            changeType(val){
+                console.log(val)
+                if(val=='number'){
+                     this.form.minimumCharacters=1
+                     this.form.maximumCharacters=1
+                }else if(val=='checkbox'){
+                    this.form.minimumCharacters=1
+                    this.form.maximumCharacters=""
+                }else {
+                     this.form.minimumCharacters=""
+                     this.form.maximumCharacters=20
+                }
             }
                
     }

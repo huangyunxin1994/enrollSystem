@@ -6,7 +6,7 @@ import Qs from 'qs'
 const service = axios.create({
   //baseURL: "https://www.hckj-cn.com/specialGroup", // url = base url + request url
  //baseURL: "http://192.168.1.111:8080", // url = base url + request url
- baseURL: "http://192.168.1.3:8081", // url = base url + request url
+ baseURL: "http://192.168.1.111:8081", // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
