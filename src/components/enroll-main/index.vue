@@ -82,30 +82,27 @@
                             </draggable>
                         </el-scrollbar>
                     </div>
-                    <div class="new-enroll-container-button" v-if="item.type=='base'">
-                        <div class="title-class" >自定义字段</div>
-                            <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'input')">单行文本</el-button>
-                            <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'textarea')">多行文本</el-button>
-                            <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'number')">数字</el-button>
-                            <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'date')">日期</el-button>
-                            <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'time')">时间</el-button>
-                            <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'img')">图片</el-button>
-                            <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'radio')">单选</el-button>
-                            <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'checkbox')">多选</el-button>
-                            <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'select')">下拉框</el-button>
+                    <div class="new-enroll-container-button">
+						<div class="shortcut">
+							<div class="title-class" >快捷字段</div>
+							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[0])">身份证</el-button>
+							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[1])">性别</el-button>
+								<el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[2])">年龄</el-button>
+								<el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[3])">婚姻状况</el-button>
+						</div>
+                        <div class="custom">
+							<div class="title-class" >自定义字段</div>
+							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'input')">单行文本</el-button>
+							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'textarea')">多行文本</el-button>
+							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'number')">数字</el-button>
+							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'date')">日期</el-button>
+							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'time')">时间</el-button>
+							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'img')">图片</el-button>
+							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'radio')">单选</el-button>
+							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'checkbox')">多选</el-button>
+							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'select')">下拉框</el-button>
+						</div>
                     </div>
-                    <div class="new-enroll-container-button" v-else-if="item.type=='table'">
-                        <div class="title-class" >自定义字段</div>
-                            <el-button type="success" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'input')">单行文本</el-button>
-                            <el-button type="success" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'textarea')">多行文本</el-button>
-                            <el-button type="success" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'number')">数字</el-button>
-                            <el-button type="success" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'date')">日期</el-button>
-                            <el-button type="success" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'time')">时间</el-button>
-                            <el-button type="success" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'img')">图片</el-button>
-                            <el-button type="success" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'radio')">单选</el-button>
-                            <el-button type="success" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'checkbox')">多选</el-button>
-                            <el-button type="success" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'select')">下拉框</el-button>
-                        </div>
                 </div>
             </div>
             <el-button  type="primary" icon="el-icon-add" class="button-class" size="medium" :disabled="disabledTag" @click="addForm">添加表格</el-button>
@@ -129,8 +126,9 @@
 import enrollForm from '@/components/enroll-form'
 import enrollOption from '@/components/enroll-option'
 import draggable from 'vuedraggable'
-import { handleCofirm,Debounce } from "@/utils/index"
+import { handleCofirm,Debounce,randomStr } from "@/utils/index"
 import { createEnrollment,getSignup } from "@/api/api"
+import { makePy } from "@/utils/pinying.js"
 let start="",end=""
 export default {
     components:{
@@ -144,6 +142,7 @@ export default {
             handleType:"",
             tagType:"",
             ruleForm: {
+				type:"",
                 title: '',
                 startTime: '',
                 endTime: '',
@@ -156,7 +155,7 @@ export default {
                         type:"base",
                         child:[//表格填写选项
                             {dataKey:'name',name :'姓名',type :'input',minimumCharacters:'1',maximumCharacters:'20',required:1,childs:[]},
-                            {dataKey:'phone',name :'联系方式',type :'number',minimumCharacters:'13',maximumCharacters:'13',required:1,childs:[]}
+                            {dataKey:'phone',name :'联系方式',type :'number',minimumCharacters:'11',maximumCharacters:'11',required:1,childs:[]}
                         ]
                     }
                 ],
@@ -181,7 +180,13 @@ export default {
             tableTitle:[
                 { title : "表格名称", name : "name", type : "input" },
                 { title : "描述", name : "details", type : "textarea" }
-            ]
+            ],
+			shortcutData:[
+				{name :'身份证',type :"idCard", minimumCharacters:'',maximumCharacters:20,required:0, childs:[],submitType:"insert"},
+				{name :'性别',type :"radio", minimumCharacters:'',maximumCharacters:20,required:0, childs:[{name:"男"},{name:"女"}],submitType:"insert"},
+				{name :'年龄',type :"number", minimumCharacters:'',maximumCharacters:20,required:0, childs:[],submitType:"insert"},
+				{name :'婚姻状况',type :"radio", minimumCharacters:'',maximumCharacters:20,required:0, childs:[{name:"已婚"},{name:"未婚"}],submitType:"insert"}
+			],
         }
     },
     methods:{
@@ -243,6 +248,15 @@ export default {
              
             
         },
+		//快捷字段
+		shortcut(index,form1){
+			console.log(form1)
+			let form = JSON.parse(JSON.stringify(form1))
+			form.index = index
+			this.$refs['enrolloption'].form=form
+			this.$refs['enrolloption'].submitData()
+		},
+		
         //新增填写报名信息表
         insertData(para){
             this.ruleForm.form.push(para)
@@ -489,15 +503,34 @@ export default {
                 }
             }
             &-button{
-                width: 420px;
-                height: 250px;
-                padding: 20px 0;
-                border: 1px dotted #dbdbe1;
-                .button-class{
-                    margin: 10px;
-                    height: 40px;
-                    width: 117px;
-                }
+				position: relative;
+				top: -75px;
+				
+				.shortcut{
+					width: 420px;
+					height: 175px;
+					margin-bottom: 10px;
+					padding: 20px 0;
+					border: 1px dotted #dbdbe1;
+					.button-class{
+					    margin: 10px;
+					    height: 40px;
+					    width: 117px;
+					}
+				}
+				.custom{
+					width: 420px;
+					height: 250px;
+					padding: 20px 0;
+					border: 1px dotted #dbdbe1;
+					.button-class{
+					    margin: 10px;
+					    height: 40px;
+					    width: 117px;
+					}
+				}
+				
+                
             }
             .line{
                 text-align: center;

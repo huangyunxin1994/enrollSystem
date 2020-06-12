@@ -74,7 +74,7 @@ export default {
                 { title : "所属区域", name : "areas", type:"input",width:'200' },
                // { title : "报名人数", name : "number", type:"input",width:'110' },
                 { title : "是否启用", name : "isEnable", type:"input",width:'150' },
-                { title : "操作", type : "handle",button:[{type:"edit",name:"编辑"}],width:'150' }
+                { title : "操作", type : "handle",button:[{type:"edit",name:"修改"}],width:'150' }
 
             ],
             tableData:[],

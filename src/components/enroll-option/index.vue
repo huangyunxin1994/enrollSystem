@@ -136,37 +136,41 @@ export default {
             },
             //新增
 			addSubmit() {
+				console.log(123)
                 this.$refs.form.validate((valid) => {
 					if (valid) {
-                        //NProgress.start();
-                            let para = Object.assign({}, this.form);
-                            let arr = makePy(para.name)
-                            let key = randomStr(false,12)
-                            para.dataKey=arr[0].toLowerCase()+"_"+key
-                            
-                            // console.log(para)
-                            if(para.submitType=="insert"){
-                                this.$emit("insertOption",para)
-                            }else if(para.submitType=="update"){
-                                this.$emit("updateOption",para)
-                            }else{
-                                this.$message.warning("参数不明确");
-                            }
-                            this.form= {
-                                name :'',
-                                type :'',
-                                minimumCharacters:'',
-                                maximumCharacters:'',
-                                required:0,
-                                childs:[] 
-                            };
-                            this.formVisible = false;	
-
-                        
+                        this.submitData()
 					}
 				});
                
             },
+			//提交
+			submitData(){
+				//NProgress.start();
+					console.log(this.form)
+				    let para = Object.assign({}, this.form);
+				    let arr = makePy(para.name)
+				    let key = randomStr(false,12)
+				    para.dataKey=arr[0].toLowerCase()+"_"+key
+				    
+				    console.log(para)
+				    if(para.submitType=="insert"){
+				        this.$emit("insertOption",para)
+				    }else if(para.submitType=="update"){
+				        this.$emit("updateOption",para)
+				    }else{
+				        this.$message.warning("参数不明确");
+				    }
+				    this.form= {
+				        name :'',
+				        type :'',
+				        minimumCharacters:'',
+				        maximumCharacters:'',
+				        required:0,
+				        childs:[] 
+				    };
+				    this.formVisible = false;	
+			},
             handleClose() {
                 this.form= {
                     name :'',

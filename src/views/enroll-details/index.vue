@@ -103,11 +103,11 @@ export default {
                                    largeArr.push(i)
                                }
                             })
-                            console.log(smallArr )
+                            // console.log(smallArr )
                             this.mainMsg.child=smallArr.concat(mediumArr).concat(largeArr)
-                            console.log(this.mainMsg.child )
+                            // console.log(this.mainMsg.child )
                             personMsg.splice(0,1)
-                            console.log(personMsg)
+                            // console.log(personMsg)
                             this.otherMsg=personMsg
                        }
                    })
