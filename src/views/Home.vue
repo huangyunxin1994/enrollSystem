@@ -72,14 +72,14 @@
 				this.$confirm('确认退出吗?', '提示', {
 					//type: 'warning'
 				}).then(() => {
-					let user = sessionStorage.getItem('user')
-					user = JSON.parse(user)
-					console.log(user)
-					// if(user.type == 1){
-					if(user.account == 'huachen2020'){
+					let type1 = sessionStorage.getItem('type')
+					type1 = JSON.parse(type1)
+					if(type1 == 1){
+						sessionStorage.removeItem('type');
 						sessionStorage.removeItem('user');
 						_this.$router.push('/userLogin');
 					}else{
+						sessionStorage.removeItem('type');
 						sessionStorage.removeItem('user');
 						_this.$router.push('/login');
 					}

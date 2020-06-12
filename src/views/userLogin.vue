@@ -69,6 +69,7 @@
 						  //NProgress.done();
 						  let { code, msg} = data
 						  let { user } = data.data;
+						  let type = data.data.type
 						  if (code != 0) {
 						    this.$message({
 						      message: msg,
@@ -76,6 +77,7 @@
 						    });
 						  } else {
 						    sessionStorage.setItem('user', JSON.stringify(user));
+							sessionStorage.setItem('type', JSON.stringify(type));
 						    this.$router.push({ path: '/userAdmin' });
 							this.$message({
 							  message: "登录成功",

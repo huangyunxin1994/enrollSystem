@@ -73,12 +73,13 @@
               this.logining = false;
               if(data.code == 0){
 				  let { msg, code, user } = data.data;
-				  console.log(user)
+				  let type = data.data.type
 				  let boolId = user.hasOwnProperty("idCard"); 
 				  if(boolId == false){//判断身份证号是否存在，如果存在就直接登录，如果不存在，需要绑定身份证号
 						this.$refs.verifyId.setShow(user.id)
 				  }else{
 					  sessionStorage.setItem('user', JSON.stringify(user));
+					  sessionStorage.setItem('type', JSON.stringify(type));
 					  this.$router.push({ path: '/' });
 					  this.$message({
 						message: "登录成功",
