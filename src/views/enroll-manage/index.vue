@@ -1,5 +1,5 @@
 <template>
-    <el-scrollbar style="width:100%;height:100%;">
+    <el-scrollbar style="width:100%;height:calc(100% - 17px);" :vertical="true">
         <div class="enroll-manage-main">
             <el-link class="enroll-manage-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一页 </el-link>
             <div class="enroll-manage-title">
@@ -33,7 +33,7 @@
                                     <el-button v-if="item.type=='edit'" type="primary" icon="el-icon-search" size="small" round @click="handleEdit(scope.$index, scope.row)">查看/修改</el-button>
                                     <el-button v-else-if="item.type=='check'" type="warning" icon="el-icon-s-check" size="small" round @click="handleCheck(scope.$index, scope.row)">审核</el-button> 
                                 </el-tooltip>
-                                <el-button type="success"  size="small" round><i class="iconfont">&#xe606; </i> 二维码</el-button>
+                                <el-button type="success"  size="small" round><i class="iconfont" style="font-size: 12px">&#xe606; </i> 二维码</el-button>
                             </div>
                             
                             <p v-else :formatter="formatSex" v-html="arrFormatter(scope.row[item.name],item.name)"></p>
@@ -236,9 +236,7 @@ export default {
                     color: #606266;
                     font-weight: 700;
                 }
-                .iconfont{
-                    font-size: 12px !important;
-                }
+                
             }
             &-tools{
                 display: flex;

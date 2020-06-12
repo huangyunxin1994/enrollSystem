@@ -1,5 +1,5 @@
 <template>
-    <el-scrollbar style="width:100%;height:100%;">
+    <el-scrollbar style="width:100%;height:calc(100% - 17px);" :vertical="true">
         <div class="enroll-check-main">
             <el-link class="enroll-check-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一页 </el-link>
             <div class="enroll-check-container" ref="container">
@@ -45,31 +45,30 @@
                         </div>
                     </div>
                     <div >
-                        <el-button type="primary" size="mini" @click="chooseField">设置显示字段</el-button>
+                        <el-button type="primary" size="medium" @click="checkEnroll('2')">通过</el-button>
+                        <el-button type="danger" size="medium" @click="checkEnroll('3')">拒绝</el-button>
                     </div>
                 </div>
                 <div class="enroll-check-container-handle" >
-                    <div class="enroll-check-container-handle-left">
-                        <div class="enroll-check-container-handle-left-date-picker">
-                        <label for="" class="enroll-check-container-handle-label" style="width:120px" >报名时间段</label>
+                    <div class="enroll-check-container-handle-left1">
+                        <div class="enroll-check-container-handle-left1-date-picker">
+                            <label for="" class="enroll-check-container-handle-label" style="width:120px" >报名时间段</label>
                         
                             <el-date-picker type="date" placeholder="选择日期" v-model="startTime" style="width:50%" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="startTimeOptions"></el-date-picker>                   
                             <span  style="margin:20px;">至</span>
                             <el-date-picker type="date" placeholder="选择日期" v-model="endTime"  style="width:50%" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="endTimeOptions"></el-date-picker>
                             
                         </div>
-                        <div >
-                        <el-button type="primary" size="mini" @click="chooseTerm">更多筛选项</el-button>
-                        <el-button type="primary" size="mini" @click="selectAllData" :disabled="tableData.length===tableAllData.length">查看全部</el-button>
+                        
                     </div>
-                    </div>
-                    
                     <div >
-                        <el-button type="primary" size="medium" @click="checkEnroll('2')">通过</el-button>
-                        <el-button type="danger" size="medium" @click="checkEnroll('3')">拒绝</el-button>
-                    </div>
+                            <el-button type="primary" size="medium" @click="chooseField">设置字段</el-button>
+                            <el-button type="primary" size="medium" @click="chooseTerm">更多筛选项</el-button>
+                            <el-button type="primary" size="medium" @click="selectAllData" :disabled="tableData.length===tableAllData.length">查看全部</el-button>
+                        </div>
+                    
                 </div>
-                <el-table :data="tables.slice((page-1)*pageSize,page*pageSize)" border stripe highlight-current-row v-loading="listLoading" @selection-change="selsChange" @row-click="selectDetails" height="calc(98% - 200px)" ref="table" :row-key="getRowKeys">
+                <el-table :data="tables.slice((page-1)*pageSize,page*pageSize)" border stripe highlight-current-row v-loading="listLoading" @selection-change="selsChange" @row-click="selectDetails" height="calc(98% - 210px)" ref="table" :row-key="getRowKeys">
                     <el-table-column type="selection" width="55" :reserve-selection="true">
                     </el-table-column>
                     <el-table-column type="index" width="60" label="序号">
@@ -512,7 +511,7 @@ export default {
             background: #fff;
             &-title{
                 margin-bottom: 20px;
-                padding: 2px 20px;
+                padding: 2px 0 2px 20px;
                 border-left: 4px solid #409EFF;
                 font-size: 18px;
                 font-weight: 700;
@@ -541,8 +540,14 @@ export default {
                     display: flex;
                     justify-content: space-between;
                     align-items: center; 
+                }
+                &-left1{
+                    width: 55%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center; 
                     &-date-picker{
-                        width: 65%;
+                        width: 100%;
                         display: flex;
                         justify-content: space-between;
                         align-items: center; 

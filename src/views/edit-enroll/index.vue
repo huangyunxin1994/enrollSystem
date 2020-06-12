@@ -1,5 +1,5 @@
 <template>
-    <el-scrollbar style="width:100%;height:100%;">
+    <el-scrollbar style="width:100%;height:calc(100% - 17px);" :vertical="true">
         <enroll-main></enroll-main>
     </el-scrollbar>
 </template>

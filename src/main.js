@@ -13,7 +13,8 @@ import Vuex from 'vuex'
 //import 'nprogress/nprogress.css'
 import routes from './routes'
 import 'font-awesome/css/font-awesome.min.css'
-
+import htmlToPdf from '@/utils/htmlToPdf'
+Vue.use(htmlToPdf)
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)

@@ -1,21 +1,38 @@
 <template>
-    
+    <el-scrollbar style="width:100%;height:calc(100% - 17px);" :vertical="true">
         <div class="enroll-details-main">
             <el-link class="enroll-details-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一页 </el-link>
+            
             <div class="enroll-details-container" ref="container">
                 <div class="enroll-details-container-img">
-                    <el-button type="primary" size="medium">导出</el-button>
-                    <el-avatar shape="square" :size="100" :src="squareUrl"></el-avatar>
+                    <el-button type="primary" size="medium" @click="getPdf()">导出</el-button>
+                    <!-- <el-avatar shape="square" :size="100" :src="squareUrl"></el-avatar> -->
                 </div> 
-                <el-scrollbar style="width:100%;height:100%;">
-                <div class="enroll-details-container-msg">
-                    
+                <el-scrollbar style="width:100%;height:calc(100% - 36px);" :vertical="true">
+                <div class="enroll-details-container-msg" id="pdfDom">
+                    <h1 style="text-align:center">报名个人信息表</h1>
                     <div class="base-msg">
-                            <div v-for="(item,index) in mainMsg.child" :key="index" class="base-msg-item ">
-                                <p class="base-msg-item-label">{{item.name}}</p>
-                                <p class="base-msg-item-text small" v-if="item.type!=='textarea'&&(!item.maximumCharacters||item.maximumCharacters<=20)">{{mainMsg.submitData[0][item.dataKey]}}</p>
-                                <p class="base-msg-item-text medium" v-else-if="item.type!=='textarea'&&(item.maximumCharacters>20&&item.maximumCharacters<=50)">{{mainMsg.submitData[0][item.dataKey]}}</p>
-                                <p class="base-msg-item-text large" v-else>{{mainMsg.submitData[0][item.dataKey]}}</p>
+                            <div v-for="(item,index) in mainMsg.child" :key="index">
+                                <div v-if="item.type!=='textarea'&&item.type!=='img'" class="base-msg-item ">
+                                    <p class="base-msg-item-label">{{item.name}}</p>
+                                    <p class="base-msg-item-text small" v-if="item.type!=='textarea'&&item.type!=='img'&&(!item.maximumCharacters||item.maximumCharacters<=20)">{{mainMsg.submitData[0][item.dataKey]}}</p>
+                                    <p class="base-msg-item-text medium" v-else-if="item.type!=='textarea'&&(item.maximumCharacters>20&&item.maximumCharacters<=50)">{{mainMsg.submitData[0][item.dataKey]}}</p>
+                                </div>
+                                <div v-else class="base-msg-item-l ">
+                                    <p class="base-msg-item-label">{{item.name}}</p>
+                                    <pre v-if="item.type!=='img'" class="large">{{mainMsg.submitData[0][item.dataKey]}}</pre>
+                                    <!-- <el-input
+                                    
+                                        type="textarea"
+                                        :rows="2"
+                                        placeholder="请输入内容"
+                                        v-model="mainMsg.submitData[0][item.dataKey]" resize="none" autosize>
+                                    </el-input> -->
+                                    <p class="img" v-else>
+                                        <img width="100%" :src="'data:image/png;base64,'+mainMsg.submitData[0][item.dataKey]"/>
+                                    </p>
+                                </div>
+                                
                             </div>
                     </div>
                     <div class="other-msg">
@@ -30,13 +47,14 @@
                             </el-table>
                         </div>
                         <div class="other-msg-title">回复信息</div>
+                        <pre class="other-msg-message"></pre>
                     </div>
 
                 </div>
                 </el-scrollbar>
             </div>      
         </div>
-    
+    </el-scrollbar>
 </template>
 
 <script>
@@ -48,6 +66,7 @@ export default {
             squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
             mainMsg:{},
             otherMsg:[],
+            htmlTitle: '报名个人信息'
         }
     },
     methods:{
@@ -69,10 +88,6 @@ export default {
                        if(res.code==0){
                            let titleData = res.data.data 
                            for(let i=0;i<titleData.length;i++){
-                               for(let j=0;j<titleData[i].child.length;j++){
-                                   if(titleData[i].child[j].type==='img')
-                                    titleData[i].child.splice(j,1)
-                               }
                                personMsg[i].child=titleData[i].child
                            }
                            personMsg[0].submitData.forEach(item=>{
@@ -91,21 +106,24 @@ export default {
                                     }
                            })
                             this.mainMsg = personMsg[0]
-                            let smallArr=[],mediumArr=[],largeArr=[]
+                            let smallArr=[],mediumArr=[],largeArr=[],imgArr=[]
                             this.mainMsg.child.forEach(i=>{
-                               if(i.type!=='textarea'){
+                                console.log(i.type)
+                               if(i.type!=='textarea'&&i.type!=='img'){
                                    if(!i.maximumCharacters||i.maximumCharacters<=30){
                                        smallArr.push(i)
                                    }else{
                                        mediumArr.push(i)
                                    }
+                               }else if(i.type==='img'){
+                                   imgArr.push(i)
                                }else{
                                    largeArr.push(i)
                                }
                             })
-                            // console.log(smallArr )
-                            this.mainMsg.child=smallArr.concat(mediumArr).concat(largeArr)
-                            // console.log(this.mainMsg.child )
+                            console.log(smallArr )
+                            this.mainMsg.child=smallArr.concat(mediumArr).concat(largeArr).concat(imgArr)
+                            console.log(this.mainMsg.child )
                             personMsg.splice(0,1)
                             // console.log(personMsg)
                             this.otherMsg=personMsg
@@ -160,32 +178,23 @@ export default {
 <style lang="scss" scoped>
     .enroll-details-main {
         height: 100%;
-        width: 1260px;
+        width: 1150px;
         margin: 0 auto;
         .enroll-details-nav{
             height: 50px;
             line-height: 50px;
         }
         .enroll-details-container{
-            height: calc(94% - 80px);
+            width: 100%;
+            height: calc(100% - 80px);
             padding: 2% 0;
             margin-bottom: 2%;
             background: #fff;
-            display: flex;
-            justify-content: space-between;
             &-img{
-                width: 150px;
-                height: 100%;
-                text-align: center;
-               
-                .el-button{
-                    margin: 20px auto;
-                }
+               padding-left: 2%; 
             }
             &-msg{
-                border: 1px solid #F2F6FC;
-                width: 100%;
-                min-width: 668px;
+                width: calc(100% - 0px);
                  .base-msg{
                      width: calc(100% - 40px);
                      padding: 20px;
@@ -193,6 +202,36 @@ export default {
                      justify-content: flex-start;
                      align-items: center;
                      flex-wrap: wrap;
+                     &-item-l{
+                        margin: 10px;
+                        display: flex;
+                        justify-content: space-between;
+                        box-sizing: border-box;
+                        .img{
+                             width: 150px; 
+                             height: 150px;
+                        }
+                        .large{
+                            
+                        width: 960px; 
+                        display: block;
+                        box-sizing: border-box;
+                        font-family: inherit;
+                        white-space: pre-wrap;
+                        white-space: -moz-pre-wrap;
+                        white-space: -o-pre-wrap;
+                        word-wrap: break-word;
+                        padding: 10px;
+                        margin: 0;
+                        font-size: 16px;
+                        line-height: inherit;
+                        color: inherit;
+                        word-break: break-all;
+                        background-color: transparent;
+                        border: 1px solid rgb(228, 228, 228);
+                         border-radius: 0; 
+                        }
+                     }
                      &-item{
                         margin: 10px;
                         display: flex;
@@ -201,15 +240,16 @@ export default {
                         box-sizing: border-box;
                         &-label{
                             width: 100px;
-                            font-size: 14px;
+                            font-size: 16px;
                             text-align: right;
                             padding: 0 10px;
                             box-sizing: border-box;
                         }
                         &-text{
                             min-width: 150px;
+                            height: 40px;
                             padding: 10px;
-                            font-size: 14px;
+                            font-size: 16px;
                             border: 1px solid rgb(228, 228, 228);
                             box-sizing: border-box;
                             
@@ -221,9 +261,7 @@ export default {
                             width: 420px; 
                         }
                      }
-                     .large{
-                        width: 100%;     
-                     }
+                     
                      
                  }
                  .other-msg{
@@ -233,7 +271,15 @@ export default {
                      &-title{
                          font-size: 24px;
                          font-weight: 700;
-                         margin: 50px 0;
+                         margin: 50px 0 20px 0;
+                     }
+                     &-message{
+                          padding: 10px;
+                            font-size: 14px;
+                            border: 1px solid rgb(228, 228, 228);
+                            box-sizing: border-box;
+                         width: calc(100% - 60px);
+                         min-height: 100px;
                      }
                  }
             }
