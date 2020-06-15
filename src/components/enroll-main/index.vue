@@ -107,18 +107,29 @@
             </div>
             <el-button  type="primary" icon="el-icon-add" class="button-class" size="medium" :disabled="disabledTag" @click="addForm">添加表格</el-button>
             <div class="new-enroll-submit" v-if="handleType=='add'">
-                <el-button type="primary" icon="el-icon-search" class="button-class" size="medium">预览</el-button>
+                <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" @click="submitForm('preview')">预览</el-button>
                 <!-- <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="!(handleType=='update'&&ruleForm.state==2)" @click="cancelSubmit">撤销发布</el-button> -->
-                <el-button type="success" icon="el-icon-upload2" class="button-class" size="medium" @click="submitForm()">发布</el-button>
+                <el-button type="success" icon="el-icon-upload2" class="button-class" size="medium" @click="submitForm('release')">发布</el-button>
             </div>
             <div class="new-enroll-submit" v-else>
                 <el-button type="primary" icon="el-icon-edit" class="button-class" size="medium" :disabled="ruleForm.state!==2" @click="changeDisabled">修改</el-button>
-                <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="ruleForm.state!==2">预览</el-button>
+                <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="ruleForm.state!==2" @click="submitForm('otherPreview')">预览</el-button>
                 <!-- <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="!(handleType=='update'&&ruleForm.state==2)" @click="cancelSubmit">撤销发布</el-button> -->
-                <el-button type="success" icon="el-icon-upload2" class="button-class" size="medium" @click="submitForm()" :disabled="ruleForm.state!==2">提交</el-button>
+                <el-button type="success" icon="el-icon-upload2" class="button-class" size="medium" @click="submitForm('submit')" :disabled="ruleForm.state!==2">提交</el-button>
             </div>
             <enroll-form ref="enrollform" :tableTitle='tableTitle' :formRule="formRule" @insertData="insertData" @updateData="updateData"></enroll-form>
         <enroll-option ref="enrolloption" @insertOption='insertOption' @updateOption='updateOption'></enroll-option>
+        <el-dialog
+            :visible.sync="dialogVisible"
+            width="300px" height="300px">
+            <span>请打开手机微信扫一扫预览</span>
+            <div >
+            <img style="width:100%;height:100%" :src="'../../assets/qrCode/'+imgPath+'.png'" alt="">
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
+            </span>
+        </el-dialog>
         </div>
         
 </template>
@@ -138,9 +149,12 @@ export default {
     },
     data(){
         return{
+            imgPath:"",
+            signupId:"",
             disabledTag:"",
             handleType:"",
             tagType:"",
+            dialogVisible:false,
             ruleForm: {
 				type:"",
                 title: '',
@@ -293,16 +307,23 @@ export default {
             this.disabledTag=false
         },
         //保存报名信息
-        submitForm:Debounce(function(){
+        submitForm(submitType){
             this.$refs.ruleForm1.validate((valid) => {
                 if (valid) {
                         let para = Object.assign({}, this.ruleForm);
-                        para.submitType=this.handleType
+                        para.submitType=submitType
+                        para.signupId=this.signupId
                         let bool = para.form.some(item=>{
                             return item.child.length==0
                         })
                         if(!bool){
-                            handleCofirm('确认保存吗?','success').then(() => {
+                            let str = ""
+                            if( submitType === 'release' ||submitType === 'submit' ){
+                                str = '确认保存吗?'
+                            }else{
+                                str = '确认预览吗?'
+                            }
+                            handleCofirm(str,'success').then(() => {
                             
                                 let nowDate = new Date();
                                 let startTime = new Date(para.startTime)
@@ -323,14 +344,30 @@ export default {
                                         }
                                     }
                                 }
+                                console.log(para)
                                 createEnrollment(para).then(res=>{
                                     if(res.code==0){
-                                        this.$notify({
-                                            title: '成功',
-                                            message: '发布成功',
-                                            type: 'success'
-                                        });
-                                        this.$router.push({path:"/enrollmanage"})
+                                        if( submitType === 'release' ||submitType === 'submit' ){
+                                            this.$notify({
+                                                title: '成功',
+                                                message: '发布成功',
+                                                type: 'success'
+                                            });
+                                            this.$router.push({path:"/enrollmanage"})
+                                        }else{
+                                            console.log(res)
+                                            let { data:{ imgPath, signupId } } = res.data
+                                            console.log(imgPath)
+                                            console.log(signupId)
+                                            if(imgPath!=="")
+                                                this.imgPath=imgPath
+                                            if(this.signupId==="")
+                                                this.signupId=signupId
+                                            this.dialogVisible=true
+                                            console.log( this.imgPath)
+                                            console.log( this.signupId)
+                                        }
+                                        
 
                                     }
                                 }).catch(err=>{
@@ -357,7 +394,7 @@ export default {
                     });
                 }
             })
-        },500),
+        },
         //获取报名信息
         getEnrollData(id){
             getSignup({id:id}).then(res=>{
@@ -373,6 +410,7 @@ export default {
         let type = this.$route.query.type
         if(type=="update"){
             let enrollId = this.$route.query.id
+            this.signupId = enrollId
             this.getEnrollData(enrollId)
             this.disabledTag=true
         }else{
