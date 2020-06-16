@@ -89,6 +89,7 @@
 							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[1])">性别</el-button>
 								<el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[2])">年龄</el-button>
 								<el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[3])">婚姻状况</el-button>
+								<el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[4])">电话号码</el-button>
 						</div>
                         <div class="custom">
 							<div class="title-class" >自定义字段</div>
@@ -169,7 +170,7 @@ export default {
                         type:"base",
                         child:[//表格填写选项
                             {dataKey:'name',name :'姓名',type :'input',minimumCharacters:'1',maximumCharacters:'20',required:1,childs:[]},
-                            {dataKey:'phone',name :'联系方式',type :'number',minimumCharacters:'11',maximumCharacters:'11',required:1,childs:[]}
+                            {dataKey:'phone',name :'联系方式',type :'phone',minimumCharacters:'11',maximumCharacters:'11',required:1,childs:[]}
                         ]
                     }
                 ],
@@ -199,7 +200,8 @@ export default {
 				{name :'身份证',type :"idCard", minimumCharacters:'',maximumCharacters:20,required:0, childs:[],submitType:"insert"},
 				{name :'性别',type :"radio", minimumCharacters:'',maximumCharacters:20,required:0, childs:[{name:"男"},{name:"女"}],submitType:"insert"},
 				{name :'年龄',type :"number", minimumCharacters:'',maximumCharacters:20,required:0, childs:[],submitType:"insert"},
-				{name :'婚姻状况',type :"radio", minimumCharacters:'',maximumCharacters:20,required:0, childs:[{name:"已婚"},{name:"未婚"}],submitType:"insert"}
+				{name :'婚姻状况',type :"radio", minimumCharacters:'',maximumCharacters:20,required:0, childs:[{name:"已婚"},{name:"未婚"}],submitType:"insert"},
+				{name :'电话号码',type :"phone", minimumCharacters:11,maximumCharacters:11,required:0, childs:[],submitType:"insert"},
 			],
         }
     },
@@ -344,7 +346,7 @@ export default {
                                         }
                                     }
                                 }
-                                console.log(para)
+                                // console.log(para)
                                 createEnrollment(para).then(res=>{
                                     if(res.code==0){
                                         if( submitType === 'release' ||submitType === 'submit' ){
@@ -357,15 +359,15 @@ export default {
                                         }else{
                                             console.log(res)
                                             let { data:{ imgPath, signupId } } = res.data
-                                            console.log(imgPath)
-                                            console.log(signupId)
+                                            // console.log(imgPath)
+                                            // console.log(signupId)
                                             if(imgPath!=="")
                                                 this.imgPath=imgPath
                                             if(this.signupId==="")
                                                 this.signupId=signupId
                                             this.dialogVisible=true
-                                            console.log( this.imgPath)
-                                            console.log( this.signupId)
+                                            // console.log( this.imgPath)
+                                            // console.log( this.signupId)
                                         }
                                         
 
@@ -426,7 +428,6 @@ export default {
     },
     computed:{
     startTimeOptions(){
-        console.log(382)
       // 开始时间
       return{
         disabledDate:(time)=>{
