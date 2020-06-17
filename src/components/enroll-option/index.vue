@@ -124,10 +124,10 @@ export default {
                     }
                 }
                 this.formVisible = true;	
-                console.log(this.form)
+                //console.log(this.form)
             },
             addItem(){
-                console.log(this.form)
+                //console.log(this.form)
                 let para = {name:""}
                 this.form.childs.push(para)
             },
@@ -136,7 +136,7 @@ export default {
             },
             //新增
 			addSubmit() {
-				console.log(123)
+				//console.log(123)
                 this.$refs.form.validate((valid) => {
 					if (valid) {
                         this.submitData()
@@ -147,13 +147,13 @@ export default {
 			//提交
 			submitData(){
 				//NProgress.start();
-					console.log(this.form)
+					//console.log(this.form)
 				    let para = Object.assign({}, this.form);
 				    let arr = makePy(para.name)
 				    let key = randomStr(false,12)
 				    para.dataKey=arr[0].toLowerCase()+"_"+key
 				    
-				    console.log(para)
+				    //console.log(para)
 				    if(para.submitType=="insert"){
 				        this.$emit("insertOption",para)
 				    }else if(para.submitType=="update"){
@@ -185,7 +185,7 @@ export default {
                 this.$emit("handleClosed")
             },
             changeType(val){
-                console.log(val)
+                //console.log(val)
                 if(val=='number'){
                      this.form.minimumCharacters=1
                      this.form.maximumCharacters=1

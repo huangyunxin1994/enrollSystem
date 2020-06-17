@@ -119,24 +119,15 @@
                 <el-button type="success" icon="el-icon-upload2" class="button-class" size="medium" @click="submitForm('submit')" :disabled="ruleForm.state!==2">提交</el-button>
             </div>
             <enroll-form ref="enrollform" :tableTitle='tableTitle' :formRule="formRule" @insertData="insertData" @updateData="updateData"></enroll-form>
-        <enroll-option ref="enrolloption" @insertOption='insertOption' @updateOption='updateOption'></enroll-option>
-        <el-dialog
-            :visible.sync="dialogVisible"
-            width="300px" height="300px">
-            <span>请打开手机微信扫一扫预览</span>
-            <div >
-            <img style="width:100%;height:100%" :src="'../../assets/qrCode/'+imgPath+'.png'" alt="">
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
-            </span>
-        </el-dialog>
+            <enroll-option ref="enrolloption" @insertOption='insertOption' @updateOption='updateOption'></enroll-option>
+            <qr-code ref="qrcode" :imgPath="imgPath"></qr-code>
         </div>
         
 </template>
 <script>
 import enrollForm from '@/components/enroll-form'
 import enrollOption from '@/components/enroll-option'
+import qrCode from '@/components/qr-code'
 import draggable from 'vuedraggable'
 import { handleCofirm,Debounce,randomStr } from "@/utils/index"
 import { createEnrollment,getSignup } from "@/api/api"
@@ -146,7 +137,8 @@ export default {
     components:{
         enrollForm,
         enrollOption,
-        draggable
+        draggable,
+        qrCode
     },
     data(){
         return{
@@ -155,7 +147,6 @@ export default {
             disabledTag:"",
             handleType:"",
             tagType:"",
-            dialogVisible:false,
             ruleForm: {
 				type:"",
                 title: '',
@@ -212,7 +203,7 @@ export default {
         },
         //新增填写报名信息表选项
         addFormOption(i,type){
-            console.log(type)
+            //console.log(type)
             this.$refs['enrolloption'].form.index=i
             this.$refs['enrolloption'].form.submitType="insert"
             this.$refs['enrolloption'].form.type=type
@@ -220,7 +211,7 @@ export default {
         },
         //更新填写报名信息表选项
         updateFormOption(index,i){
-            console.log(this.ruleForm)
+            //console.log(this.ruleForm)
             let para =JSON.parse(JSON.stringify(this.ruleForm.form[index].child[i])) 
             if(!para.childs)
             para.childs=[]
@@ -266,7 +257,7 @@ export default {
         },
 		//快捷字段
 		shortcut(index,form1){
-			console.log(form1)
+			//console.log(form1)
 			let form = JSON.parse(JSON.stringify(form1))
 			form.index = index
 			this.$refs['enrolloption'].form=form
@@ -322,11 +313,6 @@ export default {
                             let str = ""
                             if( submitType === 'release' ||submitType === 'submit' ){
                                 str = '确认保存吗?'
-                            }else{
-                                str = '确认预览吗?'
-                            }
-                            handleCofirm(str,'success').then(() => {
-                            
                                 let nowDate = new Date();
                                 let startTime = new Date(para.startTime)
                                 if(startTime.getTime() > nowDate.getTime()){
@@ -334,7 +320,14 @@ export default {
                                 }else{
                                     para.state=3 
                                 }
-                            
+                            }else{
+                                str = '确认预览吗?'
+                                para.state=1 
+                            }
+                            handleCofirm(str,'success').then(() => {
+                                let user = JSON.parse(sessionStorage.getItem('user'));
+                                para.userId = user.id
+                                this.$emit('setLoading',{bool:true})
                                 for(let i=0;i<para.form.length;i++){
                                     para.form[i].sort=i
                                     for(let j=0;j<para.form[i].child.length;j++){
@@ -346,9 +339,11 @@ export default {
                                         }
                                     }
                                 }
-                                // console.log(para)
+                                // //console.log(para)
+                                
                                 createEnrollment(para).then(res=>{
                                     if(res.code==0){
+                                         this.$emit('setLoading',{bool:false})
                                         if( submitType === 'release' ||submitType === 'submit' ){
                                             this.$notify({
                                                 title: '成功',
@@ -357,17 +352,18 @@ export default {
                                             });
                                             this.$router.push({path:"/enrollmanage"})
                                         }else{
-                                            console.log(res)
+                                             
+                                            //console.log(res)
                                             let { data:{ imgPath, signupId } } = res.data
-                                            // console.log(imgPath)
-                                            // console.log(signupId)
+                                            // //console.log(imgPath)
+                                            // //console.log(signupId)
                                             if(imgPath!=="")
                                                 this.imgPath=imgPath
                                             if(this.signupId==="")
                                                 this.signupId=signupId
-                                            this.dialogVisible=true
-                                            // console.log( this.imgPath)
-                                            // console.log( this.signupId)
+                                           this.$refs.qrcode.dialogVisible=true
+                                            // //console.log( this.imgPath)
+                                            // //console.log( this.signupId)
                                         }
                                         
 
@@ -403,7 +399,7 @@ export default {
                 if(res.code==0){
                     res.data.signup.form = res.data.data
                     this.ruleForm = res.data.signup
-                    console.log(this.ruleForm)
+                    //console.log(this.ruleForm)
                 }
             })
         }
@@ -417,7 +413,7 @@ export default {
             this.disabledTag=true
         }else{
             if(this.$route.query.data&&typeof(this.$route.query.data)=='object'){
-                console.log(typeof(this.$route.query.data))
+                //console.log(typeof(this.$route.query.data))
                 delete this.$route.query.data.id
                 this.ruleForm=this.$route.query.data
             }
@@ -585,6 +581,7 @@ export default {
             justify-content: center;
             align-items: center;
         }
+        
         
     }
     .new-enroll-footer{

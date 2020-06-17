@@ -6,8 +6,8 @@ import Qs from 'qs'
 const service = axios.create({
   //baseURL: "https://www.hckj-cn.com/specialGroup", // url = base url + request url
  //baseURL: "http://192.168.1.111:8080", // url = base url + request url
- // baseURL: "http://192.168.1.3:8081", // url = base url + request url
- baseURL: "http://192.168.1.111:8081", // url = base url + request url
+  // baseURL: "http://192.168.1.3:8081", // url = base url + request url
+ baseURL: "http://47.115.89.236:9090/signup", // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
@@ -81,18 +81,18 @@ export default service
 export function post (url, data) {
     let para,bool;
     if(Array.isArray(data)){
-		bool = true
-	}else {
-		let flag =  Object.values(data).some(i=>{
-			return Array.isArray(i)
-		})
-		bool = flag
-	}
-	if(bool){
-		para = data
-	}else{
-		para = Qs.stringify(data)
-	}
+      bool = true
+    }else {
+      let flag =  Object.values(data).some(i=>{
+        return Array.isArray(i)
+      })
+      bool = flag
+    }
+    if(bool){
+      para = data
+    }else{
+      para = Qs.stringify(data)
+    }
     return new Promise((resolve, reject) => {
 
       service.post(url, para)

@@ -15,7 +15,7 @@
                     
                     <div>
                         <el-button type="primary" icon="el-icon-printer" size="medium"  @click="exportToExcel()">导出</el-button>
-                        <el-button type="primary" size="medium"  @click="handleCheck(scope.$index, scope.row)"><i class="iconfont">&#xe606; </i>查看小程序二维码</el-button>
+                        <el-button type="primary" size="medium"  @click="handleQrCode()"><i class="iconfont">&#xe606; </i>查看小程序二维码</el-button>
                     </div>
                 </div> 
                 <div class="enroll-check-container-handle" >
@@ -93,7 +93,7 @@
         <more-term :showTableTitle="showTableTitle" :titlePara="titlePara" ref="moreTerm" @selectByTerm="selectByTerm" @clearChoose="clearChoose"></more-term>
         <show-field :tableTitle="tableTitle" :showTableTitle="showTableTitle" ref="showField" @showField="showField"></show-field>
         <review-enroll  ref="reviewEnroll" @getSignupPerson="getSignupPerson"></review-enroll>
-        
+        <qr-code ref="qrcode" :imgPath="imgPath"></qr-code>
     </el-scrollbar>
 </template>
 <script>
@@ -103,15 +103,18 @@ import { getByteLen } from "@/utils/index.js"
 import moreTerm from '@/components/more-term'
 import showField from '@/components/show-field'
 import reviewEnroll from '@/components/review-enroll'
+import qrCode from '@/components/qr-code'
 import "@/assets/iconfonts/iconfont.css"
 export default {
     components:{
         moreTerm,
         showField,
-        reviewEnroll
+        reviewEnroll,
+        qrCode
     },
     data(){
         return{
+            imgPath:"",
             tagType:"",
             enrollId:'',
             isIndeterminate:false,//对el-checkbox控制不完整的全选状态
@@ -128,8 +131,10 @@ export default {
             tableTitle:[],
             showTableTitle:[],
             titlePara:{},
+            inittTitlePara:{},
             tableData:[],
             tableAllData: [],
+            
             clientHeight:'',
             optionsC:[
                 {
@@ -177,7 +182,7 @@ export default {
 	    },
         //性别显示转换
         formatSex: function (row, column) {
-                  console.log(column.property)
+                //   console.log(column.property)
                   if(column.property=="sex")
                   return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '';
                   else
@@ -204,6 +209,7 @@ export default {
                 if(res.code==0){
                     res.data.signup.form = res.data.data
                     this.enrollData = res.data.signup
+                    this.imgPath = res.data.signup.qrCode
                     let para = res.data.data.filter(item=>{
                         return item.type=='base'
                     })
@@ -219,7 +225,21 @@ export default {
                             paras.childs=temp.childs
                             paras.width=180
                             tableTitle.push(paras)
-                            titlePara[temp.dataKey]=[]
+                            if(temp.type!="select"&&temp.type!="radio"&&temp.type!="checkbox"){
+                                if(temp.type=="number"||temp.type=="phone")
+                                   titlePara[temp.dataKey]={opType:temp.type,value:[{sNum:"",eNum:"",type:"1"}]}
+                                else if(temp.type=="date")
+                                    titlePara[temp.dataKey]={opType:temp.type,value:[{sdate:"",edate:""}] }
+                                else
+                                   titlePara[temp.dataKey]={opType:temp.type,value:[{value:""}] }
+                            } 
+                            else if(temp.type=="checkbox"){
+                                titlePara[temp.dataKey]={opType:temp.type,type:"1",value:[]}
+                            }
+                            else {
+                                titlePara[temp.dataKey]={opType:temp.type,value:[]}
+                            }
+                                
                         }
                     }
                     let paras = {title:"审核状态",name:"reviewState",type:"input",width:120}
@@ -231,6 +251,7 @@ export default {
                     this.tableTitle=tableTitle
                     this.showTableTitle=tableTitle
                     this.titlePara=titlePara
+                    this.inittTitlePara = JSON.parse(JSON.stringify(titlePara))
                     
                 }
             })
@@ -240,6 +261,7 @@ export default {
             })            
         },
         async getSignupPerson(){
+            this.sels=[]
             let id = this.enrollId
             await getSignupPerson({id:id}).then(res=>{
                 if(res.code==0){
@@ -247,6 +269,19 @@ export default {
                     for(let i=0;i<res.data.data.length;i++){
                         let formArr =  res.data.data[i]
                         let para = JSON.parse(formArr.registrationInformation).form[0].submitData[0]
+                        Object.keys(para).forEach(key=>{
+                            if(Array.isArray(para[key]) ){
+                                let str=""
+                                for(let i=0;i<para[key].length;i++){
+                                    if(str==""){
+                                        str+=para[key][i]
+                                    }else{
+                                        str+=","+para[key][i]
+                                    }
+                                }
+                                para[key]=str
+                            }
+                        })            
                         para.personId = formArr.id
                         para.reviewState = formArr.reviewState
                         para.readNot = formArr.readNot
@@ -262,7 +297,7 @@ export default {
             })   
         },
         changeResult(val){
-            console.log(this.titlePara)
+            // console.log(this.titlePara)
             let keys = Object.keys(this.titlePara);
             let vals = Object.values(this.titlePara);
             this.tableData = this.tableAllData.filter(item=>{
@@ -280,11 +315,7 @@ export default {
         
         //清空选择
         clearChoose(){
-             Object.keys(this.titlePara).forEach(key =>{
-                 if(key!=="reviewState"&&key!=="readNot")
-                     this.titlePara[key] = []
-                }  
-             );
+             this.titlePara = JSON.parse(JSON.stringify(this.inittTitlePara)) 
         },
         chooseField(){
             this.$refs.showField.handleShow()
@@ -302,41 +333,113 @@ export default {
         //查看所有数据，清空条件
         selectAllData(){
             this.inputValue=""
-            Object.keys(this.titlePara).forEach(key =>{
-                 if(key!=="reviewState"&&key!=="readNot")
-                     this.titlePara[key] = []
-                }  
-             );
+            this.titlePara = JSON.parse(JSON.stringify(this.inittTitlePara)) 
             this.tableData=this.tableAllData
         },
         //条件查询
         selectByTerm(){
-            console.log(this.titlePara)
             let keys = Object.keys(this.titlePara);
             let vals = Object.values(this.titlePara);
-            console.log(keys)
-            console.log(vals)
             this.tableData = this.tableAllData.filter(item=>{
                 let boolArr = []
                 for(let i=0;i<keys.length;i++){
-                        if(Array.isArray(this.titlePara[keys[i]])){
-                        // console.log(keys[i]+","+vals[i])
-                            if(Array.isArray(vals[i])){
-                            // console.log(keys[i]+","+vals[i])
-                                if(vals[i].length>0){
-                                    let bool = false
-                                    for(let j=0;j<vals[i].length;j++){
-                                    console.log(String(item[keys[i]]).indexOf(vals[i][j]))
-                                    console.log(item[keys[i]]+","+vals[i][j])
-                                    if( String(item[keys[i]]).indexOf(vals[i][j]) > -1)
-                                        bool=true 
+                    let bool = false
+                    if(Object.prototype.toString.call(vals[i]) !="[object String]"){
+                         let arr = vals[i].value
+                        if(vals[i].opType==='number'||vals[i].opType==='phone'){
+                            for(let j = 0; j < arr.length; j++){
+                                if(arr[j].type==='1'){
+                                    if(arr[j].sNum!==""){
+                                        if( String(item[keys[i]])===arr[j].sNum){
+                                            bool=true;
+                                            break
+                                        }  
+                                    }else{
+                                        bool=true;
+                                        break
                                     }
-                                    boolArr.push(bool)
+                                     
+                                }else{
+                                    if(arr[j].sNum!==""&&arr[j].eNum!==""){
+                                        //  console.log(keys[i],parseInt(item[keys[i]]),parseInt(arr[j].sNum),parseInt(arr[j].eNum),parseInt(item[keys[i]])>=parseInt(arr[j].sNum),parseInt(item[keys[i]])<=parseInt(arr[j].eNum))
+                                        if(parseInt(item[keys[i]])>=parseInt(arr[j].sNum)&&parseInt(item[keys[i]])<=parseInt(arr[j].eNum)){
+                                            bool=true;
+                                            break 
+                                        }
+                                    }else{
+                                        bool=true;
+                                        break
+                                    }
+                                    
+                                }
+                                //  bool=true;
+                            } 
+                            boolArr.push(bool)
+                        }else if(vals[i].opType==='checkbox'){
+                            if(arr.length>0){
+                                                                    /* 与 需满足每一个筛选条件返回true */
+                                if(vals[i].type==='2'){
+                                    for(let j = 0; j < arr.length; j++){
+                                        // console.log(String(item[keys[i]]),arr[j],String(item[keys[i]]).indexOf(arr[j]))
+                                        if( String(item[keys[i]]).indexOf(arr[j]) === -1){
+                                            bool=false;
+                                            break
+                                        }else{
+                                            bool=true;
+                                        }      
+                                    }
+                                    
+                                }else{                                    /* 或 满足其中一个筛选条件返回true */
+                                    for(let j = 0; j < arr.length; j++){
+                                        if( String(item[keys[i]]).indexOf(arr[j]) > -1){
+                                            bool=true;
+                                            break
+                                        }      
+                                    }
+                                }
+                            }else{
+                                bool=true;
+                            }
+                            boolArr.push(bool)
+                        }else if(vals[i].opType==='date'){
+                            for(let j = 0; j < arr.length; j++){
+                                
+                                if( this.compareDate(String(item[keys[i]]),arr[j].sdate)&&this.compareDate(arr[j].edate,String(item[keys[i]]))){
+                                    bool=true;
+                                    break
+                                }      
+                            }
+                            boolArr.push(bool)
+                        }else if(vals[i].opType==='radio'||vals[i].opType==='select'){
+                            if(arr.length>0){
+                                for(let j=0;j<arr.length;j++){
+                                    if( String(item[keys[i]]).indexOf(arr[j]) > -1){
+                                        bool=true
+                                        break
+                                    }     
                                 }
                             }
+                            else{
+                            bool=true 
+                            }
+                            boolArr.push(bool)
+                        }else{
+                            for(let j=0;j<arr.length;j++){
+                                if( String(item[keys[i]]).indexOf(arr[j].value) > -1){
+                                    bool=true
+                                    break
+                                }     
+                            }
+                            boolArr.push(bool)
                         }
+                    }else{
+                        if( String(item[keys[i]]).indexOf(vals[i]) > -1){
+                            bool=true
+                        }
+                        boolArr.push(bool)
+                    }
                 }
-                console.log(boolArr)
+                // console.log(boolArr)
                 let flag = boolArr.some(k=>{
                     return k==false
                 })
@@ -362,6 +465,9 @@ export default {
             //     }
             //     return item
             // })
+        },
+        handleQrCode(){
+            this.$refs.qrcode.dialogVisible=true
         },
         //excel数据导出
         exportToExcel() {
@@ -392,6 +498,22 @@ export default {
         formatJson(filterVal, jsonData) {
                 return jsonData.map(v => filterVal.map(j => v[j]))
             },
+        compareDate(dateTime1,dateTime2)
+        {
+            if(dateTime1==''||dateTime2==''){
+                return true;
+            }
+            var formatDate1 = new Date(dateTime1)
+            var formatDate2 = new Date(dateTime2)
+            if(formatDate1 >= formatDate2)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        },
         //点击某行跳转报名详情
         selectDetails(row, event, column){
             this.$router.push(
@@ -405,17 +527,26 @@ export default {
         
         },
         checkEnroll(val){
-            console.log(this.enrollData)
-            if(this.enrollData.state>=3){
+            // console.log(this.enrollData)
+            if(this.enrollData.state>3){
                 if(this.sels.length>0){
                     let sels = JSON.parse(JSON.stringify(this.sels))
                     sels = sels.filter(i=>{
                         return i.reviewState=="1"
                     })
-                    this.$refs.reviewEnroll.sels = sels
-                    this.$refs.reviewEnroll.replyMessage = ""
-                    this.$refs.reviewEnroll.reviewFlag = val
-                    this.$refs.reviewEnroll.centerDialogVisible = true
+                    if(sels.length > 0){
+                         this.$refs.reviewEnroll.sels = sels
+                        this.$refs.reviewEnroll.replyMessage = ""
+                        this.$refs.reviewEnroll.reviewFlag = val
+                        this.$refs.reviewEnroll.centerDialogVisible = true
+                    }else{
+                        this.$notify({
+                            title: '警告',
+                            message: '没有可审核的记录，请确认',
+                            type: 'warning'
+                        });
+                    }
+                   
                 }else{
                     this.$notify({
                             title: '警告',

@@ -176,7 +176,7 @@ export default {
 			if(val == 1){
 				this.state = val
 			}else{
-				console.log(val)
+				//console.log(val)
 				this.state = val
 				this.ruleForm2.account = val.account
 				this.ruleForm2.areas = val.areas
@@ -264,17 +264,10 @@ export default {
 	    return{
 	      disabledDate:(time)=>{
 	        //今天之前的时间不能作为起始时间
-	        //结束时间之后的时间不能作为开始时间
 	        let disabledDate;
 	        let nowDate = new Date();
 	        nowDate.setDate(nowDate.getDate()-1);
-	        if(this.ruleForm2.expiresTime!=""){
-	            disabledDate = new Date(this.ruleForm2.expiresTime);
-	            disabledDate.setDate(disabledDate.getDate());
-	            return time.getTime() < nowDate.getTime()||time.getTime()>disabledDate.getTime();
-	        }else{
-	            return time.getTime() < nowDate.getTime()
-	        }
+	       return time.getTime() < nowDate.getTime()
 	      }
 	    }
 	  }

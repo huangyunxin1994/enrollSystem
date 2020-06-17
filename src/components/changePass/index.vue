@@ -87,7 +87,7 @@ export default {
 					callback(new Error('请输入身份证'));
 					
 				}else{
-					vaildIdCard({idCard:value,account:this.ruleForm2.account}).then(res=>{
+					vaildIdCard({account:value,idCard:this.ruleForm2.idCard}).then(res=>{
 						if(res.code==0){
 							callback();
 						}else{
@@ -130,7 +130,7 @@ export default {
 					if (valid) {
 						let para = Object.assign({}, this.ruleForm2);
 						changePass(para).then((res)=>{
-							console.log(res)
+							//console.log(res)
 							if(res.code == 0){
 								this.$message({
 									message: '密码修改成功',

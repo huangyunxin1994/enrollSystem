@@ -104,7 +104,7 @@ export default {
         },
         //性别显示转换
         formatSex: function (row, column) {
-                  console.log(column.property)
+                  //console.log(column.property)
                   if(column.property=="sex")
                   return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '';
                   else
@@ -129,7 +129,7 @@ export default {
             getUserList().then(res=>{
                 if(res.code==0){
                     this.listLoading=false
-                    console.log(res)
+                    //console.log(res)
                     this.tableAllData=res.data.data
                     this.tableData=this.tableAllData
                 }else{
@@ -151,23 +151,23 @@ export default {
             //this.tableData = JSON.parse(JSON.stringify(this.tableAllData)) 
         },
         changeResultW(val){
-            console.log(this.valueW)
+            //console.log(this.valueW)
             this.tableData = this.tableAllData.filter(item=>{
                 return String(item.isEnable).indexOf(val) > -1
             })
         },
 		//修改
         handleEdit(index,row){
-			// console.log(row)
+			// //console.log(row)
 			this.$refs.userData.setShow(row)
         },
 		//删除
         handleCheck(index,row){
-			// console.log(row)
+			// //console.log(row)
 			let param = {
 				id : row.id
 			}
-			console.log(param)
+			//console.log(param)
 			this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
 			  confirmButtonText: '确定',
 			  cancelButtonText: '取消',
@@ -193,7 +193,7 @@ export default {
 		//新增用户
 		addUser(){
 			let val = 1
-			// console.log(val)
+			// //console.log(val)
 			this.$refs.userData.setShow(val)
 		},
 		// 更新页面

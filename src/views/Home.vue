@@ -55,17 +55,6 @@
 			}
 		},
 		methods: {
-			onSubmit() {
-				console.log('submit!');
-			},
-			handleopen() {
-				//console.log('handleopen');
-			},
-			handleclose() {
-				//console.log('handleclose');
-			},
-			handleselect: function (a, b) {
-			},
 			//退出登录
 			logout () {
 				var _this = this;

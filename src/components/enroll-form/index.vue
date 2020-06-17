@@ -57,7 +57,7 @@ export default {
     methods:{
         //显示新增界面
 			handleShow() {
-                console.log(this.form)
+                //console.log(this.form)
                 if(this.form.submitType=="update")
                     this.title="修改"
                 else if(this.form.submitType=="insert")
@@ -70,7 +70,7 @@ export default {
 					if (valid) {
                         //NProgress.start();
                             let para = Object.assign({}, this.form);
-                        //console.log(para)
+                        ////console.log(para)
                             if(para.submitType=="insert"){
                                 this.$emit("insertData",para)
                             }else if(para.submitType=="update"){

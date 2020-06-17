@@ -35,7 +35,7 @@ export default {
     },
     methods: {
       handleCheckAllChange(val) {
-          console.log(val)
+          //console.log(val)
         let arr = []
         this.tableTitle.forEach(item => {
             arr.push(item.name)
@@ -45,7 +45,7 @@ export default {
         this.isIndeterminate = this.checkedField.length> 0 && this.checkedField.length < this.tableTitle.length;
       },
       handlecheckedFieldChange(value) {
-          console.log(value)
+          //console.log(value)
         let checkedCount = value.length;
         this.checkAll = checkedCount === this.tableTitle.length;
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.tableTitle.length;

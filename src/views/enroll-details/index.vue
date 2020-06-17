@@ -29,7 +29,7 @@
                                         v-model="mainMsg.submitData[0][item.dataKey]" resize="none" autosize>
                                     </el-input> -->
                                     <p class="img" v-else>
-                                        <img width="100%" :src="'data:image/png;base64,'+mainMsg.submitData[0][item.dataKey]"/>
+                                        <img width="100%" :src="'data:image/png;base64,'+mainMsg.submitData[0][item.dataKey]" v-if="mainMsg.submitData[0][item.dataKey]"/>
                                     </p>
                                 </div>
                                 
@@ -75,9 +75,9 @@ export default {
             this.$router.go(-1);
         },
         getWidth(str){
-            console.log(str)
+            //console.log(str)
             let length = getByteLen(str)
-            console.log(length)
+            //console.log(length)
         },
         getEnrollPersonData(id){
             getPersonDetial({id:id}).then(res=>{
@@ -108,7 +108,7 @@ export default {
                             this.mainMsg = personMsg[0]
                             let smallArr=[],mediumArr=[],largeArr=[],imgArr=[]
                             this.mainMsg.child.forEach(i=>{
-                                console.log(i.type)
+                                //console.log(i.type)
                                if(i.type!=='textarea'&&i.type!=='img'){
                                    if(!i.maximumCharacters||i.maximumCharacters<=30){
                                        smallArr.push(i)
@@ -121,17 +121,17 @@ export default {
                                    largeArr.push(i)
                                }
                             })
-                            console.log(smallArr )
+                            //console.log(smallArr )
                             this.mainMsg.child=smallArr.concat(mediumArr).concat(largeArr).concat(imgArr)
-                            console.log(this.mainMsg.child )
+                            //console.log(this.mainMsg.child )
                             personMsg.splice(0,1)
-                            // console.log(personMsg)
+                            // //console.log(personMsg)
                             this.otherMsg=personMsg
                        }
                    })
                 }
             }).catch(err=>{
-                console.log(err)
+                //console.log(err)
             })
         },
     },

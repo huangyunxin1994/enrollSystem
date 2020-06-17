@@ -33,7 +33,7 @@
                                     <el-button v-if="item.type=='edit'" type="primary" icon="el-icon-search" size="small" round @click="handleEdit(scope.$index, scope.row)">查看/修改</el-button>
                                     <el-button v-else-if="item.type=='check'" type="warning" icon="el-icon-s-check" size="small" round @click="handleCheck(scope.$index, scope.row)">审核</el-button> 
                                 </el-tooltip>
-                                <el-button type="success"  size="small" round><i class="iconfont" style="font-size: 12px">&#xe606; </i> 二维码</el-button>
+                                <el-button type="success"  size="small" round @click="handleQrCode(scope.$index, scope.row)"><i class="iconfont" style="font-size: 12px">&#xe606; </i> 二维码</el-button>
                             </div>
                             
                             <p v-else :formatter="formatSex" v-html="arrFormatter(scope.row[item.name],item.name)"></p>
@@ -50,16 +50,21 @@
                 
             </div>      
         </div>
+        <qr-code ref="qrcode" :imgPath="imgPath"></qr-code>
     </el-scrollbar>
 </template>
 <script>
 import "@/assets/iconfonts/iconfont.css"
+import qrCode from '@/components/qr-code'
 import { selectSigup } from '@/api/api'
 export default {
     components:{
+        qrCode
     },
     data(){
         return{
+            imgPath:"",
+            dialogVisible:false,
             listLoading:false,
             inputValue:"",
             page:1,
@@ -101,7 +106,7 @@ export default {
         },
         //性别显示转换
         formatSex: function (row, column) {
-                  console.log(column.property)
+                //   console.log(column.property)
                   if(column.property=="sex")
                   return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '';
                   else
@@ -123,10 +128,10 @@ export default {
         },
         getEnrollData(){
             this.listLoading=true
-            selectSigup().then(res=>{
+            let user = JSON.parse(sessionStorage.getItem('user'));
+            selectSigup({userId:user.id}).then(res=>{
                 if(res.code==0){
                     this.listLoading=false
-                    console.log(res)
                     this.tableAllData=res.data.data
                     this.tableData=this.tableAllData
                 }else{
@@ -148,7 +153,7 @@ export default {
             //this.tableData = JSON.parse(JSON.stringify(this.tableAllData)) 
         },
         changeResultW(val){
-            console.log(this.valueW)
+            // console.log(this.valueW)
             this.tableData = this.tableAllData.filter(item=>{
                 return String(item.state).indexOf(val) > -1
             })
@@ -173,6 +178,10 @@ export default {
                     }
                 }
             ) 
+        },
+        handleQrCode(index,row){
+            this.imgPath=row.qrCode
+            this.$refs.qrcode.dialogVisible=true
         }
     },
     mounted(){
