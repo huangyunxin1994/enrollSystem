@@ -182,9 +182,15 @@ export default {
                 };
                 this.formVisible=false
                 this.loading=false
+                this.$nextTick(()=>{
+                    this.$refs.form.clearValidate();
+                })
                 this.$emit("handleClosed")
             },
             changeType(val){
+                 this.$nextTick(()=>{
+                    this.$refs.form.clearValidate();
+                })
                 //console.log(val)
                 if(val=='number'){
                      this.form.minimumCharacters=1

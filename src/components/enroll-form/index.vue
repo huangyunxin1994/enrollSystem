@@ -91,6 +91,9 @@ export default {
                 this.form={};
                 this.formVisible=false
                 this.loading=false
+                this.$nextTick(()=>{
+                    this.$refs.form.clearValidate();
+                })
                 this.$emit("handleClosed")
             }
                

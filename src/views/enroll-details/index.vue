@@ -29,7 +29,7 @@
                                         v-model="mainMsg.submitData[0][item.dataKey]" resize="none" autosize>
                                     </el-input> -->
                                     <p class="img" v-else>
-                                        <img width="100%" :src="'data:image/png;base64,'+mainMsg.submitData[0][item.dataKey]" v-if="mainMsg.submitData[0][item.dataKey]"/>
+                                        <img width="100%" :src="'data:image/png;base64,'+mainMsg.submitData[0][item.dataKey]" v-if="mainMsg.submitData[0][item.dataKey]" />
                                     </p>
                                 </div>
                                 
@@ -41,7 +41,8 @@
                             <el-table :data="item.submitData" border style="width: 96%">
                                 <el-table-column v-for="(ite,index) in item.child" :key="index" :prop="ite.dataKey" :label="ite.name" :min-width="ite.width">
                                     <template slot-scope="scope">
-                                        <p  v-html="scope.row[ite.dataKey]"></p>
+                                        <p v-if="ite.type!=='img'"  v-html="scope.row[ite.dataKey]"></p>
+                                        <img v-else width="100%;height100%;" :src="'data:image/png;base64,'+scope.row[ite.dataKey]" />
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -54,6 +55,9 @@
                 </el-scrollbar>
             </div>      
         </div>
+        <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="'data:image/png;base64,'+dialogImageUrl" alt="">
+        </el-dialog>
     </el-scrollbar>
 </template>
 
@@ -66,7 +70,9 @@ export default {
             squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
             mainMsg:{},
             otherMsg:[],
-            htmlTitle: '报名个人信息'
+            htmlTitle: '报名个人信息',
+            dialogImageUrl:"",
+            dialogVisible:false
         }
     },
     methods:{
@@ -134,6 +140,10 @@ export default {
                 //console.log(err)
             })
         },
+        handlePictureCardPreview(src){
+            this.dialogImageUrl = src;
+            this.dialogVisible = true
+        }
     },
     mounted(){
        let id =  this.$route.query.id
@@ -149,25 +159,30 @@ export default {
             valArr.forEach((item)=> {
                 item.child.forEach(i=>{
                     //const arr = item.sumbitData.map(x => x[i.prop])  // 获取每一列的所有数据
-                    let temp=[];
-                    item.submitData.forEach(x => {
-                        let str=""
-                        if(Array.isArray(x[i.dataKey])){
-                            x[i.dataKey].forEach(m=>{
-                                if(str=="")
-                                    str+=m
-                                else
-                                   str+=","+m
-                            })
-                            x[i.dataKey]=str
-                        }else{
-                            str=x[i.dataKey]
-                        }
-                         str+=i.name
-                         temp.push(getByteLen(str)*10) //获得列的最大长度
-                         
-                    })
-                    i.width=Math.max(...temp)
+                    if(i.type!=="img"){
+                        let temp=[];
+                        item.submitData.forEach(x => {
+                            let str=""
+                            if(Array.isArray(x[i.dataKey])){
+                                x[i.dataKey].forEach(m=>{
+                                    if(str=="")
+                                        str+=m
+                                    else
+                                    str+=","+m
+                                })
+                                x[i.dataKey]=str
+                            }else{
+                                str=x[i.dataKey]
+                            }
+                            str+=i.name
+                            temp.push(getByteLen(str)*10) //获得列的最大长度
+                            
+                        })
+                        i.width=Math.max(...temp)
+                    }else{
+                       i.width=250 
+                    }
+                    
                 })
                 
             })
