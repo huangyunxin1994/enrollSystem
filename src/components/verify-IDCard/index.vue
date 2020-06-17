@@ -114,6 +114,9 @@ export default {
 				idCard:''
 			},
 			this.dialogPassVisible = false
+			this.$nextTick(()=>{
+                    this.$refs.ruleForm2.clearValidate();
+                })
 		},
 		setShow(id){
 			this.id = id

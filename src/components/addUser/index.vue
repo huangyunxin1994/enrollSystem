@@ -61,7 +61,7 @@ export default {
 		var validateAccount =(rule, value, callback) => {
 			if(value ===''){
 				callback(new Error('请输入账号'));
-			}else{
+			}else if(value != this.account){
 				getUserName({idCard:value}).then(res=>{
 					if(res.code==0){
 						if(res.data.data.length == 0){
@@ -71,6 +71,8 @@ export default {
 						}
 					}
 				})
+			}else{
+				callback();
 			}
 		}
 		var validatePassword =(rule, value, callback) => {
@@ -112,6 +114,7 @@ export default {
 			dialogPassVisible:false,
 			getClick:true,//创建按钮是否可以点击
 			haveName:false,//账号是否存在
+			account:"",
 			ruleForm2:{
 				account:'',
 				areas:'',
@@ -170,6 +173,9 @@ export default {
 				username:''
 			},
 			this.dialogPassVisible = false
+			 this.$nextTick(()=>{
+			                    this.$refs.ruleForm2.clearValidate();
+			                })
 		},
 		setShow(val){
 			this.dialogPassVisible = true
@@ -178,6 +184,7 @@ export default {
 			}else{
 				//console.log(val)
 				this.state = val
+				this.account=val.account
 				this.ruleForm2.account = val.account
 				this.ruleForm2.areas = val.areas
 				this.ruleForm2.createTime = val.createTime
@@ -226,8 +233,8 @@ export default {
 		},
 		//修改用户
 		changeSubmit(){
-			// this.$refs.ruleForm2.validate((valid) => {
-			// 	if (valid) {
+			this.$refs.ruleForm2.validate((valid) => {
+				if (valid) {
 					let param = {
 						account:this.ruleForm2.account,
 						areas:this.ruleForm2.areas,
@@ -254,8 +261,8 @@ export default {
 						this.$message.error('修改失败');
 					})
 					this.dialogPassVisible = false
-			// 	}
-			// })
+				}
+			})
 		}
 	},
 	computed:{
