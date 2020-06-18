@@ -4,7 +4,7 @@
 			<div class="passList">
 				<el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="120px">
 					<el-form-item  label="账号" prop="account">
-					<el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="请输入账号"></el-input>
+					<el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="请输入账号" :disabled="flag"></el-input>
 					</el-form-item>
 					<el-form-item  label="身份证号" prop="idCard">
 					<el-input type="text" v-model="ruleForm2.idCard" auto-complete="off" placeholder="请输入身份证号"></el-input>
@@ -98,6 +98,7 @@ export default {
 			}
 		};
 		return{
+			flag:false,
 			dialogPassVisible:false,
 			ruleForm2:{
 				account:'',
@@ -167,7 +168,8 @@ export default {
                     this.$refs.ruleForm2.clearValidate();
                 })
 		},
-		setShow(val){
+		setShow(val,flag){
+			this.flag =flag
 			this.ruleForm2.account = val
 			this.dialogPassVisible = true
 		}

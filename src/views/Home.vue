@@ -31,6 +31,7 @@
 
 <script>
 	import changePassworld from '../components/changePass/index.vue'
+	import { changePass } from '@/api/api'
 	export default {
 		components:{
 			changePassworld
@@ -78,8 +79,7 @@
 			},
 			//设置密码
 			setPass(){
-				// console.log(this.account)
-				this.$refs.changePass.setShow(this.account)
+				this.$refs.changePass.setShow(this.account,true)
 			},
 			//折叠导航栏
 			collapse:function(){
