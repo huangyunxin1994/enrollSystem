@@ -7,6 +7,7 @@ export const selectSigup = params => { return get(`${base}/signup/selectSigup`, 
 export const getSignup = params => { return getResultful(`${base}/applicants/Signup`, params); };//查询报名项目信息
 export const getSignupPerson = params => { return getResultful(`${base}/applicants/signup`, params); };//查询报名人员列表
 export const getPersonDetial = params => { return getResultful(`${base}/applicants`, params); };//查询报名人员详细信息
+export const changePass = params => { return post(`${base}/user/changePassword`, params, {emulateJSON: true}); };//修改密码
 
 export const vaildIdCard = params => { return get(`${base}/user/getUserByIdCard`, params); };//验证身份证
 export const checkEnroll = params => { return puts(`${base}/applicants/Signup`, params, {emulateJSON: true}); };//批量更新报名信息

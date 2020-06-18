@@ -78,6 +78,7 @@
 			},
 			//设置密码
 			setPass(){
+				console.log(this.account)
 				this.$refs.changePass.setShow(this.account)
 			},
 			//折叠导航栏
@@ -92,8 +93,10 @@
 			var user = sessionStorage.getItem('user');
 			if (user) {
 				user = JSON.parse(user);
+				console.log(user)
 				this.sysUserName = user.username || '';
 				this.sysUserAvatar = user.avatar || '';
+				this.account = user.account || '';
 			}
 		}
 	}

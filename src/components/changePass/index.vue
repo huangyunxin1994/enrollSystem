@@ -126,9 +126,12 @@ export default {
 	},
 	methods:{
 		onSubmit(){
+			// console.log("修改密码")
 			 this.$refs.ruleForm2.validate((valid) => {
+				 
 					if (valid) {
 						let para = Object.assign({}, this.ruleForm2);
+						// console.log(para)
 						changePass(para).then((res)=>{
 							//console.log(res)
 							if(res.code == 0){
