@@ -78,7 +78,7 @@
 			},
 			//设置密码
 			setPass(){
-				console.log(this.account)
+				// console.log(this.account)
 				this.$refs.changePass.setShow(this.account)
 			},
 			//折叠导航栏
