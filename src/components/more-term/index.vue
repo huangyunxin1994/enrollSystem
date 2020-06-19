@@ -2,7 +2,7 @@
     <el-dialog title="更多筛选条件" :visible.sync="formVisible" :before-close="handleClose" :close-on-click-modal="false" top="5vh" width="600px">     
        <div class="more-term-main-radio">
            <!-- <el-checkbox v-model="checked" :true-label="1" :false-label="2">在当前结果筛选</el-checkbox> -->
-           <div class="choose-history" v-for="(item,index) in showTableTitle" :key="index" v-show="item.name!=='reviewState'&&item.name!=='readNot'&&titlePara[item.name]['showVal'].length>0">
+           <div class="choose-history" v-for="(item,index) in showTableTitle" :key="index" v-show="item.name!=='reviewState'&&item.name!=='readNot'&&item.name!=='submitTime'&&titlePara[item.name]['showVal'].length>0">
                 <el-tag class="choose-history-tag"  >
                    {{item.title}}: 
                    <!-- <span v-for="(i,index) in titlePara[item.name]['showVal']" :key='index'>{{i}} </span>  -->
@@ -18,7 +18,7 @@
                <span class="more-term-text-title">选择字段</span>
                <div class="more-term-contain-type">
                    <div class="more-term-radio" v-for="(item,index) in showTableTitle" :key="index">
-                        <el-radio v-model="radio" :label="item.name" v-if="item.name!=='reviewState'&&item.name!=='readNot'">{{item.title}}</el-radio>
+                        <el-radio v-model="radio" :label="item.name" v-if="item.name!=='reviewState'&&item.name!=='readNot'&&item.name!=='submitTime'">{{item.title}}</el-radio>
                   </div>
                </div>
                 
@@ -245,7 +245,7 @@ export default {
             handler:(val)=>{
                 //console.log(val)
                 Object.keys(val).forEach(i=>{
-                    if(i!=='reviewState'&&i!=='readNot'){
+                    if(i!=='reviewState'&&i!=='readNot'&&i!='submitTime'){
                         let arr = val[i].value
                         let type =val[i].opType
                         if(arr){

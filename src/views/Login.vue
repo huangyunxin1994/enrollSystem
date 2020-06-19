@@ -25,6 +25,7 @@
   import { requestLogin } from '../api/api';
   import changePassworld from '../components/changePass/index.vue'
   import verifyIdcard from '../components/verify-IDCard/index.vue'
+  import {Debounce} from '@/utils/index.js'
   //import NProgress from 'nprogress'
   export default {
     components:{
@@ -61,40 +62,40 @@
       handleReset2() {
         this.$refs.ruleForm2.resetFields();
       },
-      handleSubmit2(ev) {
+      handleSubmit2: Debounce(function() {
         var _this = this;
         this.$refs.ruleForm2.validate((valid) => {
-          if (valid) {
-            //_this.$router.replace('/table');
-            this.logining = true;
-            //NProgress.start();
-            var loginParams = { account: this.ruleForm2.account, password: this.ruleForm2.checkPass ,type:2};//普通用户传2
-            requestLogin(loginParams).then(data => {
-              this.logining = false;
-              if(data.code == 0){
-				  let { msg, code, user } = data.data;
-				  let type = data.data.type
-				  let boolId = user.hasOwnProperty("idCard"); 
-				  if(boolId == false){//判断身份证号是否存在，如果存在就直接登录，如果不存在，需要绑定身份证号
-						this.$refs.verifyId.setShow(user.id)
-				  }else{
-					  sessionStorage.setItem('user', JSON.stringify(user));
-					  sessionStorage.setItem('type', JSON.stringify(type));
-					  this.$router.push({ path: '/' });
-					  this.$message({
-						message: "登录成功",
-						type: 'success'
-					  });
-				  }
-			  }else{
-				  this.$message({
-				    message: data.msg,
-				    type: 'error'
-				  });
-			  }
-            });
-        } else {
-            return false;
+            if (valid) {
+              //_this.$router.replace('/table');
+                this.logining = true;
+                //NProgress.start();
+                var loginParams = { account: this.ruleForm2.account, password: this.ruleForm2.checkPass ,type:2};//普通用户传2
+                requestLogin(loginParams).then(data => {
+                    this.logining = false;
+                    if(data.code == 0){
+                        let { msg, code, user } = data.data;
+                        let type = data.data.type
+                        let boolId = user.hasOwnProperty("idCard"); 
+                        if(boolId == false){//判断身份证号是否存在，如果存在就直接登录，如果不存在，需要绑定身份证号
+                          this.$refs.verifyId.setShow(user.id)
+                        }else{
+                          sessionStorage.setItem('user', JSON.stringify(user));
+                          sessionStorage.setItem('type', JSON.stringify(type));
+                          this.$router.push({ path: '/' });
+                          this.$message({
+                            message: "登录成功",
+                            type: 'success'
+                          });
+                        }
+                    }else{
+                        this.$message({
+                          message: data.msg,
+                          type: 'error'
+                        });
+                    }
+              });
+          } else {
+              return false;
           }
         });
         if(_this.checked == true){
@@ -104,7 +105,7 @@
           // console.log("清空Cookie");
           _this.clearCookie();
         }
-      },
+      },300),
 	  //设置cookie
 	  setCookie(c_name, c_pwd, exdays){
 		var exdate = new Date(); //获取时间

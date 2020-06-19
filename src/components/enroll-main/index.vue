@@ -11,7 +11,7 @@
                     >
                     {{ ruleForm.state==1?"未发布":(ruleForm.state==4?'已结束':(ruleForm.state==2?'未开始':(ruleForm.state==3?'进行中':''))) }}
                 </el-tag>
-                <el-button type="primary" icon="el-icon-document-copy" class="button-class" size="medium" @click="copyAndAdd">复制并新建活动</el-button>
+                <el-button type="primary" icon="el-icon-document-copy" class="button-class" size="medium" @click="copyAndAdd" :disabled="!disabledTag">复制并新建活动</el-button>
             </div>
            
             <div class="new-enroll-container">
@@ -73,7 +73,7 @@
                             <draggable v-model="item.child" :options="{animation:200,handle:'.dragClass'}">
                                 <div v-for="(item,i) in item.child" :key="i" class="baseform-item">
                                     <span class="baseform-item-name baseform-item-o">{{item.name}}</span>
-                                    <el-checkbox class="baseform-item-o" :true-label='1' :false-label='0' v-model="item.required" :disabled="item.dataKey==='name'||item.dataKey==='phone'">必填</el-checkbox>
+                                    <el-checkbox class="baseform-item-o" :true-label='1' :false-label='0' v-model="item.required" :disabled="disabledTag||(item.dataKey==='name'||item.dataKey==='phone')">必填</el-checkbox>
                                     <el-link :underline="false" icon="el-icon-edit" class="baseform-item-o" @click="updateFormOption(index,i)" :disabled="disabledTag||(item.dataKey==='name'||item.dataKey==='phone')"></el-link>
                                     <el-link :underline="false" icon="el-icon-document-copy" class="baseform-item-o" :disabled="disabledTag"></el-link>
                                     <el-link :underline="false" icon="el-icon-delete" class="baseform-item-o" @click="removeFormOption(index,i)" :disabled="disabledTag||(item.dataKey==='name'||item.dataKey==='phone')"></el-link>
@@ -90,6 +90,8 @@
 								<el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[2])">年龄</el-button>
 								<el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[3])">婚姻状况</el-button>
 								<el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[4])">电话号码</el-button>
+                                <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[5])">一寸照</el-button>
+
 						</div>
                         <div class="custom">
 							<div class="title-class" >自定义字段</div>
@@ -98,7 +100,6 @@
 							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'number')">数字</el-button>
 							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'date')">日期</el-button>
 							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'time')">时间</el-button>
-							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'img')">图片</el-button>
 							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'radio')">单选</el-button>
 							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'checkbox')">多选</el-button>
 							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'select')">下拉框</el-button>
@@ -116,7 +117,7 @@
                 <el-button type="primary" icon="el-icon-edit" class="button-class" size="medium" :disabled="ruleForm.state!==2" @click="changeDisabled">修改</el-button>
                 <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="ruleForm.state!==2" @click="submitForm('otherPreview')">预览</el-button>
                 <!-- <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="!(handleType=='update'&&ruleForm.state==2)" @click="cancelSubmit">撤销发布</el-button> -->
-                <el-button type="success" icon="el-icon-upload2" class="button-class" size="medium" @click="submitForm('submit')" :disabled="ruleForm.state!==2">提交</el-button>
+                <el-button type="success" icon="el-icon-upload2" class="button-class" size="medium" @click="submitForm('submit')" :disabled="ruleForm.state!==2&&disabledTag">提交</el-button>
             </div>
             <enroll-form ref="enrollform" :tableTitle='tableTitle' :formRule="formRule" @insertData="insertData" @updateData="updateData"></enroll-form>
             <enroll-option ref="enrolloption" @insertOption='insertOption' @updateOption='updateOption'></enroll-option>
@@ -192,7 +193,8 @@ export default {
 				{name :'性别',type :"radio", minimumCharacters:'',maximumCharacters:20,required:0, childs:[{name:"男"},{name:"女"}],submitType:"insert"},
 				{name :'年龄',type :"number", minimumCharacters:'',maximumCharacters:20,required:0, childs:[],submitType:"insert"},
 				{name :'婚姻状况',type :"radio", minimumCharacters:'',maximumCharacters:20,required:0, childs:[{name:"已婚"},{name:"未婚"}],submitType:"insert"},
-				{name :'电话号码',type :"phone", minimumCharacters:11,maximumCharacters:11,required:0, childs:[],submitType:"insert"},
+                {name :'电话号码',type :"phone", minimumCharacters:11,maximumCharacters:11,required:0, childs:[],submitType:"insert"},
+                {name :'一寸照',type :"img", minimumCharacters:'',maximumCharacters:20,required:0, childs:[],submitType:"insert"},
 			],
         }
     },

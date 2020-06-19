@@ -25,6 +25,9 @@
 					</el-col>
 			</section>
 		</el-col>
+		<el-col :span="24" class="footer">
+			
+		</el-col>
 		<change-passworld ref="changePass"></change-passworld>
 	</el-row>
 </template>
@@ -231,5 +234,11 @@
 				}
 			}
 		}
+		// .footer {
+		// 	height: 40px;
+		// 	line-height: 80px;
+		// 	background: $color-lightblue;
+		// 	color:#fff;
+		// }
 	}
 </style>

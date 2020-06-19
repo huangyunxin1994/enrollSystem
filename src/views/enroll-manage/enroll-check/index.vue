@@ -15,7 +15,7 @@
                     
                     <div>
                         <el-button type="primary" icon="el-icon-printer" size="medium"  @click="exportToExcel()">导出</el-button>
-                        <el-button type="primary" size="medium"  @click="handleQrCode()"><i class="iconfont">&#xe606; </i>查看小程序二维码</el-button>
+                        <!-- <el-button type="primary" size="medium"  @click="handleQrCode()"><i class="iconfont">&#xe606; </i>查看小程序二维码</el-button> -->
                     </div>
                 </div> 
                 <div class="enroll-check-container-handle" >
@@ -23,7 +23,7 @@
                         <el-input v-model="inputValue" placeholder="请输入内容"  style="width:30%"></el-input>
                         <div  style="margin-left:20px;">
                             <label for="" class="enroll-check-container-handle-label">审核状态</label>
-                            <el-select v-model="titlePara.reviewState" filterable placeholder="请选择" style="width:50%"  @change="changeResult">
+                            <el-select v-model="titlePara.reviewState" filterable placeholder="请选择" style="width:50%"  @change="selectByTerm">
                                 <el-option
                                 v-for="item in optionsC"
                                 :key="item.value"
@@ -34,7 +34,7 @@
                         </div>
                         <div >
                         <label for="" class="enroll-check-container-handle-label">是否确认已读</label>
-                        <el-select v-model="titlePara.readNot" filterable placeholder="请选择"  style="width:50%" @change="changeResult">
+                        <el-select v-model="titlePara.readNot" filterable placeholder="请选择"  style="width:50%" @change="selectByTerm">
                             <el-option
                             v-for="item in optionsW"
                             :key="item.value"
@@ -54,9 +54,9 @@
                         <div class="enroll-check-container-handle-left1-date-picker">
                             <label for="" class="enroll-check-container-handle-label" style="width:120px" >报名时间段</label>
                         
-                            <el-date-picker type="date" placeholder="选择日期" v-model="startTime" style="width:50%" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="startTimeOptions"></el-date-picker>                   
+                            <el-date-picker type="date" placeholder="选择日期" v-model="startTime" style="width:50%" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="startTimeOptions" @change="changeEtime"></el-date-picker>                   
                             <span  style="margin:20px;">至</span>
-                            <el-date-picker type="date" placeholder="选择日期" v-model="endTime"  style="width:50%" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="endTimeOptions"></el-date-picker>
+                            <el-date-picker type="date" placeholder="选择日期" v-model="endTime"  style="width:50%" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="endTimeOptions" @change="changeEtime"></el-date-picker>
                             
                         </div>
                         
@@ -68,14 +68,15 @@
                         </div>
                     
                 </div>
-                <el-table :data="tables.slice((page-1)*pageSize,page*pageSize)" border stripe highlight-current-row v-loading="listLoading" @selection-change="selsChange" @row-click="selectDetails" height="calc(98% - 210px)" ref="table" :row-key="getRowKeys">
+                <el-table :data="tables.slice((page-1)*pageSize,page*pageSize)" border stripe highlight-current-row v-loading="listLoading" @selection-change="selsChange" height="calc(98% - 210px)" ref="table" :row-key="getRowKeys">
                     <el-table-column type="selection" width="55" :reserve-selection="true">
                     </el-table-column>
                     <el-table-column type="index" width="60" label="序号">
                     </el-table-column>
                     <el-table-column v-for="(item,index) in showTableTitle" :fixed="item.fixed" :key="index" :prop="item.name" :label="item.title" :min-width="item.width"  :sortable="item.type!='button'&&item.type!='handle'?true:false" show-overflow-tooltip>
                         <template slot-scope="scope">
-                            <p :formatter="formatSex" v-html="arrFormatter(scope.row[item.name],item.name)"></p>
+                            <el-link v-if="item.name==='name'" type="primary" :underline="false" v-html="arrFormatter(scope.row[item.name],item.name)" @click="selectDetails(scope.$index, scope.row)"></el-link>
+                            <p v-else :formatter="formatSex" v-html="arrFormatter(scope.row[item.name],item.name)"></p>
                         </template>
                     </el-table-column>
                     
@@ -165,7 +166,7 @@ export default {
                 label: '已读'
                 }
             ],
-            valueC:"1",
+            valueC:"",
             valueW:""
         }
     },
@@ -189,6 +190,8 @@ export default {
                   return row[column.property]
         },
         arrFormatter (value,name) {
+            if(name == 'name')
+                return '<span style="font-weight:bold">'+value+'</span>'
             if(name=='readNot')
              return value == 1 ? '<span style="color:#F56C6C;font-weight:bold">未读</span>' : value == 2 ? '<span style="color:#67C23A;font-weight:bold">已读</span>' :'';
             else if(name=='reviewState')
@@ -242,11 +245,14 @@ export default {
                                 
                         }
                     }
-                    let paras = {title:"审核状态",name:"reviewState",type:"input",width:120}
+                    let paras = {title:"报名日期",name:"submitTime",type:"date",width:120}
+                    let paras1 = {title:"审核状态",name:"reviewState",type:"input",width:120}
                     let paras2 ={title:"是否已读",name:"readNot",type:"input",width:120} 
                     tableTitle.push(paras)  
+                    tableTitle.push(paras1)  
                     tableTitle.push(paras2)
-                    titlePara.reviewState="1"
+                     titlePara.submitTime=""
+                    titlePara.reviewState=""
                     titlePara.readNot=""
                     this.tableTitle=tableTitle
                     this.showTableTitle=tableTitle
@@ -255,10 +261,11 @@ export default {
                     
                 }
             })
-            await this.getSignupPerson()
             this.$nextTick(()=>{
                 this.$refs.table.doLayout()
-            })            
+            }) 
+            await this.getSignupPerson()
+                       
         },
         async getSignupPerson(){
             this.sels=[]
@@ -285,29 +292,29 @@ export default {
                         para.personId = formArr.id
                         para.reviewState = formArr.reviewState
                         para.readNot = formArr.readNot
+                        para.submitTime = formArr.submitTime.substring(0,10)
                         arr.push(para)
                     }
                     this.tableAllData=arr
-                    this.tableData=this.tableAllData.filter(i=>{
-                        return i.reviewState=="1"
-                    })
+                    this.tableData=arr
                 }
 
             }).catch(err=>{
             })   
         },
-        changeResult(val){
-            // console.log(this.titlePara)
-            let keys = Object.keys(this.titlePara);
-            let vals = Object.values(this.titlePara);
-            this.tableData = this.tableAllData.filter(item=>{
-                for(let i=0;i<keys.length;i++){
-                   if( String(item[keys[i]]).indexOf(vals[i]) <= -1)
-                    return ""
-                }
-                return item
-            })
-        },
+        // changeResult(val){
+        //      console.log(this.titlePara)
+        //     let keys = Object.keys(this.titlePara);
+        //     let vals = Object.values(this.titlePara);
+        //     this.tableData = this.tableAllData.filter(item=>{
+        //         for(let i=0;i<keys.length;i++){
+        //             console.log(keys[i],item[keys[i]],vals[i],String(item[keys[i]]).indexOf(vals[i]))
+        //            if( String(item[keys[i]]).indexOf(vals[i]) <= -1)
+        //             return ""
+        //         }
+        //         return item
+        //     })
+        // },
         //选择筛选条件
         chooseTerm(){
             this.$refs.moreTerm.handleShow()
@@ -447,28 +454,21 @@ export default {
                     return item
                 }
             })
-            // this.tableData = this.tableAllData.filter(item=>{
-            //     for(let i=0;i<keys.length;i++){
-            //         if(Array.isArray(this.titlePara[keys[i]])){
-            //             console.log(keys[i]+","+vals[i])
-            //             let bool=false
-            //             for(let j=0;j<vals[i].length;j++){
-            //                 console.log(vals[i][j])
-            //                 if( String(item[keys[i]]).indexOf(vals[i][j]) > -1)
-            //                 bool=true
-            //             }
-            //             if(!bool)
-            //                 return ""
-            //         }
-            //         else if( String(item[keys[i]]).indexOf(vals[i]) <= -1)
-            //         return ""
-            //     }
-            //     return item
-            // })
         },
-        handleQrCode(){
-            this.$refs.qrcode.dialogVisible=true
+        changeEtime(){
+            if(this.startTime!=""&&this.endTime!=""){
+                this.tableData=this.tableAllData.filter(i=>{
+                    let submitTime =  i.submitTime
+                    console.log(this.compareDate(submitTime,this.startTime))
+                    console.log(this.compareDate(this.endTime,submitTime))
+                    if(this.compareDate(submitTime,this.startTime)&&this.compareDate(this.endTime,submitTime))
+                     return i
+                })
+            }
         },
+        // handleQrCode(){
+        //     this.$refs.qrcode.dialogVisible=true
+        // },
         //excel数据导出
         exportToExcel() {
             if(this.tableAllData.length>0){
@@ -484,7 +484,7 @@ export default {
                     })
                     const list = this.tableAllData;
                     const data = this.formatJson(filterVal, list);
-                    export_json_to_excel(tHeader, data, `${this.enrollData.title}-人员资料`);
+                     export_json_to_excel(tHeader, data, `${this.enrollData.title}-人员资料`);
                 })
             }else{
                 this.$notify({
@@ -496,16 +496,25 @@ export default {
            
         },
         formatJson(filterVal, jsonData) {
-                return jsonData.map(v => filterVal.map(j => v[j]))
+                return jsonData.map(v => filterVal.map(j => {
+                        if(j=='reviewState')
+                            return v[j] == 1 ? '未审核' :( v[j] == 2 ? '已通过' : ( v[j] == 3 ? '未通过' : ''));
+                        else if(j=='readNot')
+                            return v[j] == 1 ? '未读' : v[j] == 2 ? '已读' :'';
+                        else
+                            return v[j]
+                    }
+                ))
             },
         compareDate(dateTime1,dateTime2)
         {
             if(dateTime1==''||dateTime2==''){
                 return true;
-            }
+            }console.log(dateTime1,dateTime2)
             var formatDate1 = new Date(dateTime1)
             var formatDate2 = new Date(dateTime2)
-            if(formatDate1 >= formatDate2)
+            console.log()
+            if(formatDate1 >=formatDate2)
             {
                 return true;
             }
@@ -515,7 +524,7 @@ export default {
             }
         },
         //点击某行跳转报名详情
-        selectDetails(row, event, column){
+        selectDetails(index,row){
             this.$router.push(
                 {
                     path:"/enrolldetails",

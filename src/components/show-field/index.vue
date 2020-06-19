@@ -5,7 +5,7 @@
                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
                 <div style="margin: 15px 0;"></div>
                 <el-checkbox-group v-model="checkedField" @change="handlecheckedFieldChange">
-                    <el-checkbox v-for="(item,index) in tableTitle" :label="item.name" :key="index" class="more-term-radio">{{item.title}}</el-checkbox>
+                    <el-checkbox v-for="(item,index) in tables" :label="item.name" :key="index" class="more-term-radio">{{item.title}}</el-checkbox>
                 </el-checkbox-group>
            </div>
        </div>
@@ -40,7 +40,7 @@ export default {
         this.tableTitle.forEach(item => {
             arr.push(item.name)
         });
-        this.checkedField = val ? arr : [];
+        this.checkedField = val ? arr : ["name"];
         this.checkAll = this.checkedField.length === this.tableTitle.length
         this.isIndeterminate = this.checkedField.length> 0 && this.checkedField.length < this.tableTitle.length;
       },
@@ -62,7 +62,7 @@ export default {
                 this.formVisible = true;	
             },
             //新增
-			addSubmit() {         
+			addSubmit() {      
                this.$emit("showField",this.checkedField)
                this.formVisible = false;	
             },
@@ -78,6 +78,11 @@ export default {
                     this.$emit("clearChoose")
                 }
             }
+    },
+    computed:{
+        tables:function(){
+            return this.tableTitle.filter((i)=> i.name !== 'name')
+        }
     }
 }
 </script>

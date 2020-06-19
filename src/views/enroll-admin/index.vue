@@ -211,7 +211,8 @@ export default {
         if(search){
           return  this.tableData.filter(function(dataNews){
             return Object.keys(dataNews).some(function(key){
-              return String(dataNews[key]).toLowerCase().indexOf(search) > -1
+                if(key!=="password")
+                    return String(dataNews[key]).toLowerCase().indexOf(search) > -1
             })
           })
         }

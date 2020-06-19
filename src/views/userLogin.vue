@@ -23,7 +23,8 @@
 
 <script>
 	import { requestLogin } from '../api/api';
-	export default{
+	  import {Debounce} from '@/utils/index.js'
+	export default {
 		data(){
 			return{
 				logining:false,
@@ -55,7 +56,7 @@
 			//   // this.$refs.changePass.setShow()
 			//   console.log("修改密码")
 			// },
-			handleSubmit(e){
+			handleSubmit:Debounce(function(){
 				let _this = this;
 				this.$refs.ruleForm2.validate((valid)=>{
 					if(valid){
@@ -87,7 +88,7 @@
 						});
 					}
 				})
-			}
+			},300)
 		}
 	}
 </script>

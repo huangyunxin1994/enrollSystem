@@ -16,7 +16,7 @@
 					<el-input type="password" v-model="ruleForm2.again" auto-complete="off" placeholder="请再次密码" show-password></el-input>
 					</el-form-item>
 					
-					<el-button type="primary" style="width:100%;" @click.native.prevent="onSubmit" >确定</el-button>
+					<el-button type="primary" style="width:100%;" @click.native.prevent="onSubmit" :loading="loading" >确定</el-button>
 					
 				</el-form>
 			</div>
@@ -26,8 +26,7 @@
 
 <script>
 import {changePass,vaildIdCard} from '@/api/api.js'
-import {IdentityCodeValid} from '@/utils/index.js'
-
+import {IdentityCodeValid,Debounce} from '@/utils/index.js'
 export default {
 	data(){
 		var validatePass = (rule, value, callback) => {
@@ -63,18 +62,7 @@ export default {
 				if(!bool){
 					callback(new Error('身份证格式错误'));
 				}else{
-					if(this.ruleForm2.account === ''){
-						callback(new Error('请输入账号'));
-						
-					}else{
-						vaildIdCard({idCard:value,account:this.ruleForm2.account}).then(res=>{
-							if(res.code==0){
-								callback();
-							}else{
-							  callback(new Error(res.msg));
-							}
-						})
-					}
+					callback();
 				}
 				
 			}
@@ -83,21 +71,28 @@ export default {
 			if(value ===''){
 				callback(new Error('请输入账号'));
 			}else{
-				if(this.ruleForm2.idCard === ''){
-					callback(new Error('请输入身份证'));
+				callback();
+				// if(this.ruleForm2.idCard === ''){
+				// 	callback();
 					
-				}else{
-					vaildIdCard({account:value,idCard:this.ruleForm2.idCard}).then(res=>{
-						if(res.code==0){
-							callback();
-						}else{
-						  callback(new Error(res.msg));
-						}
-					})
-				}
+				// }else{
+				// 	let bool = IdentityCodeValid(this.ruleForm2.idCard)
+				// 	if(bool){
+				// 		vaildIdCard({account:value,idCard:this.ruleForm2.idCard}).then(res=>{
+				// 			if(res.code==0){
+				// 				callback();
+				// 			}else{
+				// 			callback(new Error(res.msg));
+				// 			}
+				// 		})
+				// 	}else{
+				// 		callback();
+				// 	}
+				// }
 			}
 		};
 		return{
+			loading:false,
 			flag:false,
 			dialogPassVisible:false,
 			ruleForm2:{
@@ -126,36 +121,54 @@ export default {
 		}
 	},
 	methods:{
-		onSubmit(){
+		onSubmit:Debounce (function(){
 			// console.log("修改密码")
+			this.loading=true
 			 this.$refs.ruleForm2.validate((valid) => {
 				 
 					if (valid) {
 						let para = Object.assign({}, this.ruleForm2);
-						// console.log(para)
-						changePass(para).then((res)=>{
-							//console.log(res)
-							if(res.code == 0){
-								this.$message({
-									message: '密码修改成功',
-									type: 'success'
-								});
-								this.ruleForm2={
-									newPassword:'',
-									again:'',
-									idCard:''
-								},
-								this.dialogPassVisible = false
+						vaildIdCard({idCard: this.ruleForm2.idCard,account:this.ruleForm2.account}).then(res=>{
+							if(res.code==0){
+								// console.log(para)
+								changePass(para).then((res)=>{
+									//console.log(res)
+									if(res.code == 0){
+										this.$message({
+											message: '密码修改成功',
+											type: 'success'
+										});
+										this.ruleForm2={
+											newPassword:'',
+											again:'',
+											idCard:''
+										},
+										this.dialogPassVisible = false
+										this.loading=false
+									}else{
+										this.$message.error('密码修改失败');
+										this.loading=false
+									}
+								}).catch((res)=>{
+									this.$message.error('密码修改失败');
+									this.loading=false
+								})
 							}else{
-								this.$message.error('密码修改失败');
+							  	this.$notify({
+                                    title: '警告',
+                                    message: '账号或身份证号验证错误',
+                                    type: 'warning'
+								});
+								this.loading=false
 							}
-						}).catch((res)=>{
-							this.$message.error('密码修改失败');
 						})
+						
+					}else{
+						this.loading=false
 					}
 			 })
 			
-		},
+		},300),
 		handleClose(){
 			this.ruleForm2={
 				account:'',
