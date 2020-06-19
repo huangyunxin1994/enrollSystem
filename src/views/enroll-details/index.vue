@@ -5,21 +5,22 @@
             
             <div class="enroll-details-container" ref="container">
                 <div class="enroll-details-container-img">
-                    <el-button type="primary" size="medium" @click="getPdf()">导出</el-button>
+                    <el-button type="primary" size="medium" @click="exportData()">导出</el-button>
                     <!-- <el-avatar shape="square" :size="100" :src="squareUrl"></el-avatar> -->
                 </div> 
                 <el-scrollbar style="width:100%;height:calc(100% - 36px);" :vertical="true">
-                <div class="enroll-details-container-msg" id="pdfDom">
-                    <h1 style="text-align:center">报名个人信息表</h1>
-                    <div class="base-msg">
+                <div class="enroll-details-container-msg" >
+                    <div id='pdfDom' style="padding-top:50px">
+                    <h1 style="text-align:center">{{htmlTitle}}</h1>
+                    <div class="base-msg" >
                             <div v-for="(item,index) in mainMsg.child" :key="index">
                                 <div v-if="item.type!=='textarea'&&item.type!=='img'" class="base-msg-item ">
-                                    <p class="base-msg-item-label">{{item.name}}</p>
-                                    <p class="base-msg-item-text small" v-if="item.type!=='textarea'&&item.type!=='img'&&(!item.maximumCharacters||item.maximumCharacters<=20)">{{mainMsg.submitData[0][item.dataKey]}}</p>
-                                    <p class="base-msg-item-text medium" v-else-if="item.type!=='textarea'&&(item.maximumCharacters>20&&item.maximumCharacters<=50)">{{mainMsg.submitData[0][item.dataKey]}}</p>
+                                    <span class="base-msg-item-label">{{item.name}}</span>
+                                    <span class="base-msg-item-text small" v-if="item.type!=='textarea'&&item.type!=='img'&&(!item.maximumCharacters||item.maximumCharacters<=20)">{{mainMsg.submitData[0][item.dataKey]}}</span>
+                                    <span class="base-msg-item-text medium" v-else-if="item.type!=='textarea'&&(item.maximumCharacters>20&&item.maximumCharacters<=50)">{{mainMsg.submitData[0][item.dataKey]}}</span>
                                 </div>
                                 <div v-else class="base-msg-item-l ">
-                                    <p class="base-msg-item-label">{{item.name}}</p>
+                                    <span class="base-msg-item-label">{{item.name}}</span>
                                     <pre v-if="item.type!=='img'" class="large">{{mainMsg.submitData[0][item.dataKey]}}</pre>
                                     <!-- <el-input
                                     
@@ -28,35 +29,46 @@
                                         placeholder="请输入内容"
                                         v-model="mainMsg.submitData[0][item.dataKey]" resize="none" autosize>
                                     </el-input> -->
-                                    <p class="img" v-else>
+                                    <span class="img" v-else>
                                         <img width="100%" :src="'data:image/png;base64,'+mainMsg.submitData[0][item.dataKey]" v-if="mainMsg.submitData[0][item.dataKey]" />
-                                    </p>
+                                    </span>
                                 </div>
                                 
                             </div>
                     </div>
+                     </div>
                     <div class="other-msg">
                         <div v-for="(item,index) in otherMsg" :key="index">
                             <div class="other-msg-title">{{item.name}}</div>
                             <el-table :data="item.submitData" border style="width: 96%">
                                 <el-table-column v-for="(ite,index) in item.child" :key="index" :prop="ite.dataKey" :label="ite.name" :min-width="ite.width">
                                     <template slot-scope="scope">
-                                        <p v-if="ite.type!=='img'"  v-html="scope.row[ite.dataKey]"></p>
+                                        <span v-if="ite.type!=='img'"  v-html="scope.row[ite.dataKey]"></span>
                                         <img v-else width="100%;height100%;" :src="'data:image/png;base64,'+scope.row[ite.dataKey]" />
                                     </template>
                                 </el-table-column>
                             </el-table>
                         </div>
                         <div class="other-msg-title">回复信息</div>
-                        <pre class="other-msg-message"></pre>
+                        <pre class="other-msg-message">{{replyMessage}}</pre>
                     </div>
 
                 </div>
                 </el-scrollbar>
             </div>      
         </div>
-        <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="'data:image/png;base64,'+dialogImageUrl" alt="">
+        <el-dialog :visible.sync="dialogVisible" width="300px" top="30vh">
+            <div>
+                <el-checkbox v-model="checked1">{{mainTitle}}（PDF）</el-checkbox>
+            </div>
+            <br/>
+            <div>
+                <el-checkbox v-model="checked2">附加信息（Excel）</el-checkbox>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false" size="mini">取 消</el-button>
+                <el-button type="primary" @click="downLoad" size="mini">确 定</el-button>
+            </div>
         </el-dialog>
     </el-scrollbar>
 </template>
@@ -70,9 +82,15 @@ export default {
             squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
             mainMsg:{},
             otherMsg:[],
-            htmlTitle: '报名个人信息',
+            htmlTitle: '',
+            mainTitle:"",
+            enrollerName:"",
+            enrollName:"",
             dialogImageUrl:"",
-            dialogVisible:false
+            dialogVisible:false,
+            checked1:false,
+            checked2:false,
+            replyMessage:""
         }
     },
     methods:{
@@ -89,10 +107,15 @@ export default {
             getPersonDetial({id:id}).then(res=>{
                 if(res.code==0){
                     let para = res.data.data;
-                    let personMsg = JSON.parse(para.registrationInformation).form;
+                    this.replyMessage = para.replyMessage
+                    let enrolldata = JSON.parse(para.registrationInformation)
+                    console.log(para)
+                    this.enrollName = enrolldata.title
+                    let personMsg = enrolldata.form;
                    getSignup({id:para.sid}).then(res=>{
                        if(res.code==0){
                            let titleData = res.data.data 
+                           console.log(titleData)
                            for(let i=0;i<titleData.length;i++){
                                personMsg[i].child=titleData[i].child
                            }
@@ -112,6 +135,9 @@ export default {
                                     }
                            })
                             this.mainMsg = personMsg[0]
+                            this.mainTitle = this.mainMsg.name
+                            this.htmlTitle = `${this.mainMsg.submitData[0]['name']}-${this.mainMsg.name}`
+                            this.enrollerName = this.mainMsg.submitData[0]['name']
                             let smallArr=[],mediumArr=[],largeArr=[],imgArr=[]
                             this.mainMsg.child.forEach(i=>{
                                 //console.log(i.type)
@@ -143,7 +169,69 @@ export default {
         handlePictureCardPreview(src){
             this.dialogImageUrl = src;
             this.dialogVisible = true
-        }
+        },
+        exportData(){
+            this.dialogVisible = true
+        },
+        downLoad(){
+            this.dialogVisible = false
+            if(this.checked1)
+                this.getPdf();
+            if(this.checked2)
+                this.exportToExcel()
+        },
+        //excel数据导出
+        exportToExcel() {
+            if(this.otherMsg.length>0){
+                console.log(this.otherMsg)
+                    require.ensure([], () => {
+                        const {
+                            export_json_to_excel
+                        } = require('@/export/Export2Excel');
+                        const tHeaders = [] // 对应表格输出的中文title
+                        const datas = []  // 对应表格输出的数据   
+                        const sheetNames = [] // 对应表格sheet的名称
+                        const fileName =`${this.enrollerName}-${this.enrollName}-附加信息`
+                        console.log(fileName)
+                        this.otherMsg.forEach(i=>{
+                            const tHeader = []
+                            const filterVal = [] 
+                            const sheetName =i.name
+                            i.child.forEach(val => {
+                                tHeader.push(val.name)
+                                filterVal.push(val.dataKey)
+                            })
+                            const list = i.submitData;
+                            const data = this.formatJson(filterVal, list);
+                            tHeaders.push(tHeader)
+                            datas.push(data)
+                            sheetNames.push(sheetName)
+                        })
+
+                         export_json_to_excel(tHeaders, datas, sheetNames, fileName);
+                    })
+               
+                 
+            }else{
+                this.$notify({
+                    title: '警告',
+                    message: '没有数据可以导出',
+                    type: 'warning'
+                });
+            }
+           
+        },
+        formatJson(filterVal, jsonData) {
+                return jsonData.map(v => filterVal.map(j => {
+                        if(j=='reviewState')
+                            return v[j] == 1 ? '未审核' :( v[j] == 2 ? '已通过' : ( v[j] == 3 ? '未通过' : ''));
+                        else if(j=='readNot')
+                            return v[j] == 1 ? '未读' : v[j] == 2 ? '已读' :'';
+                        else
+                            return v[j]
+                    }
+                ))
+        },
     },
     mounted(){
        let id =  this.$route.query.id
@@ -223,8 +311,8 @@ export default {
                         justify-content: space-between;
                         box-sizing: border-box;
                         .img{
-                             width: 150px; 
-                             height: 150px;
+                             width: 200px; 
+                             height: 200px;
                         }
                         .large{
                             
@@ -254,8 +342,9 @@ export default {
                         align-items: center;
                         box-sizing: border-box;
                         &-label{
-                            width: 100px;
-                            font-size: 16px;
+                            width: 150px;
+                            font-size: 14px;
+                            font-weight: 700;
                             text-align: right;
                             padding: 0 10px;
                             box-sizing: border-box;
@@ -270,10 +359,10 @@ export default {
                             
                         }
                         .small{
-                           width: 150px; 
+                           width: 200px; 
                         }
                         .medium{
-                            width: 420px; 
+                            width: 570px; 
                         }
                      }
                      

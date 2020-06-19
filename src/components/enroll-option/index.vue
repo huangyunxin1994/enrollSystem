@@ -24,7 +24,7 @@
 			<el-form-item prop="maximumCharacters" v-show="form['type']=='input'">
 				<el-radio-group v-model="form['maximumCharacters']">
 				    <el-radio :label="20" class="sortText">短文本 <p class="explain">(最多可填10个字)</p></el-radio>
-				    <el-radio :label="50" class="longText">长文本 <p class="explain">(最多可填50个字)</p></el-radio>
+				    <el-radio :label="60" class="longText">长文本 <p class="explain">(最多可填30个字)</p></el-radio>
 				</el-radio-group>
 			</el-form-item>
             <el-form-item label="最小长度" prop="minimumCharacters" v-show="form['type']=='number'">

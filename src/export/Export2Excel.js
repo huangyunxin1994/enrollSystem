@@ -121,22 +121,70 @@ export function export_table_to_excel(id) {
 function formatJson(jsonData) {
     console.log(jsonData)
 }
-export function export_json_to_excel(th, jsonData, defaultTitle) {
+export function export_json_to_excel(th, jsonData, defaultTitle,fileName) {
 
     /* original data */
-
     var data = jsonData;
-    data.unshift(th);
-    var ws_name = "SheetJS";
-
-    var wb = new Workbook(), ws = sheet_from_array_of_arrays(data);
-
-
+    for (var i = 0; i < th.length; i++) {
+        data[i].unshift(th[i])
+    }
+    var ws_name = defaultTitle;
+    var wb = new Workbook(), 
+    ws = []
+    for (var j = 0; j < th.length; j++){
+        ws.push(sheet_from_array_of_arrays(data[j]))
+    }
+    // if (autoWidth) {
+        /*设置worksheet每列的最大宽度*/
+        var colWidth = []
+        for (var k = 0; k < th.length; k++) {
+          colWidth.push(
+            data[k].map(row =>
+              row.map(val => {
+                /*先判断是否为null/undefined*/
+                if (val == null) {
+                  return {
+                    wch: 10
+                  }
+                } else if (val.toString().charCodeAt(0) > 255) {
+                  /*再判断是否为中文*/
+                  return {
+                    wch: val.toString().length * 2
+                  }
+                } else {
+                  return {
+                    wch: val.toString().length
+                  }
+                }
+              })
+            )
+          )
+        }
+     
+        /*以第一行为初始值*/
+        let result = []
+        for (var k = 0; k < colWidth.length; k++) {
+          result[k] = colWidth[k][0]
+          for (let i = 1; i < colWidth[k].length; i++) {
+            for (let j = 0; j < colWidth[k][i].length; j++) {
+              if (result[k][j]["wch"] < colWidth[k][i][j]["wch"]) {
+                result[k][j]["wch"] = colWidth[k][i][j]["wch"]
+              }
+            }
+          }
+        }
+        // 分别给sheet表设置宽度
+        for (var l = 0; l < result.length; l++) {
+          ws[l]["!cols"] = result[l]
+        }
+    //   }
     /* add worksheet to workbook */
-    wb.SheetNames.push(ws_name);
-    wb.Sheets[ws_name] = ws;
-
+    for (var k = 0; k < th.length; k++) {
+        wb.SheetNames.push(ws_name[k])
+        wb.Sheets[ws_name[k]] = ws[k]
+    }    
+  
     var wbout = XLSX.write(wb, {bookType: 'xlsx', bookSST: false, type: 'binary'});
-    var title = defaultTitle || '列表'
+    var title = fileName || '列表'
     saveAs(new Blob([s2ab(wbout)], {type: "application/octet-stream"}), title + ".xlsx")
 }

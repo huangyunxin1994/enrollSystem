@@ -483,8 +483,13 @@ export default {
                     filterVal.push(val.name)
                     })
                     const list = this.tableAllData;
-                    const data = this.formatJson(filterVal, list);
-                     export_json_to_excel(tHeader, data, `${this.enrollData.title}-人员资料`);
+                    const tHeaders = []
+                    const datas = []
+                    const sheetNames = []
+                    tHeaders.push(tHeader)
+                    datas.push(this.formatJson(filterVal, list))
+                    sheetNames.push('sheet1')
+                    export_json_to_excel(tHeaders, datas, sheetNames, `${this.enrollData.title}-人员资料`);
                 })
             }else{
                 this.$notify({
