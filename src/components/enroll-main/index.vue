@@ -85,24 +85,24 @@
                     <div class="new-enroll-container-button">
 						<div class="shortcut">
 							<div class="title-class" >快捷字段</div>
-							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[0])">身份证</el-button>
-							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[1])">性别</el-button>
-								<el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[2])">年龄</el-button>
-								<el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[3])">婚姻状况</el-button>
-								<el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[4])">电话号码</el-button>
-                                <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[5])">一寸照</el-button>
+							    <el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[0])">身份证</el-button>
+							    <el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[1])">性别</el-button>
+								<el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[2])">年龄</el-button>
+								<el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[3])">婚姻状况</el-button>
+								<el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[4])">电话号码</el-button>
+                                <el-button type='primary' v-if="item.type=='base'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[5])">一寸照</el-button>
 
 						</div>
                         <div class="custom">
 							<div class="title-class" >自定义字段</div>
-							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'input')">单行文本</el-button>
-							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'textarea')">多行文本</el-button>
-							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'number')">数字</el-button>
-							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'date')">日期</el-button>
-							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'time')">时间</el-button>
-							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'radio')">单选</el-button>
-							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'checkbox')">多选</el-button>
-							    <el-button :type="type=item.type=='table'?'success':'primary'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'select')">下拉框</el-button>
+							    <el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'input')">单行文本</el-button>
+							    <el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'textarea')">多行文本</el-button>
+							    <el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'number')">数字</el-button>
+							    <el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'date')">日期</el-button>
+							    <el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'time')">时间</el-button>
+							    <el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'radio')">单选</el-button>
+							    <el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'checkbox')">多选</el-button>
+							    <el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="addFormOption(index,'select')">下拉框</el-button>
 						</div>
                     </div>
                 </div>
@@ -117,7 +117,7 @@
                 <el-button type="primary" icon="el-icon-edit" class="button-class" size="medium" :disabled="ruleForm.state!==2" @click="changeDisabled">修改</el-button>
                 <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="ruleForm.state!==2" @click="submitForm('otherPreview')">预览</el-button>
                 <!-- <el-button type="primary" icon="el-icon-search" class="button-class" size="medium" :disabled="!(handleType=='update'&&ruleForm.state==2)" @click="cancelSubmit">撤销发布</el-button> -->
-                <el-button type="success" icon="el-icon-upload2" class="button-class" size="medium" @click="submitForm('submit')" :disabled="ruleForm.state!==2&&disabledTag">提交</el-button>
+                <el-button type="success" icon="el-icon-upload2" class="button-class" size="medium" @click="submitForm('submit')" :disabled="ruleForm.state>2||disabledTag">提交</el-button>
             </div>
             <enroll-form ref="enrollform" :tableTitle='tableTitle' :formRule="formRule" @insertData="insertData" @updateData="updateData"></enroll-form>
             <enroll-option ref="enrolloption" @insertOption='insertOption' @updateOption='updateOption'></enroll-option>
@@ -145,7 +145,7 @@ export default {
         return{
             imgPath:"",
             signupId:"",
-            disabledTag:"",
+            disabledTag:true,
             handleType:"",
             tagType:"",
             ruleForm: {

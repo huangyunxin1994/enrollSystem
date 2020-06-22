@@ -102,7 +102,7 @@ export default {
     methods:{
         //回到上一页
         backpage(){
-            this.$router.go(-1);
+            this.$router.push({path:"/main"})
         },
         //性别显示转换
         formatSex: function (row, column) {

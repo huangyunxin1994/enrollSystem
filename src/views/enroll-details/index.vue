@@ -16,20 +16,21 @@
                             <div v-for="(item,index) in mainMsg.child" :key="index">
                                 <div v-if="item.type!=='textarea'&&item.type!=='img'" class="base-msg-item ">
                                     <span class="base-msg-item-label">{{item.name}}</span>
-                                    <span class="base-msg-item-text small" v-if="item.type!=='textarea'&&item.type!=='img'&&(!item.maximumCharacters||item.maximumCharacters<=20)">{{mainMsg.submitData[0][item.dataKey]}}</span>
-                                    <span class="base-msg-item-text medium" v-else-if="item.type!=='textarea'&&(item.maximumCharacters>20&&item.maximumCharacters<=50)">{{mainMsg.submitData[0][item.dataKey]}}</span>
+                                    <span class="base-msg-item-text small" v-if="item.type!=='textarea'&&item.type!=='img'&&item.type!=='checkbox'&&(!item.maximumCharacters||item.maximumCharacters<=20)">{{mainMsg.submitData[0][item.dataKey]}}</span>
+                                    <span class="base-msg-item-text medium" v-else-if="item.type==='checkbox'||(item.type!=='textarea'&&(item.maximumCharacters>20&&item.maximumCharacters<=60))">{{mainMsg.submitData[0][item.dataKey]}}</span>
                                 </div>
                                 <div v-else class="base-msg-item-l ">
                                     <span class="base-msg-item-label">{{item.name}}</span>
                                     <pre v-if="item.type!=='img'" class="large">{{mainMsg.submitData[0][item.dataKey]}}</pre>
-                                    <!-- <el-input
-                                    
-                                        type="textarea"
-                                        :rows="2"
-                                        placeholder="请输入内容"
-                                        v-model="mainMsg.submitData[0][item.dataKey]" resize="none" autosize>
-                                    </el-input> -->
-                                    <span class="img" v-else>
+                                </div>
+                                
+                            </div>
+                    </div>
+                     <div class="base-msg" >
+                            <div v-for="(item,index) in imgArr" :key="index">
+                                <div  class="base-msg-item-l ">
+                                    <span class="base-msg-item-label">{{item.name}}</span>
+                                    <span class="img">
                                         <img width="100%" :src="'data:image/png;base64,'+mainMsg.submitData[0][item.dataKey]" v-if="mainMsg.submitData[0][item.dataKey]" />
                                     </span>
                                 </div>
@@ -81,6 +82,7 @@ export default {
         return {
             squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
             mainMsg:{},
+            imgArr:[],
             otherMsg:[],
             htmlTitle: '',
             mainTitle:"",
@@ -142,7 +144,7 @@ export default {
                             this.mainMsg.child.forEach(i=>{
                                 //console.log(i.type)
                                if(i.type!=='textarea'&&i.type!=='img'){
-                                   if(!i.maximumCharacters||i.maximumCharacters<=30){
+                                   if(i.type!=='checkbox'&&(!i.maximumCharacters||i.maximumCharacters<=30)){
                                        smallArr.push(i)
                                    }else{
                                        mediumArr.push(i)
@@ -153,8 +155,10 @@ export default {
                                    largeArr.push(i)
                                }
                             })
-                            //console.log(smallArr )
-                            this.mainMsg.child=smallArr.concat(mediumArr).concat(largeArr).concat(imgArr)
+                            console.log(mediumArr )
+                            // this.mainMsg.child=smallArr.concat(mediumArr).concat(largeArr).concat(imgArr)
+                            this.mainMsg.child=[...smallArr,...mediumArr,...largeArr]
+                            this.imgArr = imgArr
                             //console.log(this.mainMsg.child )
                             personMsg.splice(0,1)
                             // //console.log(personMsg)
@@ -300,7 +304,7 @@ export default {
                 width: calc(100% - 0px);
                  .base-msg{
                      width: calc(100% - 40px);
-                     padding: 20px;
+                     padding: 0 20px;
                      display: flex;
                      justify-content: flex-start;
                      align-items: center;
@@ -382,8 +386,11 @@ export default {
                             font-size: 14px;
                             border: 1px solid rgb(228, 228, 228);
                             box-sizing: border-box;
-                         width: calc(100% - 60px);
-                         min-height: 100px;
+                            width: calc(100% - 60px);
+                            min-height: 100px; 
+                            white-space: pre-wrap;
+                            word-wrap: break-word;
+                            
                      }
                  }
             }

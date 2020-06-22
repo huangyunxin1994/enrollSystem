@@ -64,7 +64,7 @@
                     <div >
                             <el-button type="primary" size="medium" @click="chooseField">设置字段</el-button>
                             <el-button type="primary" size="medium" @click="chooseTerm">更多筛选项</el-button>
-                            <el-button type="primary" size="medium" @click="selectAllData" :disabled="tableData.length===tableAllData.length">查看全部</el-button>
+                            <el-button type="primary" size="medium" @click="selectAllData" :disabled="tableData.length===tableAllData.length">清空查询条件</el-button>
                         </div>
                     
                 </div>
@@ -75,7 +75,7 @@
                     </el-table-column>
                     <el-table-column v-for="(item,index) in showTableTitle" :fixed="item.fixed" :key="index" :prop="item.name" :label="item.title" :min-width="item.width"  :sortable="item.type!='button'&&item.type!='handle'?true:false" show-overflow-tooltip>
                         <template slot-scope="scope">
-                            <el-link v-if="item.name==='name'" type="primary" :underline="false" v-html="arrFormatter(scope.row[item.name],item.name)" @click="selectDetails(scope.$index, scope.row)"></el-link>
+                            <el-link v-if="item.name==='name'" type="success" :underline="false" v-html="arrFormatter(scope.row[item.name],item.name)" @click="selectDetails(scope.$index, scope.row)"></el-link>
                             <p v-else :formatter="formatSex" v-html="arrFormatter(scope.row[item.name],item.name)"></p>
                         </template>
                     </el-table-column>

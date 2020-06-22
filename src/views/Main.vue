@@ -245,19 +245,19 @@ body{font-size: 28px;}
 		font-size: 5vw;
 	}
 	.new-enroll-title{
-		font-size: 2.3vw;
+		font-size: 1.6vw;
 	}
 	.new-enroll-tip{
-		font-size: 1.5vw;
+		font-size: 1vw;
 	}
 	.enroll-manage-title{
-		font-size: 2.3vw;
+		font-size: 1.6vw;
 	}
 	.enroll-manage-tip{
-		font-size: 1.5vw;
+		font-size: 1vw;
 	}
 	.main-container-item-bottom{
-		font-size: 2.3vw;
+		font-size: 1vw;
 		font-weight: 600;
 	}
 } 
@@ -267,13 +267,13 @@ body{font-size: 28px;}
 		font-size: 4vw;
 	}
 	.new-enroll-title{
-		font-size: 1.8vw;
+		font-size: 1.5vw;
 	}
 	.new-enroll-tip{
 		font-size: 1vw;
 	}
 	.enroll-manage-title{
-		font-size: 1.8vw;
+		font-size: 1.5vw;
 	}
 	.enroll-manage-tip{
 		font-size: 1vw;
