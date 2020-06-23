@@ -1,18 +1,28 @@
 <template>
     <div class="new-enroll-main">
-            <el-link class="new-enroll-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一页 </el-link>
-            <div class="new-enroll-title" v-if="handleType=='add'">
-                新建报名活动
-            </div>
-            <div class="new-enroll-title" v-else>
-                 编辑报名活动
-                 <el-tag
-                    :type="tagType=ruleForm.state==1||ruleForm.state==4?'info':(ruleForm.state==2?'primary':(ruleForm.state==3?'success':''))"
-                    >
-                    {{ ruleForm.state==1?"未发布":(ruleForm.state==4?'已结束':(ruleForm.state==2?'未开始':(ruleForm.state==3?'进行中':''))) }}
-                </el-tag>
-                <el-button type="primary" icon="el-icon-document-copy" class="button-class" size="medium" @click="copyAndAdd" :disabled="!disabledTag">复制并新建活动</el-button>
-            </div>
+            <div class="titleSwrap">
+				<el-link class="new-enroll-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一页 </el-link>
+				<div>
+					<div class="new-enroll-title" v-if="handleType=='add'">
+					    新建报名活动
+					</div>
+					<div class="new-enroll-title" v-else>
+					     编辑报名活动
+					     <div class="titleRight">
+							 <div>
+								 <span class="nowState">当前状态:</span>
+								 <el-tag
+								     :type="tagType=ruleForm.state==1||ruleForm.state==4?'info':(ruleForm.state==2?'primary':(ruleForm.state==3?'success':''))"
+								     >
+								     {{ ruleForm.state==1?"未发布":(ruleForm.state==4?'已结束':(ruleForm.state==2?'未开始':(ruleForm.state==3?'进行中':''))) }}
+								 </el-tag>
+							 </div>
+							 <el-button type="primary" icon="el-icon-document-copy" class="button-class" size="medium" @click="copyAndAdd" :disabled="!disabledTag">复制并新建活动</el-button>
+						 </div>
+					</div>
+				</div>
+				<div style="width: 88px;"></div>
+			</div>
            
             <div class="new-enroll-container">
                 <div class="new-enroll-container-title">报名信息</div> 
@@ -89,7 +99,7 @@
 							    <el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[1])">性别</el-button>
 								<el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[2])">年龄</el-button>
 								<el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[3])">婚姻状况</el-button>
-								<el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[4])">电话号码</el-button>
+								<el-button type='primary' icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[4])">手机号码</el-button>
                                 <el-button type='primary' v-if="item.type=='base'" icon="el-icon-search" class="button-class" size="medium" :disabled="disabledTag" @click="shortcut(index,shortcutData[5])">一寸照</el-button>
 
 						</div>
@@ -162,7 +172,7 @@ export default {
                         type:"base",
                         child:[//表格填写选项
                             {dataKey:'name',name :'姓名',type :'input',minimumCharacters:'1',maximumCharacters:'20',required:1,childs:[]},
-                            {dataKey:'phone',name :'联系方式',type :'phone',minimumCharacters:'11',maximumCharacters:'11',required:1,childs:[]}
+                            {dataKey:'phone',name :'手机号码',type :'phone',minimumCharacters:'11',maximumCharacters:'11',required:1,childs:[]}
                         ]
                     }
                 ],
@@ -477,18 +487,37 @@ export default {
         min-width: 868px;
         max-width: 1080px;
         margin: 0 auto;
+		.titleSwrap{
+			display: flex;
+			justify-content: space-between;
+			position: relative;
+		}
         .new-enroll-nav{
             height: 50px;
             line-height: 50px;
         }
         .new-enroll-title{
-            padding: 2%;
-            margin-bottom: 2%;
-            background: #fff;
+            // padding: 2%;
+            // margin-bottom: 2%;
+            // background: #fff;
+			line-height: 50px;
             font-size: 21px;
             font-weight: 700;
+			.titleRight{
+				position: absolute;
+				right: 0px;
+				top: 0px;
+				display: flex;
+				align-items: center;
+			}
+			.nowState{
+				color: #6b6868;
+				font-size: 15px;
+				font-weight: 600;
+			}
             .el-tag{
-                margin-left: 50px;
+                // margin-left: 50px;
+				margin-right: 15px;
             }
             .el-button{
                 float: right;

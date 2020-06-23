@@ -1,7 +1,7 @@
 <template>
     <el-scrollbar style="width:100%;height:100%;">
         <div class="enroll-manage-main">
-            <div class="enroll-manage-nav"> </div>
+            <!-- <div class="enroll-manage-nav"> </div> -->
             <div class="enroll-manage-title">
                 用户管理
             </div>
@@ -26,24 +26,39 @@
 						<el-button type="primary" @click="addUser">新建</el-button>
 					</div>
                 </div>
-                <el-table :data="tables.slice((page-1)*20,page*20)" border stripe highlight-current-row v-loading="listLoading" height="calc(98% - 120px)">
+                <el-table 
+						:data="tables.slice((page-1)*pageSize,page*pageSize)" 
+						class="myTable" border stripe highlight-current-row 
+						v-loading="listLoading" 
+						size="mini"
+						:row-style="{height:'20px'}"
+						:cell-style="{padding:'0px'}">
                     <el-table-column type="index" width="60" label="序号">
                     </el-table-column>
                     <el-table-column v-for="(item,index) in tableTitle" :key="index" :prop="item.name" :label="item.title" :width="item.width" :min-width="item.minwidth" :sortable="item.type!='button'&&item.type!='handle'?true:false">
                         <template slot-scope="scope">
                             <div v-if="item.type=='handle'">
-                                <el-tooltip v-for="(item,index) in item.button" :key="index" :content="item.name" placement="top">
-                                    <el-button v-if="item.type=='edit'" type="primary" icon="el-icon-edit" size="small" round @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+								<el-button  type="primary" icon="el-icon-edit" size="small" round @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+                                <!-- <el-tooltip v-for="(item,index) in item.button" :key="index" :content="item.name" placement="top">
+                                    
                                     <el-button v-else-if="item.type=='check'" type="danger" icon="el-icon-delete" size="small" circle @click="handleCheck(scope.$index, scope.row)"></el-button>
-                                </el-tooltip>
+                                </el-tooltip> -->
                             </div>
                             <p v-else :formatter="formatSex" v-html="arrFormatter(scope.row[item.name],item.name)"></p>
                         </template>
                     </el-table-column>
                 </el-table>
                <div class="enroll-manage-container-tools">
-                   <span class="enroll-manage-container-tools-span">共 {{tables.length}} 条数据，每页 {{pageSize}} 条</span> 
-                   <el-pagination background layout="prev, pager, next, jumper" @current-change="handleCurrentChange" :page-size="pageSize" :total="tables.length" >
+                   <span class="enroll-manage-container-tools-span"></span> 
+                   <el-pagination
+						background 
+						layout="total, sizes, prev, pager, next, jumper" 
+						@current-change="handleCurrentChange" 
+						@size-change="handleSizeChange"
+						:current-page="page"
+						:page-sizes="[10, 15, 20, 25]"
+						:page-size="pageSize" 
+						:total="tables.length" >
                     </el-pagination>
                </div>
                 <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
@@ -74,7 +89,7 @@ export default {
                 { title : "所属区域", name : "areas", type:"input",width:'200' },
                // { title : "报名人数", name : "number", type:"input",width:'110' },
                 { title : "是否启用", name : "isEnable", type:"input",width:'150' },
-                { title : "操作", type : "handle",button:[{type:"edit",name:"修改"}],width:'150' }
+                { title : "操作", type : "handle",button:[],width:'150' }
 
             ],
             tableData:[],
@@ -123,6 +138,9 @@ export default {
         },
         handleCurrentChange(val){
            this.page = val;
+        },
+        handleSizeChange(val){
+        	this.pageSize = val
         },
         getEnrollData(){
             this.listLoading=true
@@ -233,14 +251,14 @@ export default {
             line-height: 50px;
         }
         .enroll-manage-title{
-            padding: 2%;
+            padding: 1%;
             margin-bottom: 2%;
             background: #fff;
             font-size: 21px;
             font-weight: 700;
         }
         .enroll-manage-container{
-            height: calc(88% - 119px);
+            min-height: calc(88% - 119px);
             padding: 2%;
             margin-bottom: 2%;
             background: #fff;
@@ -275,6 +293,21 @@ export default {
                 }
             }
         }
+		.myTable{
+			th{
+				padding: 0 !important;
+				height: 15px;
+				line-height: 15px;
+			}
+			td{
+				padding: 0 !important;
+				height: 15px;
+				line-height: 15px;
+			}
+			tr{
+				height: 15px !important;
+			}
+		}
     }
     .enroll-manage-footer{
         position: fixed;
@@ -283,4 +316,5 @@ export default {
             height: 80px;
             background: #fff;
         }
+	
 </style>

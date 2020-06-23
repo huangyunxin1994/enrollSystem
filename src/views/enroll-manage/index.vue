@@ -1,10 +1,13 @@
 <template>
     <el-scrollbar style="width:100%;height:calc(100% - 17px);" :vertical="true">
         <div class="enroll-manage-main">
-            <el-link class="enroll-manage-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一页 </el-link>
-            <div class="enroll-manage-title">
-                报名管理与审核
-            </div>
+			<div class="titleSwrap">
+				<div><el-link class="enroll-manage-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一页 </el-link></div>
+				<div class="enroll-manage-title">
+				    报名管理与审核
+				</div>
+				<div class="titleRight" style="width: 88px;"></div>
+			</div>
             <div class="enroll-manage-container" ref="container">
                 <div class="enroll-manage-container-title">报名活动管理</div> 
                 <div class="enroll-manage-container-handle" >
@@ -23,17 +26,18 @@
                         </el-select>
                     </div>
                 </div>
-                <el-table :data="tables.slice((page-1)*20,page*20)" border stripe highlight-current-row v-loading="listLoading" height="calc(98% - 120px)">
+                <el-table :data="tables.slice((page-1)*pageSize,page*pageSize)" border stripe highlight-current-row size="mini" v-loading="listLoading" >
                     <el-table-column type="index" width="60" label="序号">
                     </el-table-column>
                     <el-table-column v-for="(item,index) in tableTitle" :key="index" :prop="item.name" :label="item.title" :width="item.width" :min-width="item.minwidth" :sortable="item.type!='button'&&item.type!='handle'?true:false">
                         <template slot-scope="scope">
                             <div v-if="item.type=='handle'">
-                                <el-tooltip v-for="(item,index) in item.button" :key="index" :content="item.name" placement="top">
-                                    <el-button v-if="item.type=='edit'" type="primary" icon="el-icon-search" size="small" round @click="handleEdit(scope.$index, scope.row)">查看/修改</el-button>
-                                    <el-button v-else-if="item.type=='check'" type="warning" icon="el-icon-s-check" size="small" round @click="handleCheck(scope.$index, scope.row)">审核</el-button> 
-                                </el-tooltip>
-                                <el-button type="success"  size="small" round @click="handleQrCode(scope.$index, scope.row)"><i class="iconfont" style="font-size: 12px">&#xe606; </i> 二维码</el-button>
+                                <!-- <el-tooltip v-for="(item,index) in item.button" :key="index" :content="item.name" placement="top">
+                                    
+                                </el-tooltip> -->
+								<el-button type="primary" icon="el-icon-search" size="small" round @click="handleEdit(scope.$index, scope.row)">查看/修改</el-button>
+								<el-button type="primary" icon="el-icon-s-check" size="small" round @click="handleCheck(scope.$index, scope.row)">审核</el-button> 
+                                <el-button type="primary"  size="small" round @click="handleQrCode(scope.$index, scope.row)"><i class="iconfont" style="font-size: 12px">&#xe606; </i> 二维码</el-button>
                             </div>
                             
                             <p v-else :formatter="formatSex" v-html="arrFormatter(scope.row[item.name],item.name)"></p>
@@ -41,8 +45,16 @@
                     </el-table-column>
                 </el-table>
                <div class="enroll-manage-container-tools">
-                   <span class="enroll-manage-container-tools-span">共 {{tables.length}} 条数据，每页 {{pageSize}} 条</span> 
-                   <el-pagination background layout="prev, pager, next, jumper" @current-change="handleCurrentChange" :page-size="pageSize" :total="tables.length" >
+                   <span class="enroll-manage-container-tools-span"></span>
+                   <el-pagination 
+						background 
+						layout="total, sizes, prev, pager, next, jumper" 
+						@current-change="handleCurrentChange" 
+						@size-change="handleSizeChange"
+						:current-page="page"
+						:page-sizes="[10, 15, 20, 25]"
+						:page-size="pageSize" 
+						:total="tables.length" >
                     </el-pagination>
                </div>
                 <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
@@ -75,7 +87,7 @@ export default {
                 { title : "报名结束时间", name : "endTime", type:"input",width:'130' },
                // { title : "报名人数", name : "number", type:"input",width:'110' },
                 { title : "状态", name : "state", type:"input",width:'80' },
-                { title : "操作", type : "handle",button:[{type:"edit",name:"查看/修改"},{type:"check",name:"审核"}],width:'320' }
+                { title : "操作", type : "handle",button:[],width:'320' }
 
             ],
             tableData:[],
@@ -126,6 +138,9 @@ export default {
         handleCurrentChange(val){
            this.page = val;
         },
+		handleSizeChange(val){
+			this.pageSize = val
+		},
         getEnrollData(){
             this.listLoading=true
             let user = JSON.parse(sessionStorage.getItem('user'));
@@ -204,25 +219,35 @@ export default {
     
 }
 </script>
+<style>
+	/* .el-table__body-wrapper{
+		min-height:480px !important
+	} */
+</style>
 <style lang="scss" scoped>
     .enroll-manage-main {
         width: 80%;
         height: 100%;
         min-width: 868px;
         margin: 0 auto;
+		.titleSwrap{
+			display: flex;
+			justify-content:space-between;
+		}
         .enroll-manage-nav{
             height: 50px;
             line-height: 50px;
         }
         .enroll-manage-title{
-            padding: 2%;
-            margin-bottom: 2%;
-            background: #fff;
+            // padding: 2%;
+            // margin-bottom: 2%;
+            // background: #fff;
+			line-height: 50px;
             font-size: 21px;
             font-weight: 700;
         }
         .enroll-manage-container{
-            height: calc(88% - 119px);
+            min-height: calc(88% - 119px);
             padding: 2%;
             margin-bottom: 2%;
             background: #fff;

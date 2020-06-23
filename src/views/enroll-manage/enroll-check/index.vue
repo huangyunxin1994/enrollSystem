@@ -68,7 +68,7 @@
                         </div>
                     
                 </div>
-                <el-table :data="tables.slice((page-1)*pageSize,page*pageSize)" border stripe highlight-current-row v-loading="listLoading" @selection-change="selsChange" height="calc(98% - 210px)" ref="table" :row-key="getRowKeys">
+                <el-table :data="tables.slice((page-1)*pageSize,page*pageSize)" border stripe highlight-current-row size="mini" v-loading="listLoading" @selection-change="selsChange" class="myTable" ref="table" :row-key="getRowKeys">
                     <el-table-column type="selection" width="55" :reserve-selection="true">
                     </el-table-column>
                     <el-table-column type="index" width="60" label="序号">
@@ -82,8 +82,16 @@
                     
                 </el-table>
                <div class="enroll-check-container-tools">
-                   <span class="enroll-check-container-tools-span">共 {{tables.length}} 条数据，每页 {{pageSize}} 条</span> 
-                   <el-pagination background layout="prev, pager, next, jumper" @current-change="handleCurrentChange" :page-size="pageSize" :total="tables.length" >
+                   <span class="enroll-check-container-tools-span"></span>
+                   <el-pagination 
+						background 
+						layout="total, sizes, prev, pager, next, jumper" 
+						@current-change="handleCurrentChange" 
+						@size-change="handleSizeChange"
+						:current-page="page"
+						:page-sizes="[10, 15, 20, 25]"
+						:page-size="pageSize" 
+						:total="tables.length" >
                     </el-pagination>
                </div>
                 <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
@@ -205,6 +213,9 @@ export default {
         handleCurrentChange(val){
            this.page = val;
         },
+		handleSizeChange(val){
+			this.pageSize = val
+		},
         async getEnrollPersonData(id){
             let tableTitle=[]
             let titlePara={}
@@ -293,7 +304,8 @@ export default {
                         para.reviewState = formArr.reviewState
                         para.readNot = formArr.readNot
                         para.submitTime = formArr.submitTime.substring(0,10)
-                        arr.push(para)
+						// for( let i =0;i< 20;i++)
+						arr.push(para)
                     }
                     this.tableAllData=arr
                     this.tableData=arr
@@ -632,6 +644,14 @@ export default {
     
 }
 </script>
+<style>
+		.el-table__body-wrapper{
+			min-height:480px !important
+		}
+		/* .el-table__body-wrapper td,.el-table__body-wrapper th{
+			padding: 5px 0;
+		} */
+</style>
 <style lang="scss" scoped>
     .enroll-check-main {
         width: 80%;
@@ -650,12 +670,12 @@ export default {
             font-weight: 700;
         }
         .enroll-check-container{
-            height: calc(94% - 80px);
+            min-height: calc(94% - 80px);
             padding: 2%;
             margin-bottom: 2%;
             background: #fff;
             &-title{
-                margin-bottom: 20px;
+                margin-bottom: 15px;
                 padding: 2px 0 2px 20px;
                 border-left: 4px solid #409EFF;
                 font-size: 18px;
@@ -671,7 +691,7 @@ export default {
                 }
             }
             &-handle{
-                margin-bottom:2%;
+                margin-bottom:1%;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -718,4 +738,5 @@ export default {
             height: 80px;
             background: #fff;
         }
+		
 </style>

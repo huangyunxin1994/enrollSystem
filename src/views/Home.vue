@@ -2,18 +2,19 @@
 	<el-row class="container">
 		<el-col :span="24" class="header">
 			<el-col :span="20" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
-				{{collapsed?'':sysName}}
+				<i class="iconfont logoIcon"  @click="returnIndex">&#xe602;</i>{{collapsed?'':sysName}}
 			</el-col>
 			
-			<el-col :span="4" class="userinfo">
-
+			<el-col :span="7" class="userinfo">
+				<span class="time">服务到期时间:  {{expiresTime}}</span>
 				<el-dropdown trigger="click">
-					<span class="el-dropdown-link userinfo-inner"> <span>欢迎你</span> {{sysUserName}}</span>
+					<i class="el-icon-s-tools setIcon el-dropdown-link"></i>
 					<el-dropdown-menu slot="dropdown">
 						<el-dropdown-item @click.native="setPass">密码设置</el-dropdown-item>
 						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
+				<span class=" userinfo-inner"> <span>欢迎你</span> {{sysUserName}}</span>
 			</el-col>
 		</el-col>
 		<el-col :span="24" class="main">
@@ -44,6 +45,7 @@
 				sysName:'报名系统',
 				collapsed:false,
 				sysUserName: '',
+				expiresTime:'',//服务到期时间
 				sysUserAvatar: '',
 				account:'',
 				form: {
@@ -80,6 +82,11 @@
 
 				});
 			},
+			//返回首页
+			returnIndex(){
+				this.$router.replace({ path: '/' })
+				// console.log("路由跳转")
+			},
 			//设置密码
 			setPass(){
 				this.$refs.changePass.setShow(this.account,true)
@@ -98,6 +105,7 @@
 				user = JSON.parse(user);
 				console.log(user)
 				this.sysUserName = user.username || '';
+				this.expiresTime = user.expiresTime || '';
 				this.sysUserAvatar = user.avatar || '';
 				this.account = user.account || '';
 			}
@@ -115,16 +123,30 @@
 		bottom: 0px;
 		width: 100%;
 		.header {
-			height: 80px;
-			line-height: 80px;
+			height: 65px;
+			line-height: 65px;
 			background: $color-lightblue;
 			color:#fff;
+			.logoIcon{
+				cursor: pointer;
+				margin-right: 20px;
+				font-size: 30px;
+			}
 			.userinfo {
 				text-align: right;
 				margin-right: 35px;
 				float: right;
-				.userinfo-inner {
+				.time{
+					margin-right: 20px;
+				}
+				.setIcon{
+					color: #fff;
+					font-size: 30px;
+					margin-right: 20px;
 					cursor: pointer;
+				}
+				.userinfo-inner {
+					font-size: 15px;
 					color:#fff;
 					img {
 						width: 40px;
@@ -135,6 +157,7 @@
 					}
 				}
 			}
+			
 			.logo {
 				//width:230px;
 				height:60px;
@@ -169,7 +192,7 @@
 			display: flex;
 			// background: #324057;
 			position: absolute;
-			top: 80px;
+			top: 65px;
 			bottom: 0px;
 			overflow: hidden;
 			background-color: rgba(242, 242, 242, 1);
