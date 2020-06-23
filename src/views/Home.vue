@@ -1,11 +1,11 @@
 <template>
 	<el-row class="container">
 		<el-col :span="24" class="header">
-			<el-col :span="20" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
+			<el-col :span="19" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
 				<i class="iconfont logoIcon"  @click="returnIndex">&#xe602;</i>{{collapsed?'':sysName}}
 			</el-col>
 			
-			<el-col :span="7" class="userinfo">
+			<el-col :span="5" class="userinfo">
 				<span class="time">服务到期时间:  {{expiresTime}}</span>
 				<el-dropdown trigger="click">
 					<i class="el-icon-s-tools setIcon el-dropdown-link"></i>
@@ -133,7 +133,10 @@
 				font-size: 30px;
 			}
 			.userinfo {
-				text-align: right;
+				// text-align: right;
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
 				margin-right: 35px;
 				float: right;
 				.time{
@@ -144,6 +147,8 @@
 					font-size: 30px;
 					margin-right: 20px;
 					cursor: pointer;
+					display: flex;
+					align-items: center;
 				}
 				.userinfo-inner {
 					font-size: 15px;
