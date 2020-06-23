@@ -2,7 +2,7 @@
 	<el-row class="container">
 		<div :span="24" class="header">
 			<div class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
-				<i class="iconfont logoIcon"  @click="returnIndex">&#xe602;</i>{{collapsed?'':sysName}}
+				<i class="iconfont logoIcon"  @click="returnIndex">&#xe66e;</i>{{collapsed?'':sysName}}
 			</div>
 			
 			<div class="userinfo">
@@ -134,7 +134,7 @@
 				cursor: pointer;
 				margin-right: 20px;
 				font-size: 25px;
-				background-color: #CCCCCC;
+				background-color: #dcdbdb;
 				padding: 10px;
 				border-radius: 10px;
 				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
