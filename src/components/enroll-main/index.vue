@@ -78,11 +78,14 @@
                 <div class="new-enroll-container-remarks">{{item.details}}</div>
                 <div class="title-class">已选信息({{item.child.length}})</div>
                 <div class="new-enroll-container-item">
-                    <div style="width:calc(100% - 440px);max-height: 568px;" >
+                    <div style="width:calc(100% - 340px);max-height: 568px;" >
                         <el-scrollbar style="width:100%;height:100%;">
                             <draggable v-model="item.child" :options="{animation:200,handle:'.dragClass'}">
                                 <div v-for="(item,i) in item.child" :key="i" class="baseform-item">
-                                    <span class="baseform-item-name baseform-item-o">{{item.name}}</span>
+                                    <div class="baseform-item-name baseform-item-o">
+                                        <span>{{item.name}}</span>
+                                        <el-tag class="baseform-item-name-tag" type="info" effect="dark" v-html="arrFormatter(item.type)" size="mini"></el-tag>
+                                    </div>
                                     <el-checkbox class="baseform-item-o" :true-label='1' :false-label='0' v-model="item.required" :disabled="disabledTag||(item.dataKey==='name'||item.dataKey==='phone')">必填</el-checkbox>
                                     <el-link :underline="false" icon="el-icon-edit" class="baseform-item-o" @click="updateFormOption(index,i)" :disabled="disabledTag||(item.dataKey==='name'||item.dataKey==='phone')"></el-link>
                                     <el-link :underline="false" icon="el-icon-document-copy" class="baseform-item-o" @click="copyFormOption(index,i)" :disabled="disabledTag"></el-link>
@@ -203,7 +206,7 @@ export default {
 				{name :'性别',type :"radio", minimumCharacters:'',maximumCharacters:20,required:0, childs:[{name:"男"},{name:"女"}],submitType:"insert"},
 				{name :'年龄',type :"number", minimumCharacters:'',maximumCharacters:20,required:0, childs:[],submitType:"insert"},
 				{name :'婚姻状况',type :"radio", minimumCharacters:'',maximumCharacters:20,required:0, childs:[{name:"已婚"},{name:"未婚"}],submitType:"insert"},
-                {name :'电话号码',type :"phone", minimumCharacters:11,maximumCharacters:11,required:0, childs:[],submitType:"insert"},
+                {name :'手机号码',type :"phone", minimumCharacters:11,maximumCharacters:11,required:0, childs:[],submitType:"insert"},
                 {name :'一寸照',type :"img", minimumCharacters:'',maximumCharacters:20,required:0, childs:[],submitType:"insert"},
 			],
         }
@@ -212,6 +215,21 @@ export default {
         //回到上一页
         backpage(){
             this.$router.go(-1);
+        },
+        //格式化类型
+        arrFormatter (type) {
+             return type == 'input' ? '单行文本</>' 
+             :(type == 'textarea' ? '多行文本</>' 
+             :(type == 'number' ? '数字</>'
+             :(type == 'radio' ? '单选</>'
+             :(type == 'select' ? '下拉框</>'
+             :(type == 'checkbox' ? '多选</>'
+             :(type == 'date' ? '日期</>'
+             :(type == 'time' ? '时间</>'
+             :(type == 'img' ? '图片</>'
+             :(type == 'idCard' ? '身份证</>'
+             :(type == 'phone' ? '手机号码</>'
+             :''))))))))));
         },
         //新增填写报名信息表选项
         addFormOption(i,type){
@@ -572,6 +590,13 @@ export default {
                         width: 50%;
                         border: 1px solid #dddfe6;
                         padding: 8px 15px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        &-tag{
+                            width: 60px;
+                            text-align: center;
+                        }
                         
                     }
                     &-o{
@@ -584,24 +609,24 @@ export default {
 				top: -75px;
 				
 				.shortcut{
-					width: 420px;
+					width: 400px;
 					margin-bottom: 10px;
 					padding: 20px 0;
 					border: 1px dotted #dbdbe1;
 					.button-class{
 					    margin: 10px;
 					    height: 40px;
-					    width: 117px;
+					    width: 110px;
 					}
 				}
 				.custom{
-					width: 420px;
+					width: 400px;
 					padding: 20px 0;
 					border: 1px dotted #dbdbe1;
 					.button-class{
 					    margin: 10px;
 					    height: 40px;
-					    width: 117px;
+					    width: 110px;
 					}
 				}
 				

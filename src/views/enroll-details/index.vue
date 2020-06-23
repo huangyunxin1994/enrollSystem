@@ -11,7 +11,7 @@
                 <el-scrollbar style="width:100%;height:calc(100% - 36px);" :vertical="true">
                 <div class="enroll-details-container-msg" >
                     <div id='pdfDom' style="padding-top:50px">
-                    <h1 style="text-align:center">{{htmlTitle}}</h1>
+                    <h1 style="text-align:center">{{mainMsg.name}}</h1>
                     <div class="base-msg" >
                             <div v-for="(item,index) in mainMsg.child" :key="index">
                                 <div v-if="item.type!=='textarea'&&item.type!=='img'" class="base-msg-item ">
@@ -31,7 +31,7 @@
                                 <div  class="base-msg-item-l ">
                                     <span class="base-msg-item-label">{{item.name}}</span>
                                     <span class="img">
-                                        <img width="100%" :src="'data:image/png;base64,'+mainMsg.submitData[0][item.dataKey]" v-if="mainMsg.submitData[0][item.dataKey]" />
+                                        <img  height="100%" :src="'data:image/png;base64,'+mainMsg.submitData[0][item.dataKey]" v-if="mainMsg.submitData[0][item.dataKey]" />
                                     </span>
                                 </div>
                                 
@@ -138,7 +138,7 @@ export default {
                            })
                             this.mainMsg = personMsg[0]
                             this.mainTitle = this.mainMsg.name
-                            this.htmlTitle = `${this.mainMsg.submitData[0]['name']}-${this.mainMsg.name}`
+                            this.htmlTitle = `${this.mainMsg.submitData[0]['name']}_${this.enrollName}_${this.mainMsg.name}`
                             this.enrollerName = this.mainMsg.submitData[0]['name']
                             let smallArr=[],mediumArr=[],largeArr=[],imgArr=[]
                             this.mainMsg.child.forEach(i=>{
@@ -195,7 +195,7 @@ export default {
                         const tHeaders = [] // 对应表格输出的中文title
                         const datas = []  // 对应表格输出的数据   
                         const sheetNames = [] // 对应表格sheet的名称
-                        const fileName =`${this.enrollerName}-${this.enrollName}-附加信息`
+                        const fileName =`${this.enrollerName}_${this.enrollName}_附加信息`
                         console.log(fileName)
                         this.otherMsg.forEach(i=>{
                             const tHeader = []
@@ -315,8 +315,12 @@ export default {
                         justify-content: space-between;
                         box-sizing: border-box;
                         .img{
-                             width: 200px; 
-                             height: 200px;
+                            width: 200px; 
+                             height: 150px; 
+                             overflow: hidden;
+                             img{
+                                 object-fit: cover;
+                             }
                         }
                         .large{
                             

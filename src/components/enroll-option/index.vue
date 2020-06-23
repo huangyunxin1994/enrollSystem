@@ -54,10 +54,23 @@
     </el-dialog>
 </template>
 <script>
-import { randomStr } from "@/utils/index.js"
+import { randomStr,getByteLen } from "@/utils/index.js"
 import { makePy } from "@/utils/pinying.js"
 export default {
     data(){
+        var validateLen =(rule, value, callback) => {
+			if(value ===''){
+				callback(new Error('字段名称不能为空'));
+			}else{
+				let bool = getByteLen(value)
+				if(bool>16){
+					callback(new Error('字段名称最多8个汉字或16个字符'));
+				}else{
+					callback();
+				}
+				
+			}
+		};
         return {
             formVisible:false,
             loading: false,
@@ -89,6 +102,12 @@ export default {
                 }, {
                 value: 'select',
                 label: '下拉框'
+                }, {
+                value: 'idCard',
+                label: '身份证'
+                }, {
+                value: 'phone',
+                label: '手机号码'
                 }
             ],
             //新增界面数据
@@ -102,7 +121,8 @@ export default {
             },
             formRule:{
                 name: [
-                    { required: true, message: '字段名称不能为空', trigger: 'blur' }
+                    { required: true, message: '字段名称不能为空', trigger: 'blur' },
+                    { required: true,validator: validateLen, trigger: 'change' }
                 ],
             }
             
@@ -112,7 +132,13 @@ export default {
         //显示新增界面
 			handleShow() {
                 if(this.form.maximumCharacters==''){
-                    if(this.form.type=='number'){
+                    if(this.form.type=='idCard'){
+                        this.form.minimumCharacters=18
+                        this.form.maximumCharacters=18
+                    }else if(this.form.type=='phone'){
+                        this.form.minimumCharacters=11
+                        this.form.maximumCharacters=11
+                    }else if(this.form.type=='number'){
                         this.form.minimumCharacters=1
                         this.form.maximumCharacters=20
                     }else if(this.form.type=='checkbox'){
@@ -192,15 +218,21 @@ export default {
                     this.$refs.form.clearValidate();
                 })
                 //console.log(val)
-                if(val=='number'){
-                     this.form.minimumCharacters=1
-                     this.form.maximumCharacters=1
+                if(val=='idCard'){
+                    this.form.minimumCharacters=18
+                    this.form.maximumCharacters=18
+                }else if(val=='phone'){
+                    this.form.minimumCharacters=11
+                    this.form.maximumCharacters=11
+                }else if(val=='number'){
+                    this.form.minimumCharacters=1
+                    this.form.maximumCharacters=20
                 }else if(val=='checkbox'){
                     this.form.minimumCharacters=1
                     this.form.maximumCharacters=""
                 }else {
-                     this.form.minimumCharacters=""
-                     this.form.maximumCharacters=20
+                    this.form.minimumCharacters=""
+                    this.form.maximumCharacters=20
                 }
             }
                
