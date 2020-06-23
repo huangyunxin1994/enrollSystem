@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="更多筛选条件" :visible.sync="formVisible" :before-close="handleClose" :close-on-click-modal="false" top="5vh" width="600px">     
+    <el-dialog title="更多筛选条件" :visible.sync="formVisible" :before-close="handleClose" :close-on-click-modal="false" top="5vh" width="700px">     
        <div class="more-term-main-radio">
            <!-- <el-checkbox v-model="checked" :true-label="1" :false-label="2">在当前结果筛选</el-checkbox> -->
            <div class="choose-history" v-for="(item,index) in showTableTitle" :key="index" v-show="item.name!=='reviewState'&&item.name!=='readNot'&&item.name!=='submitTime'&&titlePara[item.name]['showVal'].length>0">
@@ -319,7 +319,7 @@ export default {
 }
 .more-term-radio{
     margin: 10px 0;
-    width: 100px;
+    width: 150px;
     white-space:nowrap;
     overflow: hidden;
 }

@@ -85,7 +85,7 @@
                                     <span class="baseform-item-name baseform-item-o">{{item.name}}</span>
                                     <el-checkbox class="baseform-item-o" :true-label='1' :false-label='0' v-model="item.required" :disabled="disabledTag||(item.dataKey==='name'||item.dataKey==='phone')">必填</el-checkbox>
                                     <el-link :underline="false" icon="el-icon-edit" class="baseform-item-o" @click="updateFormOption(index,i)" :disabled="disabledTag||(item.dataKey==='name'||item.dataKey==='phone')"></el-link>
-                                    <el-link :underline="false" icon="el-icon-document-copy" class="baseform-item-o" :disabled="disabledTag"></el-link>
+                                    <el-link :underline="false" icon="el-icon-document-copy" class="baseform-item-o" @click="copyFormOption(index,i)" :disabled="disabledTag"></el-link>
                                     <el-link :underline="false" icon="el-icon-delete" class="baseform-item-o" @click="removeFormOption(index,i)" :disabled="disabledTag||(item.dataKey==='name'||item.dataKey==='phone')"></el-link>
                                     <el-link :underline="false" icon="el-icon-rank" class="baseform-item-o dragClass" :disabled="disabledTag"></el-link>
                                 </div>
@@ -233,6 +233,16 @@ export default {
             this.$refs['enrolloption'].form.itemIndex=i
             this.$refs['enrolloption'].handleShow()
         },
+        //复制并新增报名信息表选项
+        copyFormOption(index,i){
+             let para =JSON.parse(JSON.stringify(this.ruleForm.form[index].child[i])) 
+            if(!para.childs)
+            para.childs=[]
+            this.$refs['enrolloption'].form=para
+            this.$refs['enrolloption'].form.submitType="insert"
+            this.$refs['enrolloption'].form.index=index
+            this.$refs['enrolloption'].handleShow()
+        },
         //删除填写报名信息表选项
         removeFormOption(index,i){
             this.ruleForm.form[index].child.splice(i,1)
@@ -286,6 +296,7 @@ export default {
         },
         //新增填写报名信息表选项
         insertOption(para){
+            console.log(para)
             this.ruleForm.form[para.index].child.push(para)
         },
         //更新填写报名信息表选项
@@ -524,11 +535,11 @@ export default {
             }
         }
         .new-enroll-container{
-            padding: 2%;
-            margin-bottom: 2%;
+            padding: 1%;
+            margin-bottom: 1%;
             background: #fff;
             &-title{
-                margin-bottom: 20px;
+                margin-bottom: 1%;
                 padding: 2px 0;
                 border-left: 4px solid #409EFF;
                 text-indent: 20px;
@@ -574,7 +585,6 @@ export default {
 				
 				.shortcut{
 					width: 420px;
-					height: 175px;
 					margin-bottom: 10px;
 					padding: 20px 0;
 					border: 1px dotted #dbdbe1;
@@ -586,7 +596,6 @@ export default {
 				}
 				.custom{
 					width: 420px;
-					height: 250px;
 					padding: 20px 0;
 					border: 1px dotted #dbdbe1;
 					.button-class{
