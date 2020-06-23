@@ -133,7 +133,15 @@
 			.logoIcon{
 				cursor: pointer;
 				margin-right: 20px;
-				font-size: 30px;
+				font-size: 25px;
+				background-color: #CCCCCC;
+				padding: 10px;
+				border-radius: 10px;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+			}
+			.logoIcon:hover{
+				background-color: #C0CCDA;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .4);
 			}
 			.userinfo {
 				// text-align: right;
