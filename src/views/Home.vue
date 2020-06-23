@@ -1,11 +1,11 @@
 <template>
 	<el-row class="container">
-		<el-col :span="24" class="header">
-			<el-col :span="19" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
+		<div :span="24" class="header">
+			<div class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
 				<i class="iconfont logoIcon"  @click="returnIndex">&#xe602;</i>{{collapsed?'':sysName}}
-			</el-col>
+			</div>
 			
-			<el-col :span="5" class="userinfo">
+			<div class="userinfo">
 				<span class="time">服务到期时间:  {{expiresTime}}</span>
 				<el-dropdown trigger="click">
 					<i class="el-icon-s-tools setIcon el-dropdown-link"></i>
@@ -15,8 +15,8 @@
 					</el-dropdown-menu>
 				</el-dropdown>
 				<span class=" userinfo-inner"> <span>欢迎你</span> {{sysUserName}}</span>
-			</el-col>
-		</el-col>
+			</div>
+		</div>
 		<el-col :span="24" class="main">
 			<section class="content-container">
 					<el-col :span="24" class="content-wrapper">
@@ -127,6 +127,9 @@
 			line-height: 65px;
 			background: $color-lightblue;
 			color:#fff;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
 			.logoIcon{
 				cursor: pointer;
 				margin-right: 20px;
@@ -178,9 +181,6 @@
 				.txt {
 					color:#fff;
 				}
-			}
-			.logo-width{
-				width:230px;
 			}
 			.logo-collapse-width{
 				width:60px

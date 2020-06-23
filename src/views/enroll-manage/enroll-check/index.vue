@@ -55,7 +55,7 @@
                             <label for="" class="enroll-check-container-handle-label" style="width:120px" >报名时间段</label>
                         
                             <el-date-picker type="date" placeholder="选择日期" v-model="startTime" style="width:50%" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="startTimeOptions" @change="changeEtime"></el-date-picker>                   
-                            <span  style="margin:20px;">至</span>
+                            <span  style="margin:0 20px ;">至</span>
                             <el-date-picker type="date" placeholder="选择日期" v-model="endTime"  style="width:50%" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="endTimeOptions" @change="changeEtime"></el-date-picker>
                             
                         </div>
@@ -468,6 +468,7 @@ export default {
             })
         },
         changeEtime(){
+            console.log(this.startTime,this.endTime)
             if(this.startTime!=""&&this.endTime!=""){
                 this.tableData=this.tableAllData.filter(i=>{
                     let submitTime =  i.submitTime
@@ -644,14 +645,7 @@ export default {
     
 }
 </script>
-<style>
-		.el-table__body-wrapper{
-			min-height:480px !important
-		}
-		/* .el-table__body-wrapper td,.el-table__body-wrapper th{
-			padding: 5px 0;
-		} */
-</style>
+
 <style lang="scss" scoped>
     .enroll-check-main {
         width: 80%;

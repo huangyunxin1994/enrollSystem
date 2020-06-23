@@ -69,14 +69,14 @@
 						  this.logining = false;
 						  //NProgress.done();
 						  let { code, msg} = data
-						  let { user } = data.data;
-						  let type = data.data.type
 						  if (code != 0) {
 						    this.$message({
 						      message: msg,
 						      type: 'error'
 						    });
 						  } else {
+							let { user } = data.data;
+						  	let type = data.data.type
 						    sessionStorage.setItem('user', JSON.stringify(user));
 							sessionStorage.setItem('type', JSON.stringify(type));
 						    this.$router.push({ path: '/userAdmin' });

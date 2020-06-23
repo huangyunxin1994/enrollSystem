@@ -247,12 +247,11 @@ export default {
             font-weight: 700;
         }
         .enroll-manage-container{
-            min-height: calc(88% - 119px);
+            min-height: 88%;
             padding: 2%;
-            margin-bottom: 2%;
             background: #fff;
             &-title{
-                margin-bottom: 20px;
+                margin-bottom: 1%;
                 padding: 2px 0;
                 border-left: 4px solid #409EFF;
                 text-indent: 20px;
@@ -260,7 +259,7 @@ export default {
                 font-weight: 700;
             }
             &-handle{
-                margin-bottom:2%;
+                margin-bottom:1%;
                 width:80%;
                 display: flex;
                 justify-content: space-between;
