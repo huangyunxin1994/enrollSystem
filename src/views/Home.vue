@@ -132,15 +132,19 @@
 			align-items: center;
 			.logoIcon{
 				cursor: pointer;
-				margin-right: 20px;
-				font-size: 25px;
-				background-color: #dcdbdb;
-				padding: 10px;
-				border-radius: 10px;
-				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+				margin-right: 5px;
+				font-size: 35px;
+				// font-size: 25px;
+				background-color: transparent;
+				padding: 8px;
+				// border-radius: 10px;
+				// box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
 			}
 			.logoIcon:hover{
-				background-color: #C0CCDA;
+				// background-color: #C0CCDA;
+				background-color: #dcdbdb;
+				padding: 8px;
+				border-radius: 10px;
 				box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .4);
 			}
 			.userinfo {
