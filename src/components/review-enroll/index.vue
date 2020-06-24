@@ -5,6 +5,9 @@
         width="30%"
         center
         >
+        <div style="font-size:12px;color:#909399;margin-bottom:20px">
+            注：点击提交后，系统将发送短信告知报名者审核结果，而您在此编写的内容将同步到报名者的小程序端
+        </div>
         <el-input type='textarea' :rows="4" v-model="replyMessage">需要注意的是内容是默认不居中的</el-input>
         <span slot="footer" class="dialog-footer">
             <el-button @click="centerDialogVisible=false">取 消</el-button>

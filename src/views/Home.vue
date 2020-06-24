@@ -1,12 +1,12 @@
 <template>
 	<el-row class="container">
 		<div :span="24" class="header">
-			<div class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
-				<i class="iconfont logoIcon"  @click="returnIndex">&#xe66e;</i>{{collapsed?'':sysName}}
+			<div class="logo logo-width">
+				<i class="iconfont logo-icon"  @click="returnIndex">&#xe66e;</i>
+				<span class="logo-title">{{sysName}}</span>
 			</div>
-			
 			<div class="userinfo">
-				<span class="time">服务到期时间:  {{expiresTime}}</span>
+				<span class="time" v-if="isManage!==1&&expiresTime!=''">服务到期时间:  {{expiresTime}}</span>
 				<el-dropdown trigger="click">
 					<i class="el-icon-s-tools setIcon el-dropdown-link"></i>
 					<el-dropdown-menu slot="dropdown">
@@ -42,6 +42,7 @@
 		},
 		data() {
 			return {
+				isManage:2,
 				sysName:'报名系统',
 				collapsed:false,
 				sysUserName: '',
@@ -91,13 +92,6 @@
 			setPass(){
 				this.$refs.changePass.setShow(this.account,true)
 			},
-			//折叠导航栏
-			collapse:function(){
-				this.collapsed=!this.collapsed;
-			},
-			showMenu(i,status){
-				this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-'+i)[0].style.display=status?'block':'none';
-			}
 		},
 		mounted() {
 			var user = sessionStorage.getItem('user');
@@ -108,6 +102,8 @@
 				this.expiresTime = user.expiresTime || '';
 				this.sysUserAvatar = user.avatar || '';
 				this.account = user.account || '';
+				this.sysName = user.platformName || '报名系统';
+				this.isManage = user.isManage
 			}
 		}
 	}
@@ -123,30 +119,12 @@
 		bottom: 0px;
 		width: 100%;
 		.header {
-			height: 65px;
-			line-height: 65px;
+			height: 50px;
 			background: $color-lightblue;
 			color:#fff;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			.logoIcon{
-				cursor: pointer;
-				margin-right: 5px;
-				font-size: 35px;
-				// font-size: 25px;
-				background-color: transparent;
-				padding: 8px;
-				// border-radius: 10px;
-				// box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
-			}
-			.logoIcon:hover{
-				// background-color: #C0CCDA;
-				background-color: #dcdbdb;
-				padding: 8px;
-				border-radius: 10px;
-				box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .4);
-			}
 			.userinfo {
 				// text-align: right;
 				display: flex;
@@ -180,11 +158,30 @@
 			
 			.logo {
 				//width:230px;
-				height:60px;
-				font-size: 28px;
-				padding-left:20px;
-				padding-right:20px;
-				font-weight: bold;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				.logo-icon{
+					cursor: pointer;
+					margin:0 15px;
+					font-size: 24px;
+					// font-size: 25px;
+					background-color: #dcdbdb;
+					padding: 5px;
+					box-sizing: border-box;
+					border-radius: 10px;
+					box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+				}
+				.logo-icon:hover{
+					// background-color: #C0CCDA;
+					background-color: #dcdbdb;
+					border-radius: 10px;
+					box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .4);
+				}
+				.logo-title{
+					font-size: 22px;
+					font-weight: 700;
+				}
 				img {
 					width: 40px;
 					float: left;
@@ -209,7 +206,7 @@
 			display: flex;
 			// background: #324057;
 			position: absolute;
-			top: 65px;
+			top: 50px;
 			bottom: 0px;
 			overflow: hidden;
 			background-color: rgba(242, 242, 242, 1);

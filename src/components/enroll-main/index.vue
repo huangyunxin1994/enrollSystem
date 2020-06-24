@@ -28,7 +28,7 @@
                 <div class="new-enroll-container-title">报名信息</div> 
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm1" label-width="100px" class="demo-ruleForm" label-position="left" :status-icon="true">
                     <el-form-item label="报名标题" prop="title">
-                        <el-input v-model="ruleForm.title" :disabled="disabledTag"></el-input>
+                        <el-input v-model="ruleForm.title" :disabled="disabledTag" placeholder="例：淘淘考试报名"></el-input>
                     </el-form-item>
                     <el-form-item label="报名时间" required>
                         <el-col :span="11">
