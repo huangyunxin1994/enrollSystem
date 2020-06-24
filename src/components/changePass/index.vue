@@ -72,23 +72,6 @@ export default {
 				callback(new Error('请输入账号'));
 			}else{
 				callback();
-				// if(this.ruleForm2.idCard === ''){
-				// 	callback();
-					
-				// }else{
-				// 	let bool = IdentityCodeValid(this.ruleForm2.idCard)
-				// 	if(bool){
-				// 		vaildIdCard({account:value,idCard:this.ruleForm2.idCard}).then(res=>{
-				// 			if(res.code==0){
-				// 				callback();
-				// 			}else{
-				// 			callback(new Error(res.msg));
-				// 			}
-				// 		})
-				// 	}else{
-				// 		callback();
-				// 	}
-				// }
 			}
 		};
 		return{
@@ -135,7 +118,7 @@ export default {
 									//console.log(res)
 									if(res.code == 0){
 										this.$message({
-											message: '密码修改成功',
+											message: '密码修改成功,3秒后退出系统，请重新登录',
 											type: 'success'
 										});
 										this.ruleForm2={
@@ -145,6 +128,10 @@ export default {
 										},
 										this.dialogPassVisible = false
 										this.loading=false
+										setTimeout(_=>{
+											this.$router.push({path:"/login"})
+										},3000)
+										
 									}else{
 										this.$message.error('密码修改失败');
 										this.loading=false
