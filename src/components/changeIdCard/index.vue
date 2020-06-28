@@ -7,13 +7,13 @@
 					<el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="请输入账号" :disabled="flag"></el-input>
 					</el-form-item>
 					<el-form-item  label="旧身份证号" prop="idCard">
-					<el-input type="password" v-model="ruleForm2.idCard" auto-complete="off" placeholder="请输入身份证号" show-password></el-input>
+					<el-input type="text" v-model="ruleForm2.idCard" auto-complete="off" placeholder="请输入身份证号"></el-input>
 					</el-form-item>
 					<el-form-item  label="新身份证号" prop="newIdCard">
-					<el-input type="password" v-model="ruleForm2.newIdCard" auto-complete="off" placeholder="请输入身份证号" show-password></el-input>
+					<el-input type="text" v-model="ruleForm2.newIdCard" auto-complete="off" placeholder="请输入身份证号"></el-input>
 					</el-form-item>
 					<el-form-item  label="再输入一次" prop="again">
-					<el-input type="password" v-model="ruleForm2.again" auto-complete="off" placeholder="请再次身份证号" show-password></el-input>
+					<el-input type="text" v-model="ruleForm2.again" auto-complete="off" placeholder="请再次身份证号"></el-input>
 					</el-form-item>
 					
 					<el-button type="primary" style="width:100%;" @click.native.prevent="onSubmit" :loading="loading" >确定</el-button>
