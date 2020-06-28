@@ -326,20 +326,6 @@ export default {
             }).catch(err=>{
             })   
         },
-        handleChangeVal(){
-            console.log(111)
-            //  console.log(this.titlePara)
-            // let keys = Object.keys(this.titlePara);
-            // let vals = Object.values(this.titlePara);
-            // this.tableData = this.tableAllData.filter(item=>{
-            //     for(let i=0;i<keys.length;i++){
-            //         console.log(keys[i],item[keys[i]],vals[i],String(item[keys[i]]).indexOf(vals[i]))
-            //        if( String(item[keys[i]]).indexOf(vals[i]) <= -1)
-            //         return ""
-            //     }
-            //     return item
-            // })
-        },
         //选择筛选条件
         chooseTerm(){
             this.$refs.moreTerm.handleShow()
