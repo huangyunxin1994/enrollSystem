@@ -377,7 +377,7 @@ export default {
             this.tableData = this.tableAllData.filter(item=>{
                 let boolArr = []
                  let submitTime =  item.submitTime
-                if(this.startTime!=""&&this.endTime!=""){
+                if(this.startTime!=""&&this.startTime!=null&&this.endTime!=""&&this.endTime!=null){
                     if(this.compareDate(submitTime,this.startTime)&&this.compareDate(this.endTime,submitTime)){
                         boolArr.push(true)
                     }else{
@@ -502,18 +502,6 @@ export default {
                     return item
                 }
             })
-        },
-        changeEtime(){
-            console.log(this.startTime,this.endTime)
-            if(this.startTime!=""&&this.endTime!=""){
-                this.tableData=this.tableAllData.filter(i=>{
-                    let submitTime =  i.submitTime
-                    console.log(this.compareDate(submitTime,this.startTime))
-                    console.log(this.compareDate(this.endTime,submitTime))
-                    if(this.compareDate(submitTime,this.startTime)&&this.compareDate(this.endTime,submitTime))
-                     return i
-                })
-            }
         },
         // handleQrCode(){
         //     this.$refs.qrcode.dialogVisible=true
