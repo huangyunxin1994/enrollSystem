@@ -17,3 +17,6 @@ export const addUser = params => { return post(`${base}/user/`, params, {emulate
 export const updateUser = params => { return put(`${base}/user/`, params, {emulateJSON: true}); };//批量更新报名信息
 export const deleteUser = params => { return deleteResultful(`${base}/user/`, params); };//查询报名项目信息
 export const getUserName = params => { return getResultful(`${base}/user/user/`, params); };//获取url中account值的User信息
+
+export const getPlatForm = params => { return get(`${base}/Platform/platform/getplatform`, params); };//获取平台名称
+export const updatePlatform = params => { return put(`${base}/Platform/platform/putPlatform`, params, {emulateJSON: true}); };//更新平台名称

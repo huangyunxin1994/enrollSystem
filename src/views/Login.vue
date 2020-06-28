@@ -1,6 +1,6 @@
 <template>
   <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container">
-    <h3 class="title">系统登录</h3>
+    <h3 class="title">{{platFormName}}</h3>
     <el-form-item prop="account">
       <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import { requestLogin } from '../api/api';
+  import { requestLogin,getPlatForm } from '../api/api';
   import changePassworld from '../components/changePass/index.vue'
   import verifyIdcard from '../components/verify-IDCard/index.vue'
   import {Debounce} from '@/utils/index.js'
@@ -34,13 +34,11 @@
     },
     data() {
       return {
-        
+        platFormName:"",
         logining: false,
         ruleForm2: {
-          // account: 'administrator',
-		  account: '',
-          // checkPass: 'password'
-		  checkPass: ''
+          account: '',
+          checkPass: ''
         },
         rules2: {
           account: [
@@ -81,6 +79,7 @@
                         }else{
                           sessionStorage.setItem('user', JSON.stringify(user));
                           sessionStorage.setItem('type', JSON.stringify(type));
+                          
                           this.$router.push({ path: '/' });
                           this.$message({
                             message: "登录成功",
@@ -106,6 +105,17 @@
           _this.clearCookie();
         }
       },300),
+      //获取平台名称
+      getPlatformName(){
+        getPlatForm().then(res=>{
+          if(res.code==0){
+            sessionStorage.setItem('sysName', JSON.stringify(res.data.data[0]));
+            this.platFormName = res.data.data[0].platformName
+          }
+        }).catch(err=>{
+          console.log(err)
+        })
+      },
 	  //设置cookie
 	  setCookie(c_name, c_pwd, exdays){
 		var exdate = new Date(); //获取时间
@@ -137,7 +147,8 @@
 	  },
     },
 	mounted() {
-		this.getCookie()
+    this.getCookie()
+    this.getPlatformName()
 	}
   }
 

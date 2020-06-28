@@ -40,9 +40,6 @@
                 </div>
                 <el-link :underline="false" icon="el-icon-circle-plus" type="primary" style="font-size:30px;margin:0 20px" @click="addItem()"></el-link>
             </el-form-item>
-            <el-form-item label="最少选几项" prop="minimumCharacters" v-show="form['type']=='checkbox'">
-                <el-input v-model="form['minimumCharacters']" auto-complete="off"></el-input>
-            </el-form-item>
             <el-form-item label="最多选几项" prop="maximumCharacters" v-show="form['type']=='checkbox'">
                 <el-input v-model="form['maximumCharacters']" auto-complete="off"></el-input>
             </el-form-item>

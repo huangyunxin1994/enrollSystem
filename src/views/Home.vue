@@ -10,7 +10,9 @@
 				<el-dropdown trigger="click">
 					<i class="el-icon-s-tools setIcon el-dropdown-link"></i>
 					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item @click.native="setPass">密码设置</el-dropdown-item>
+						<el-dropdown-item @click.native="setSysName" v-if="isManage===1">平台名称设置</el-dropdown-item>
+						<el-dropdown-item @click.native="setIdCard">校验身份证修改</el-dropdown-item>
+						<el-dropdown-item @click.native="setPass">密码修改</el-dropdown-item>
 						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
@@ -30,20 +32,28 @@
 			
 		</el-col>
 		<change-passworld ref="changePass"></change-passworld>
+		<change-id-card ref="changeIdCard"></change-id-card>
+		<change-sys-name ref="changeSysName" @changeSysName="changeSysName"></change-sys-name>
 	</el-row>
 </template>
 
 <script>
 	import changePassworld from '../components/changePass/index.vue'
+	import changeIdCard from '../components/changeIdCard/index.vue'
+	import changeSysName from '../components/changeSysName/index.vue'
 	import { changePass } from '@/api/api'
 	export default {
 		components:{
-			changePassworld
+			changePassworld,
+			changeIdCard,
+			changeSysName
 		},
 		data() {
 			return {
+				id:"",
 				isManage:2,
-				sysName:'报名系统',
+				sysName:'',
+				sysId:"",
 				collapsed:false,
 				sysUserName: '',
 				expiresTime:'',//服务到期时间
@@ -92,9 +102,21 @@
 			setPass(){
 				this.$refs.changePass.setShow(this.account,true)
 			},
+			//设置身份证
+			setIdCard(){
+				this.$refs.changeIdCard.setShow(this.account,this.id,true)
+			},
+			setSysName(){
+				this.$refs.changeSysName.setShow(this.sysName,this.sysId)
+			},
+			changeSysName(){
+				let platform =  JSON.parse(sessionStorage.getItem('sysName'));
+				this.sysName = platform.platformName
+			}
 		},
 		mounted() {
 			var user = sessionStorage.getItem('user');
+			var sysName = sessionStorage.getItem('sysName');
 			if (user) {
 				user = JSON.parse(user);
 				console.log(user)
@@ -102,8 +124,13 @@
 				this.expiresTime = user.expiresTime || '';
 				this.sysUserAvatar = user.avatar || '';
 				this.account = user.account || '';
-				this.sysName = user.platformName || '报名系统';
 				this.isManage = user.isManage
+				this.id = user.id;
+			}
+			if(sysName){
+				sysName = JSON.parse(sysName);
+				this.sysName = sysName.platformName || '报名系统';
+				this.sysId = sysName.id || '';
 			}
 		}
 	}

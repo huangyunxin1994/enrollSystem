@@ -1,7 +1,7 @@
 <template>
 	<div class="loginSwap">
 		<el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container">
-		  <h3 class="title">报名系统管理端</h3>
+		  <h3 class="title">{{platFormName}} 管理端</h3>
 		  <el-form-item prop="account">
 		    <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
 		  </el-form-item>
@@ -22,11 +22,12 @@
 </template>
 
 <script>
-	import { requestLogin } from '../api/api';
+	import { requestLogin,getPlatForm } from '../api/api';
 	  import {Debounce} from '@/utils/index.js'
 	export default {
 		data(){
 			return{
+				platFormName:"",
 				logining:false,
 				ruleForm2:{
 					account:'huachen2020',
@@ -88,7 +89,21 @@
 						});
 					}
 				})
-			},300)
+			},300),
+			//获取平台名称
+			getPlatformName(){
+				getPlatForm().then(res=>{
+				if(res.code==0){
+					sessionStorage.setItem('sysName', JSON.stringify(res.data.data[0]));
+					this.platFormName = res.data.data[0].platformName
+				}
+				}).catch(err=>{
+				console.log(err)
+				})
+			},
+		},
+		mounted(){
+			this.getPlatformName()
 		}
 	}
 </script>
