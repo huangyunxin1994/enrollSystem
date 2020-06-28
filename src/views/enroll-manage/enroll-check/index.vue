@@ -1,7 +1,7 @@
 <template>
     <el-scrollbar style="width:100%;height:calc(100% - 17px);" :vertical="true">
         <div class="enroll-check-main">
-            <el-link class="enroll-check-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一页 </el-link>
+            <el-link class="enroll-check-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一级 </el-link>
             <div class="enroll-check-container" ref="container">
                 <div class="enroll-check-container-title">
                     <div>
@@ -20,7 +20,7 @@
                 </div> 
                 <div class="enroll-check-container-handle" >
                     <div class="enroll-check-container-handle-left">
-                        <el-input v-model="inputValue" placeholder="请输入内容"  style="width:30%"></el-input>
+                        <el-input v-model="inputValue" placeholder="请输入内容"  style="width:30%" ></el-input>
                         <div  style="margin-left:20px;">
                             <label for="" class="enroll-check-container-handle-label">审核状态</label>
                             <el-select v-model="titlePara.reviewState" filterable placeholder="请选择" style="width:50%"  @change="selectByTerm">
@@ -54,9 +54,9 @@
                         <div class="enroll-check-container-handle-left1-date-picker">
                             <label for="" class="enroll-check-container-handle-label" style="width:120px" >报名时间段</label>
                         
-                            <el-date-picker type="date" placeholder="选择日期" v-model="startTime" style="width:50%" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="startTimeOptions" @change="changeEtime"></el-date-picker>                   
+                            <el-date-picker type="date" placeholder="选择日期" v-model="startTime" style="width:50%" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="startTimeOptions" @change="selectByTerm"></el-date-picker>                   
                             <span  style="margin:0 20px ;">至</span>
-                            <el-date-picker type="date" placeholder="选择日期" v-model="endTime"  style="width:50%" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="endTimeOptions" @change="changeEtime"></el-date-picker>
+                            <el-date-picker type="date" placeholder="选择日期" v-model="endTime"  style="width:50%" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="endTimeOptions" @change="selectByTerm"></el-date-picker>
                             
                         </div>
                         
@@ -68,7 +68,7 @@
                         </div>
                     
                 </div>
-                <el-table :data="tables.slice((page-1)*pageSize,page*pageSize)" border stripe highlight-current-row size="mini" v-loading="listLoading" @selection-change="selsChange" class="myTable" ref="table" :row-key="getRowKeys">
+                <el-table :data="tableData.slice((page-1)*pageSize,page*pageSize)" border stripe highlight-current-row size="mini" v-loading="listLoading" @selection-change="selsChange" class="myTable" ref="table" :row-key="getRowKeys">
                     <el-table-column type="selection" width="55" :reserve-selection="true">
                     </el-table-column>
                     <el-table-column type="index" width="60" label="序号">
@@ -91,7 +91,7 @@
 						:current-page="page"
 						:page-sizes="[10, 15, 20, 25]"
 						:page-size="pageSize" 
-						:total="tables.length" >
+						:total="tableData.length" >
                     </el-pagination>
                </div>
                 <!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button> -->
@@ -287,24 +287,36 @@ export default {
                     for(let i=0;i<res.data.data.length;i++){
                         let formArr =  res.data.data[i]
                         let para = JSON.parse(formArr.registrationInformation).form[0].submitData[0]
+                        let keyArr = []
+                        JSON.parse(formArr.registrationInformation).form[0].child.filter(i =>{
+                           if(i.type==='img') {
+                               keyArr.push(i.dataKey)
+                           }
+                        })
                         Object.keys(para).forEach(key=>{
-                            if(Array.isArray(para[key]) ){
-                                let str=""
-                                for(let i=0;i<para[key].length;i++){
-                                    if(str==""){
-                                        str+=para[key][i]
-                                    }else{
-                                        str+=","+para[key][i]
-                                    }
-                                }
-                                para[key]=str
+                            
+                            if(String(keyArr).indexOf(key) > -1){
+                                delete para[key]
                             }
+                            if(Array.isArray(para[key]) ){
+                            let str=""
+                            for(let i=0;i<para[key].length;i++){
+                                if(str==""){
+                                    str+=para[key][i]
+                                }else{
+                                    str+=","+para[key][i]
+                                }
+                            }
+                            para[key]=str
+                            }
+                            
+                            
                         })            
                         para.personId = formArr.id
                         para.reviewState = formArr.reviewState
                         para.readNot = formArr.readNot
                         para.submitTime = formArr.submitTime.substring(0,10)
-						// for( let i =0;i< 20;i++)
+                        // for( let i =0;i< 20;i++)
 						arr.push(para)
                     }
                     this.tableAllData=arr
@@ -314,19 +326,20 @@ export default {
             }).catch(err=>{
             })   
         },
-        // changeResult(val){
-        //      console.log(this.titlePara)
-        //     let keys = Object.keys(this.titlePara);
-        //     let vals = Object.values(this.titlePara);
-        //     this.tableData = this.tableAllData.filter(item=>{
-        //         for(let i=0;i<keys.length;i++){
-        //             console.log(keys[i],item[keys[i]],vals[i],String(item[keys[i]]).indexOf(vals[i]))
-        //            if( String(item[keys[i]]).indexOf(vals[i]) <= -1)
-        //             return ""
-        //         }
-        //         return item
-        //     })
-        // },
+        handleChangeVal(){
+            console.log(111)
+            //  console.log(this.titlePara)
+            // let keys = Object.keys(this.titlePara);
+            // let vals = Object.values(this.titlePara);
+            // this.tableData = this.tableAllData.filter(item=>{
+            //     for(let i=0;i<keys.length;i++){
+            //         console.log(keys[i],item[keys[i]],vals[i],String(item[keys[i]]).indexOf(vals[i]))
+            //        if( String(item[keys[i]]).indexOf(vals[i]) <= -1)
+            //         return ""
+            //     }
+            //     return item
+            // })
+        },
         //选择筛选条件
         chooseTerm(){
             this.$refs.moreTerm.handleShow()
@@ -345,6 +358,7 @@ export default {
             this.showTableTitle = this.tableTitle.filter(item=>{
                 return str.indexOf(item.name)>-1
             })
+            this.selectByTerm()
             this.$nextTick(()=>{
                             this.$refs.table.doLayout()
                         }) 
@@ -359,8 +373,31 @@ export default {
         selectByTerm(){
             let keys = Object.keys(this.titlePara);
             let vals = Object.values(this.titlePara);
+            var search=this.inputValue;
             this.tableData = this.tableAllData.filter(item=>{
                 let boolArr = []
+                 let submitTime =  item.submitTime
+                if(this.startTime!=""&&this.endTime!=""){
+                    if(this.compareDate(submitTime,this.startTime)&&this.compareDate(this.endTime,submitTime)){
+                        boolArr.push(true)
+                    }else{
+                        boolArr.push(false)
+                    }
+                }else{
+                    boolArr.push(true)
+                }
+                if(search){
+                    let arr = []
+                    this.showTableTitle.forEach(i => {
+                        arr.push(i.name)
+                    });
+                   let bool =  Object.keys(item).some(function(key){
+                        return String(arr).indexOf(key)>-1&&String(item[key]).toLowerCase().indexOf(search) > -1
+                    })
+                    boolArr.push(bool)
+                }else{
+                     boolArr.push(true)
+                }
                 for(let i=0;i<keys.length;i++){
                     let bool = false
                     if(Object.prototype.toString.call(vals[i]) !="[object String]"){
@@ -458,7 +495,6 @@ export default {
                         boolArr.push(bool)
                     }
                 }
-                // console.log(boolArr)
                 let flag = boolArr.some(k=>{
                     return k==false
                 })
@@ -600,18 +636,14 @@ export default {
       
         
     },
-    computed:{
-        tables:function(){
-            var search=this.inputValue;
-            if(search){
-            return  this.tableData.filter(function(dataNews){
-                return Object.keys(dataNews).some(function(key){
-                return String(dataNews[key]).toLowerCase().indexOf(search) > -1
-                })
-            })
+    watch:{
+        inputValue:{
+            handler(){
+                this.selectByTerm()     
             }
-            return this.tableData
-        },
+        }
+    },
+    computed:{
         startTimeOptions(){
             // 开始时间
             return{

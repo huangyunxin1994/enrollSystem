@@ -2,7 +2,7 @@
     <el-scrollbar style="width:100%;height:calc(100% - 17px);" :vertical="true">
         <div class="enroll-manage-main">
 			<div class="titleSwrap">
-				<div><el-link class="enroll-manage-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一页 </el-link></div>
+				<div><el-link class="enroll-manage-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一级 </el-link></div>
 				<div class="enroll-manage-title">
 				    报名管理与审核
 				</div>
@@ -207,9 +207,14 @@ export default {
       tables:function(){
         var search=this.inputValue;
         if(search){
+            let arr = []
+            this.tableTitle.forEach(e => {
+                if(e.name)
+                arr.push(e.name)
+            });
           return  this.tableData.filter(function(dataNews){
             return Object.keys(dataNews).some(function(key){
-              return String(dataNews[key]).toLowerCase().indexOf(search) > -1
+              return String(arr).indexOf(key)>-1&&String(dataNews[key]).toLowerCase().indexOf(search) > -1
             })
           })
         }

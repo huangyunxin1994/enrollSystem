@@ -227,10 +227,14 @@ export default {
       tables:function(){
         var search=this.inputValue;
         if(search){
+             let arr = []
+            this.tableTitle.forEach(e => {
+                if(e.name)
+                arr.push(e.name)
+            });
           return  this.tableData.filter(function(dataNews){
             return Object.keys(dataNews).some(function(key){
-                if(key!=="password")
-                    return String(dataNews[key]).toLowerCase().indexOf(search) > -1
+                    return String(arr).indexOf(key)>-1&&String(dataNews[key]).toLowerCase().indexOf(search) > -1
             })
           })
         }

@@ -1,7 +1,7 @@
 <template>
     <el-scrollbar style="width:100%;height:calc(100% - 17px);" :vertical="true">
         <div class="enroll-details-main">
-            <el-link class="enroll-details-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一页 </el-link>
+            <el-link class="enroll-details-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一级 </el-link>
             
             <div class="enroll-details-container" ref="container">
                 <div class="enroll-details-container-img">

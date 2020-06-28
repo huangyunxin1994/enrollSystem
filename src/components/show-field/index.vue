@@ -81,7 +81,7 @@ export default {
     },
     computed:{
         tables:function(){
-            return this.tableTitle.filter((i)=> i.name !== 'name')
+            return this.tableTitle.filter((i)=> i.name !== 'name'&&i.name!=='reviewState'&&i.name!=='readNot'&&i.name!=='submitTime')
         }
     }
 }

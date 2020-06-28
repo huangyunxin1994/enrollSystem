@@ -1,7 +1,7 @@
 <template>
     <div class="new-enroll-main">
             <div class="titleSwrap">
-				<el-link class="new-enroll-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一页 </el-link>
+				<el-link class="new-enroll-nav" :underline="false" @click="backpage"><i class="el-icon-arrow-left"></i> 返回上一级 </el-link>
 				<div>
 					<div class="new-enroll-title" v-if="handleType=='add'">
 					    新建报名活动
@@ -47,12 +47,12 @@
             </div>
             <div class="new-enroll-container">
                 <div class="new-enroll-container-title">报名详细说明</div> 
-                <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" label-position="left">
-                    <el-form-item label="详细说明" prop="details">
+                <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm" label-position="left">
+                    <el-form-item prop="details">
                         <el-input
                         type="textarea"
                         :rows="10"
-                        placeholder="请输入内容"
+                        placeholder="请输入报名详细说明"
                         resize="none"
                         v-model="ruleForm.details"
                         :disabled="disabledTag">
@@ -76,7 +76,7 @@
                     
                 </div>
                 <div class="new-enroll-container-remarks">{{item.details}}</div>
-                <div class="title-class">已选信息({{item.child.length}})</div>
+                <div class="tag-class">已选信息({{item.child.length}})</div>
                 <div class="new-enroll-container-item">
                     <div style="width:calc(100% - 340px);max-height: 568px;" >
                         <el-scrollbar style="width:100%;height:100%;">
@@ -214,7 +214,8 @@ export default {
     methods:{
         //回到上一页
         backpage(){
-            this.$router.go(-1);
+            this.$emit('backPage')
+            // this.$router.go(-1);
         },
         //格式化类型
         arrFormatter (type) {
@@ -557,7 +558,7 @@ export default {
             margin-bottom: 1%;
             background: #fff;
             &-title{
-                margin-bottom: 1%;
+                margin-bottom: 20px;
                 padding: 2px 0;
                 border-left: 4px solid #409EFF;
                 text-indent: 20px;
@@ -635,9 +636,15 @@ export default {
             .line{
                 text-align: center;
             }
+            .tag-class{
+                font-size: 14px;
+                color: #606266;
+                font-weight: 700;
+                margin:0 0 20px 0;
+            }
             .title-class{
                 font-weight: 700;
-                    margin:0 0 10px 10px;
+                margin:0 0 10px 10px;
             }
         }
         .new-enroll-submit{
