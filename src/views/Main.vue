@@ -6,7 +6,6 @@
 				<el-col :xs="24" :sm="10" :md="10" :lg="10" :xl="10">
 					<div class="main-container-item">
 						<div class="usermessage">
-							
 							<h3><i class="iconfont">&#xe62b;</i> 欢迎您, {{sysUserName}}</h3>
 							<span v-if="isManage!==1&&expiresTime!=''">服务到期时间:  {{expiresTime}}</span>
 						</div>
@@ -63,9 +62,9 @@
 								<span>还没有创建报名</span>
 								<el-link :underline="false" type="primary" icon="el-icon-circle-plus-outline" @click="newEnroll">创建一个试一试 ?</el-link>
 							</el-col>
-							<el-scrollbar style="width:100%;height:430px;" v-else>
+						
 							
-							<el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12"  v-for="item in tableAllData" :key="item.id" >
+							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6"  v-for="item in tableAllData" :key="item.id" v-else>
 								
 								<div  class="enroll-contain-item" @click="handleCheck(item.id)">
 									<div>
@@ -78,9 +77,9 @@
 									</div>
 									<div>
 										<i class="el-icon-timer"></i>
-										<span>{{item.startTime}} ~ {{item.endTime}}</span>
+										<span>{{item.startTime.replace(/-/g,"/")}} ~ {{item.endTime.replace(/-/g,"/")}}</span>
 									</div>
-									<span class="creattime">创建时间：{{item.createTime}}</span>
+									<div ><span>创建时间:{{item.createTime.substring(0,11).replace(/-/g,"/")}}</span></div>
 									<div>
 										<el-tooltip class="item" effect="dark" content="详情" placement="top">
 										<i class="el-icon-tickets" @click.stop="handleCheck(item.id)"></i>
@@ -94,7 +93,6 @@
 									</div>
 								</div>
 							</el-col>
-							</el-scrollbar>
 						</el-row>
 					</div>
 				</el-col>
@@ -399,7 +397,7 @@ body{
 		border-radius: 5px;
 		-webkit-border-radius: 5px;
 		-moz-border-radius: 5px;
-		margin: 1vw 0;
+		margin-top: 2em;
 		display: flex;
 		flex-direction: column;
 		cursor: pointer;
@@ -408,7 +406,7 @@ body{
 			padding: 2vw;
 			box-sizing: border-box;
 			color: #3e8ef7;
-    		background-color: rgba(217, 233, 255, .8);height:60%;
+    		background-color: rgba(217, 233, 255, .8);height:70%;
 			h3{
 				display: flex;
 				align-items: center;
@@ -422,7 +420,7 @@ body{
 			}
 		}
 		.userhandle{
-			height: 40%;
+			height: 30%;
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -449,13 +447,13 @@ body{
 			}
 		}
 		&-top{
-			height: 80%;
+			height: 70%;
 			color: #fff;
-			padding: 5% 10%;
+			padding: 0 20px
 		}
 		&-bottom{
 			width: 100%;
-			height: 20%;
+			height: 30%;
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -492,7 +490,6 @@ body{
 	}
 	.enroll-contain{
 		width: 100%;
-		height:500px;
 		background-color: #fff;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
 		-webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
@@ -500,7 +497,7 @@ body{
 		border-radius: 5px;
 		-webkit-border-radius: 5px;
 		-moz-border-radius: 5px;
-		margin: 1vw 0;
+		margin-top: 2em;
 		padding: 1vw;
 		box-sizing: border-box;
 		display: flex;
@@ -549,7 +546,7 @@ body{
 				justify-content: space-between;
 				align-items: center;
 			}
-			div:nth-child(2){
+			div:nth-child(2),:nth-child(3){
 
 				font-size: 14px;
 				color: #a3afb7;
@@ -565,7 +562,7 @@ body{
 			}
 			div:last-child{
 				position: absolute;
-				right: 1em;
+				right: 0.6em;
 				bottom:1em;
 				margin-bottom: 0;
 				font-size: 24px;
