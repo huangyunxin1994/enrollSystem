@@ -1,24 +1,46 @@
 <template>
+<div class="login-background">
+  <!-- <img class='login-img' > -->
+  <div class='login-logo'>
+    <div class="logo" >
+      <i class="iconfont">&#xe62b;</i>
+    </div>
+    <h1 class="title">{{platFormName}}</h1>
+    
+  </div>
   <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container">
-    <h3 class="title">{{platFormName}}</h3>
+    
+    
+      <h2>欢迎登录</h2>
     <el-form-item prop="account">
       <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
-    <el-form-item prop="checkPass">
-      <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
-    </el-form-item>
+  
+      <el-form-item prop="checkPass">
+        <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
+      </el-form-item>
+  
     <div class="login-handle">
     <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
-    <el-link :underline="false" type="primary" class="remember" @click="changePass">忘记密码?</el-link>
+    <el-link :underline="false"  class="remember" @click="changePass">忘记密码?</el-link>
     </div>
     <el-form-item style="width:100%;">
-      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
+      <el-button  class="login-button" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
       <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
     </el-form-item>
     <change-passworld ref="changePass"></change-passworld>
 	<verify-idcard ref="verifyId" ></verify-idcard>
   </el-form>
-  
+  <div class="footer">
+      <span class="footer-message">© 2019-2020 中科华宸创新科技研发中心.</span> 
+      <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=45010302002241">
+        <img src="../assets/gongan.png" style="float:left;"/>
+        <span>桂公网安备 45010302002241号</span >
+      </a>
+      <a target="_blank" href="http://beian.miit.gov.cn/">桂ICP备20002998号-1</a>
+      
+    </div>
+</div>
 </template>
 
 <script>
@@ -154,19 +176,71 @@
 
 </script>
 
+<style lang="scss" >
+.login-handle  .el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+    background-color:#303133;
+    border-color: #303133;
+    }
+    .login-handle  .el-checkbox__input.is-checked + .el-checkbox__label {
+      color: #303133;
+    }
+    .login-handle  .el-checkbox.is-bordered.is-checked{
+      border-color: #303133;
+    }
+    .login-handle  .el-checkbox__input.is-focus .el-checkbox__inner{
+      border-color:  #303133;
+    }
+</style>
 <style lang="scss" scoped>
+.login-background{
+  position: relative;
+    width:100%;
+    height:100%;
+    min-width: 684px;
+    min-height: 584px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; 
+    background: url("../assets/bg2.jpg") no-repeat;
+     background-size: cover;
+     -webkit-background-size: cover;
+     -o-background-size: cover;
+     background-position: top center;
+    z-index:0;
+  
+  .login-logo{
+     position: absolute;
+     top: 20px;
+     left: 30px;
+     color: #fff;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     z-index: 2;
+    .logo{
+      margin-right: 30px;
+      i{
+        color: #E6A23C;
+         font-size: 48px;
+      }
+    }
+  }
+  
   .login-container {
     /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
     -webkit-border-radius: 5px;
     border-radius: 5px;
     -moz-border-radius: 5px;
     background-clip: padding-box;
-    margin: 180px auto;
-    width: 350px;
+    // min-width: 250px;
+    // max-width: 350px;
+    width: 35vh;
     padding: 35px 35px 15px 35px;
     background: #fff;
     border: 1px solid #eaeaea;
-    box-shadow: 0 0 25px #cac6c6;
+    // box-shadow: 0 0 25px #cac6c6;
+    z-index: 2;
     .title {
       margin: 0px auto 40px auto;
       text-align: center;
@@ -177,9 +251,69 @@
       justify-content: space-between;
       align-items: center;
       .remember {
-      margin: 0px 0px 35px 0px;
+        margin: 0px 0px 35px 0px;
+        color:  #303133;
     }
     }
+    .login-handle {
+      /deep/ .el-checkbox {
+        color:  #303133;
+        
+      }
+    } 
     
+    .el-form-item__content /deep/ .el-button {
+      width: 100%;
+      color: #fff;
+      background: #303133;
+    } 
+   h2{
+     text-align: center;
+   }
   }
+   .footer{
+    position: absolute;
+    background: #303133;
+    opacity: 0.8;
+    padding: 20px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    z-index: 2;
+    &-message,a{
+      font-size: 14px;
+      font-weight: 500;
+      color:#fff;
+      padding: 0 10px;
+      border-right: 2px solid #fff;
+    }
+    a:last-child{
+      border:none
+    }
+    a{
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    a:hover{
+      color:#C0C4CC;
+      
+    }
+  }
+}
+.login-background:after{
+  content:"";
+  width:100%;
+  height:100%;
+  position:absolute;
+  left:0;
+  top:0;
+  background:inherit;
+  filter:blur(2px);
+  z-index:0;
+}
 </style>

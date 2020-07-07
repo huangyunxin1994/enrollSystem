@@ -6,17 +6,16 @@
 				<span class="logo-title">{{sysName}}</span>
 			</div>
 			<div class="userinfo">
-				<span class="time" v-if="isManage!==1&&expiresTime!=''">服务到期时间:  {{expiresTime}}</span>
 				<el-dropdown trigger="click">
 					<i class="el-icon-s-tools setIcon el-dropdown-link"></i>
 					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item @click.native="setSysName" v-if="isManage===1">平台名称设置</el-dropdown-item>
+						<el-dropdown-item @click.native="setSysName" v-if="isManage>=1">平台名称设置</el-dropdown-item>
 						<el-dropdown-item @click.native="setIdCard">校验身份证修改</el-dropdown-item>
 						<el-dropdown-item @click.native="setPass">密码修改</el-dropdown-item>
 						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
-				<span class=" userinfo-inner"> <span>欢迎你</span> {{sysUserName}}</span>
+				<span class=" userinfo-inner"> <span>欢迎您</span> {{sysUserName}}</span>
 			</div>
 		</div>
 		<el-col :span="24" class="main">
@@ -146,7 +145,7 @@
 		bottom: 0px;
 		width: 100%;
 		.header {
-			height: 50px;
+			height: 60px;
 			background: $color-lightblue;
 			color:#fff;
 			display: flex;
@@ -233,7 +232,7 @@
 			display: flex;
 			// background: #324057;
 			position: absolute;
-			top: 50px;
+			top: 60px;
 			bottom: 0px;
 			overflow: hidden;
 			background-color: rgba(242, 242, 242, 1);

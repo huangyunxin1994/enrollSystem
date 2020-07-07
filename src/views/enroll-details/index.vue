@@ -138,7 +138,7 @@ export default {
                            })
                             this.mainMsg = personMsg[0]
                             this.mainTitle = this.mainMsg.name
-                            this.htmlTitle = `${this.mainMsg.submitData[0]['name']}_${this.enrollName}_${this.mainMsg.name}`
+                            this.htmlTitle = `${this.enrollName}_${this.mainMsg.submitData[0]['name']}_${this.mainMsg.name}`
                             this.enrollerName = this.mainMsg.submitData[0]['name']
                             let smallArr=[],mediumArr=[],largeArr=[],imgArr=[]
                             this.mainMsg.child.forEach(i=>{
@@ -195,7 +195,7 @@ export default {
                         const tHeaders = [] // 对应表格输出的中文title
                         const datas = []  // 对应表格输出的数据   
                         const sheetNames = [] // 对应表格sheet的名称
-                        const fileName =`${this.enrollerName}_${this.enrollName}_附加信息`
+                        const fileName =`${this.enrollName}_${this.enrollerName}_附加信息`
                         console.log(fileName)
                         this.otherMsg.forEach(i=>{
                             const tHeader = []
