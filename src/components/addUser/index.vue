@@ -34,7 +34,7 @@
 						    </el-date-picker>
 					</el-form-item>
 					<el-form-item label="联系号码" prop="phone">
-					    <el-input v-model="ruleForm2.phone" placeholder="请输入联系号码" ></el-input>
+					    <el-input v-model="ruleForm2.phone" placeholder="请输入联系号码 例:010-XXXXXXXX或XXXXXXXXXXX" ></el-input>
 					</el-form-item>
 					<el-form-item label="单位名称" prop="username">
 					    <el-input v-model="ruleForm2.username" placeholder="请输入单位名称" ></el-input>
@@ -146,10 +146,13 @@ export default {
 				],
 				phone:[
 					{ required: true,validator: validatePhone, trigger: 'blur' },
-					{ min: 11, max: 11, message: "请输入11位手机号码", trigger: "blur" },
+					{ message: "请输入正确的号码", trigger: "blur" },
 					{
-						pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/,
-						message: "请输入正确的手机号码"
+						// pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/||/^(0[0-9]{2,3}\-)?([2-9][0-9]{6,7})+(\-[0-9]{1,6})?$/,
+						// pattern:/^[0-9]*$/||
+						pattern:/^([1]\d{10}|([\(（]?0[0-9]{2,3}[）\)]?[-]?)?([2-9][0-9]{6,7})+(\-[0-9]{1,4})?)$/,
+						// pattern:/^[\d\-]+$/,
+						message: "请输入正确的号码"
 					}
 				],
 				expiresTime:[
