@@ -9,7 +9,7 @@
 				<el-dropdown trigger="click">
 					<i class="el-icon-s-tools setIcon el-dropdown-link"></i>
 					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item @click.native="setSysName" v-if="isManage>=1">平台名称设置</el-dropdown-item>
+						<el-dropdown-item @click.native="setSysName" v-if="isManage===1">平台名称设置</el-dropdown-item>
 						<el-dropdown-item @click.native="setIdCard">校验身份证修改</el-dropdown-item>
 						<el-dropdown-item @click.native="setPass">密码修改</el-dropdown-item>
 						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
@@ -50,7 +50,7 @@
 		data() {
 			return {
 				id:"",
-				isManage:2,
+				isManage:"",
 				sysName:'',
 				sysId:"",
 				collapsed:false,

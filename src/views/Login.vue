@@ -17,7 +17,7 @@
     </el-form-item>
   
       <el-form-item prop="checkPass">
-        <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
+        <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码" @keyup.enter.native="handleSubmit2"></el-input>
       </el-form-item>
   
     <div class="login-handle">
@@ -33,11 +33,11 @@
   </el-form>
   <div class="footer">
       <span class="footer-message">© 2019-2020 中科华宸创新科技研发中心.</span> 
-      <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=45010302002241">
+      <!-- <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=45010302002241">
         <img src="../assets/gongan.png" style="float:left;"/>
         <span>桂公网安备 45010302002241号</span >
-      </a>
-      <a target="_blank" href="http://beian.miit.gov.cn/">桂ICP备20002998号-1</a>
+      </a> -->
+      <a target="_blank" href="http://beian.miit.gov.cn/">桂ICP备20002998号-2</a>
       
     </div>
 </div>
@@ -177,7 +177,7 @@
 </script>
 
 <style lang="scss" >
-.login-handle  .el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+.login-handle  .el-checkbox__input.is-checked .el-checkbox__inner, .login-handle .el-checkbox__input.is-indeterminate .el-checkbox__inner{
     background-color:#303133;
     border-color: #303133;
     }
